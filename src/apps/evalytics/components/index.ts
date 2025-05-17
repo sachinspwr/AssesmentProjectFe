@@ -1,0 +1,1 @@
+export * from './doc-not-found.component';

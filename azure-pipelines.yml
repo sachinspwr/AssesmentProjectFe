@@ -1,0 +1,75 @@
+# azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - master # Change to your preferred branch
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: test-engine-developement # Your variable group for Vercel keys
+
+steps:
+  # Step 1: Install Node.js version 20 and Yarn, build the project
+  - script: |
+      # Install Node.js version 20
+      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+      sudo apt-get install -y nodejs
+      # Install Yarn globally
+      npm install -g yarn
+      # Install project dependencies and build
+      yarn install
+      yarn build
+    displayName: 'Install Node.js 20, Yarn, and Build Project'
+
+  # Step 2: Deploy to Vercel in batches
+  - script: |
+      # Navigate to the build directory
+      cd dist
+
+      # Initialize an empty payload
+      BASE_URL="https://api.vercel.com/v13/deployments"
+      MAX_BATCH_SIZE=100  # Number of files per batch
+
+      # Function to deploy files
+      deploy_files() {
+        local files=("$@")
+        local payload='{"files":['
+        local first_file=true
+
+        for file in "${files[@]}"; do
+          # Encode the file content in Base64
+          data=$(base64 -w 0 "$file")
+          # Prepare the JSON entry
+          if [ "$first_file" = true ]; then
+            first_file=false
+          else
+            payload+=","
+          fi
+          payload+="{\"file\":\"${file#./}\",\"data\":\"$data\"}"
+        done
+
+        # Close the JSON array and add project information
+        payload+="],\"name\":\"my-vercel-project\",\"projectId\":\"$(VERCEL_PROJECT_ID)\",\"orgId\":\"$(VERCEL_ORG_ID)\",\"target\":\"production\"}"
+
+        # Send the request to Vercel API
+        curl -X POST "$BASE_URL" \
+          -H "Authorization: Bearer $(VERCEL_TOKEN)" \
+          -H "Content-Type: application/json" \
+          -d "$payload"
+      }
+
+      # Find all files in the dist directory
+      all_files=($(find . -type f))
+      num_files=${#all_files[@]}
+
+      # Loop through files in batches
+      for (( i=0; i<num_files; i+=MAX_BATCH_SIZE )); do
+        batch=("${all_files[@]:i:MAX_BATCH_SIZE}")
+        deploy_files "${batch[@]}"
+      done
+    displayName: 'Deploy to Vercel in Batches'
+    env:
+      VERCEL_TOKEN: $(VERCEL_TOKEN)

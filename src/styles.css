@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer {
+  :root {
+    /* Text Colors */
+    
+    --theme-text-primary: #333333;
+    /* Main text */
+    --theme-text-secondary: #616160;
+    /* Supporting text */
+    --theme-text-muted: #9C9C9C;
+    /* Disabled/low-emphasis text */
+    --theme-text-link: #0569CC;
+    /* Hyperlinks */
+    --theme-text-positive: #029765;
+    /* Success messages */
+    --theme-text-negative: #db0108;
+    /* Error messages */
+    --theme-text-warning: #b98145;
+    /* Warning messages */
+    --theme-text-brand: #0064c7;
+    /* Brand-specific text color */
+
+    --theme-text-on-default: #333333;
+    --theme-text-on-primary: #ffffff;
+    --theme-text-on-secondary: #0064c7;
+    --theme-text-on-positive: #ffffff;
+    --theme-text-on-negative: #ffffff;
+
+    --theme-text-on-default-hover: #333333;
+    --theme-text-on-primary-hover: #ffffff;
+    --theme-text-on-secondary-hover: #ffffff;
+    --theme-text-on-positive-hover: #ffffff;
+    --theme-text-on-negative-hover: #ffffff;
+
+    --theme-text-on-default-disabled: #D9D9D9;
+    --theme-text-on-primary-disabled: #ffffff;
+    --theme-text-on-secondary-disabled: #0064c7;
+    --theme-text-on-positive-disabled: #ffffff;
+    --theme-text-on-negative-disabled: #ffffff;
+
+    --theme-default-bg: #ffff;
+    --theme-default-alt-bg: #F7F7F7;
+    --theme-default-dark-bg: #9C9C9C;
+    --theme-default-backdrop: rgba(0, 0, 0, 0.5);
+    --theme-default-border: #D9D9D9;
+    --theme-default-hover-bg: #F7F7F7;
+    --theme-default-hover-border: #F7F7F7;
+    --theme-default-disabled-bg: #D9D9D9;
+    --theme-default-disabled-border: #D9D9D9;
+
+    --theme-primary-bg: #0064c7;
+    --theme-primary-lite-bg: #d4e3f3;
+    --theme-primary-border: #0064c7;
+    --theme-primary-hover-bg: #0057ae;
+    --theme-primary-hover-border: #0057ae;
+    --theme-primary-disabled-bg: #8fb3d9;        /* 40% opacity equivalent */
+    --theme-primary-disabled-border: #7a9fc4;    /* Slightly darker for contrast */
+    --theme-primary-disabled-text: #ffffff;    /* Light blue-grey to contrast the background */
+
+    --theme-secondary-bg: #ffffff;
+    --theme-secondary-border: #0064c7;
+    --theme-secondary-hover-bg: #0064c7;
+    --theme-secondary-hover-border: #0064c7;
+    --theme-secondary-disabled-bg: #f8f8f8;      /* Very subtle off-white */
+    --theme-secondary-disabled-border: #c8d6e5;  /* Blue-gray for harmony */
+    --theme-secondary-disabled-text: #8a9ba8; 
+
+    --theme-positive-bg: #029765;
+    --theme-positive-lite-bg: #D1FCEC;
+    --theme-positive-border: #029765;
+    --theme-positive-hover-bg: #0b6a0b;
+    --theme-positive-hover-border: #095607;
+    --theme-positive-disabled-bg: #9ae5a9;
+    --theme-positive-disabled-border: #0b6a0b;
+
+    --theme-negative-bg: #db0108;
+    --theme-negative-lite-bg: #FED8D7;
+    --theme-negative-border: #db0108;
+    --theme-negative-hover-bg: #a4262c;
+    --theme-negative-hover-border: #8e1f2d;
+    --theme-negative-disabled-bg: #e0b4b6;
+    --theme-negative-disabled-border: #a4262c;
+
+    --theme-warning-bg: #C3925C;
+    --theme-warning-lite-bg: #FEE6CC;
+    --theme-warning-border: #B8742A;
+
+    --theme-muted-bg: #D9D9D9;
+    --theme-highlight-bg: #F5FAFF;
+  }
+
+  /* Light Theme Overrides */
+  .theme-light {
+    --brand-text: var(--theme-text-brand);
+    --primary-text: var(--theme-text-primary);
+    --secondary-text: var(--theme-text-secondary);
+    --muted-text: var(--theme-text-muted);
+    --positive-text: var(--theme-text-positive);
+    --negative-text: var(--theme-text-negative);
+    --warning-text: var(--theme-text-warning);
+    --link-text: var(--theme-text-link);
+    --disabled-text: var(--theme-text-disabled);
+
+    --text-on-default: var(--theme-text-on-default);
+    --text-on-primary: var(--theme-text-on-primary);
+    --text-on-secondary: var(--theme-text-on-secondary);
+    --text-on-positive: var(--theme-text-on-positive);
+    --text-on-negative: var(--theme-text-on-negative);
+
+    --text-on-default-hover: var(--theme-text-on-default-hover);
+    --text-on-primary-hover: var(--theme-text-on-primary-hover);
+    --text-on-secondary-hover: var(--theme-text-on-secondary-hover);
+    --text-on-positive-hover: var(--theme-text-on-positive-hover);
+    --text-on-negative-hover: var(--theme-text-on-negative-hover);
+
+    --text-on-default-disabled: var(--theme-text-on-default-disabled);
+    --text-on-primary-disabled: var(--theme-text-on-primary-disabled);
+    --text-on-secondary-disabled: var(--theme-text-on-secondary-disabled);
+    --text-on-positive-disabled: var(--theme-text-on-positive-disabled);
+    --text-on-negative-disabled: var(--theme-text-on-negative-disabled);
+
+    --default-bg: var(--theme-default-bg);
+    --default-alt-bg: var(--theme-default-alt-bg);
+    --default-dark-bg: var(--theme-default-dark-bg);
+    --default-backdrop: var(--theme-default-backdrop);
+    --default-border: var(--theme-default-border);
+    --default-hover-bg: var(--theme-default-hover-bg);
+    --default-hover-border: var(--theme-default-hover-border);
+    --default-disabled-bg: var(--theme-default-disabled-bg);
+    --default-disabled-border: var(--theme-default-disabled-border);
+
+    --primary-bg: var(--theme-primary-bg);
+    --primary-lite-bg: var(--theme-primary-lite-bg);
+    --primary-border: var(--theme-primary-border);
+    --primary-hover-bg: var(--theme-primary-hover-bg);
+    --primary-hover-border: var(--theme-primary-hover-border);
+    --primary-disabled-bg: var(--theme-primary-disabled-bg);
+    --primary-disabled-border: var(--theme-primary-disabled-border);
+
+    --secondary-bg: var(--theme-secondary-bg);
+    --secondary-dark-bg: var(--theme-secondary-dark-bg);
+    --secondary-border: var(--theme-secondary-border);
+    --secondary-hover-bg: var(--theme-secondary-hover-bg);
+    --secondary-hover-border: var(--theme-secondary-hover-border);
+    --secondary-disabled-bg: var(--theme-secondary-disabled-bg);
+    --secondary-disabled-border: var(--theme-secondary-disabled-border);
+
+    --positive-bg: var(--theme-positive-bg);
+    --positive-lite-bg: var(--theme-positive-lite-bg);
+    --positive-border: var(--theme-positive-border);
+    --positive-hover-bg: var(--theme-positive-hover-bg);
+    --positive-hover-border: var(--theme-positive-hover-border);
+    --positive-disabled-bg: var(--theme-positive-disabled-bg);
+    --positive-disabled-border: var(--theme-positive-disabled-border);
+
+    --negative-bg: var(--theme-negative-bg);
+    --negative-lite-bg: var(--theme-negative-lite-bg);
+    --negative-border: var(--theme-negative-border);
+    --negative-hover-bg: var(--theme-negative-hover-bg);
+    --negative-hover-border: var(--theme-negative-hover-border);
+    --negative-disabled-bg: var(--theme-negative-disabled-bg);
+    --negative-disabled-border: var(--theme-negative-disabled-border);
+
+    --warning-bg: var(--theme-warning-bg);
+    --warning-lite-bg: var(--theme-warning-lite-bg);
+    --warning-border: var(--theme-warning-border);
+
+    --muted-bg: var(--theme-muted-bg);
+    --highlight-bg: var(--theme-highlight-bg);
+  }
+}
+
+body {
+  zoom: 1.0;
+}
+
+/* Scrollbar Track */
+::-webkit-scrollbar {
+  width: 8px; 
+  height: 8px;
+  background-color: #f0f0f0; 
+  border-radius: 4px; 
+}
+
+/* Scrollbar Thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #b0b0b0; 
+  border-radius: 10px; 
+  border: 2px solid #f0f0f0; 
+}
+
+/* Scrollbar Thumb - On Hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #999; /* Darker on hover for visibility */
+}
+
+/* Scrollbar Corner (For Overflow Areas) */
+::-webkit-scrollbar-corner {
+  background-color: transparent; /* Clean look */
+}
+
+
+.header-1 {
+  @apply text-4xl text-theme-primary font-semibold;
+}
+
+.header-2 {
+  @apply text-3xl text-theme-primary font-semibold;
+}
+
+.header-3 {
+  @apply text-2xl text-theme-primary font-semibold;
+}
+
+.header-4 {
+  @apply text-xl text-theme-primary font-semibold;
+}
+
+.min-h-screen-minus-200 {
+  min-height: calc(100vh - 200px);
+}

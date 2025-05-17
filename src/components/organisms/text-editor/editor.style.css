@@ -1,0 +1,11 @@
+
+  /* Basic editor styles */
+  .ProseMirror {
+    padding: 2rem;
+    padding-left: 3rem;
+    width: 50vw;
+    height: 50vh;
+    font-size: medium;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+ 
