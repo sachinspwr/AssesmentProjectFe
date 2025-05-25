@@ -5,6 +5,7 @@ import { questionProfile } from './profiles/question.profile';
 import { sharedProfile } from './profiles/shared.profile';
 import { userProfile } from './profiles/user.profile';
 import { subscriptionProfile } from './profiles/subscription.profile';
+import { tenantProfile } from './profiles/tenant.profile';
 
 // ✅ Configure logger FIRST, before anything else
 const mapper = createMapper({ strategyInitializer: classes() });
@@ -16,6 +17,7 @@ const mapperProfiles = (mapper: Mapper) => {
   addProfile(mapper, sharedProfile);
   addProfile(mapper, questionProfile);
   addProfile(mapper, testProfile);
+  addProfile(mapper, tenantProfile);
 };
 
 mapperProfiles(mapper);

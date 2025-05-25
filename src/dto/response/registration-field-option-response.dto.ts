@@ -9,6 +9,7 @@ export class TestRegistrationFieldOptionResponseDTO {
     placeholder?: string;
     isRequired?: boolean;
     options?:string;
+    disabled?:boolean;
 }
 
 type selectOption={

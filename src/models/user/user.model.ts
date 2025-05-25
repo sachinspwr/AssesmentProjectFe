@@ -15,4 +15,5 @@ export class User {
   roles!: string[];
   permissions!: string[];
   subscriptions!: UserSubscription[]
+  tenantId?: string;
 }

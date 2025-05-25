@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { QuestionResponseDTO } from '../../../dto/response/question-response.dto';
 import VTable, { VTableColumn } from '../table/v-table.organism';
 import { useNavigate } from 'react-router-dom';
@@ -11,9 +11,10 @@ type QuestionListProps = {
   onImportClick?: () => void;
   onDeleteSuccess: () => void;
   fetchMore?: (page: number) => void;
+  noDataMessage?: string;
 };
 
-function QuestionList({ data, loading, onImportClick, onDeleteSuccess }: QuestionListProps) {
+function QuestionList({ data, loading, onImportClick, onDeleteSuccess, noDataMessage }: QuestionListProps) {
   const navigate = useNavigate();
   const [deleteQuestion] = useDeleteQuestionMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,7 +62,7 @@ function QuestionList({ data, loading, onImportClick, onDeleteSuccess }: Questio
         columns={columns}
         itemsPerPage={8}
         loading={loading}
-        emptyState={<div>No Questions Found!</div>}
+        emptyState={<div>{loading ? '' : (noDataMessage || 'No Questions Found!')}</div>}
         getId={(x) => x.id}
         actionsConfig={[
           {

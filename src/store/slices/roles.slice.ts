@@ -51,21 +51,21 @@ export const rolesApiSlice = createApi({
 
     fetchRoleById: builder.query<RolesResponseDTO, string>({
       query: (id) => ({
-      url: `/roles/${id}`,
-      method: 'GET',
+        url: `/roles/${id}`,
+        method: 'GET',
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
     }),
-    onQueryStarted: async (_, { queryFulfilled }) => {
-      try {
-        await queryFulfilled;
-      } catch (err) {
-        toast.error(handleApiError(err));
-        throw err;
-      }
-    },
-  }),
-    
 
-    addRoles: builder.mutation<RolesResponseDTO,{ newRole: RolesRequestDTO }>({
+
+    addRoles: builder.mutation<RolesResponseDTO, { newRole: RolesRequestDTO }>({
       query: ({ newRole }) => ({
         url: `/roles`,
         method: 'POST',
@@ -75,30 +75,37 @@ export const rolesApiSlice = createApi({
         await handleQueryResponse(arg, api, 'Role Added Successfully!');
       },
     }),
-    
-    updateRole: builder.mutation<RolesResponseDTO,{ id: string; data: RolesRequestDTO }
-        >({
-          query: ({ id, data }) => ({
-            url: `/roles/${id}`,
-            method: 'PUT',
-            body: data,
-          }),
-          onQueryStarted: async (arg, api) => {
-            await handleQueryResponse(arg, api, 'Role Updated Successfully!');
-          },
-        }),
-    
-        deleteRole: builder.mutation<boolean, { id: string }>({
-          query: ({ id }) => ({
-            url: `/roles/${id}`,
-            method: 'DELETE',
-          }),
-          onQueryStarted: async (arg, api) => {
-            await handleQueryResponse(arg, api, 'Role Deleted Successfully!');
-          },
-        }),
+
+    updateRole: builder.mutation<RolesResponseDTO, { id: string; data: RolesRequestDTO }
+    >({
+      query: ({ id, data }) => ({
+        url: `/roles/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Role Updated Successfully!');
+      },
+    }),
+
+    deleteRole: builder.mutation<boolean, { id: string }>({
+      query: ({ id }) => ({
+        url: `/roles/${id}`,
+        method: 'DELETE',
+      }),
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Role Deleted Successfully!');
+      },
+    }),
   }),
 });
 
 // Export hooks for usage in functional components
-export const { useFetchRolesQuery, useAddRolesMutation, useUpdateRoleMutation, useDeleteRoleMutation, useFetchRoleByIdQuery } = rolesApiSlice;
+export const {
+  useFetchRolesQuery,
+  useAddRolesMutation,
+  useUpdateRoleMutation,
+  useDeleteRoleMutation,
+  useFetchRoleByIdQuery
+} = rolesApiSlice;
+

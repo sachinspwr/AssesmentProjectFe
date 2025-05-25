@@ -1,11 +1,13 @@
 // components/profile-information-section.component.tsx
-import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VDynamicForm } from '@components/organisms/dynamic-form/v-dynamic-form.organism';
 import { useLoggedInUser } from '@hooks';
 import { VFormFieldData, VFormFields } from '@types';
 import { UserProfileHeader } from './user-profile-header.organism';
 import toast from 'react-hot-toast';
 import { useUpdateUserMutation } from 'store/slices/account.slice';
+import { VTitleWithIcon } from '@components/molecules/icon-title/v-title-with-icon.mol';
+import { MdArrowBack } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileInformationSectionProps {
   user: ReturnType<typeof useLoggedInUser>;
@@ -16,6 +18,7 @@ interface ProfileInformationSectionProps {
 
 export function ProfileInformationSection({ user, formConfig, initialValues }: ProfileInformationSectionProps) {
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (formData: VFormFieldData) => {
     if (!user || !user.id) {
@@ -36,7 +39,7 @@ export function ProfileInformationSection({ user, formConfig, initialValues }: P
   return (
     <div>
       <div className="pb-6">
-        <VTypography as="h3">Profile Information</VTypography>
+        <VTitleWithIcon as="h3" icon={MdArrowBack} onClick={() => navigate('/dashboard')}>Profile Information</VTitleWithIcon>
       </div>
       <UserProfileHeader user={user} />
       <VDynamicForm

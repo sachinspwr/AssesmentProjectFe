@@ -17,6 +17,7 @@ type VRadioButtonGroupProps = DefaultProps & {
   optionContainerClasses?: string;
   labelClasses?: string;
   className?: string;
+  disabled?: boolean;
   onChange: (value: string) => void;
 };
 
@@ -30,6 +31,7 @@ function VRadioButtonGroup({
   optionContainerClasses = '',
   labelClasses = '',
   className = '',
+  disabled=false,
   onChange,
 }: VRadioButtonGroupProps) {
   const [selectedValue, setSelectedValue] = useState<string>(defaultValue); // Use defaultValue for initial selection
@@ -59,6 +61,7 @@ function VRadioButtonGroup({
               type="radio"
               name={name}
               value={option.value}
+              disabled={disabled}
               checked={selectedValue === option.value}
               onChange={() => handleChange(option.value)} // Update selected value on change
               className={`!w-4 !h-4 !p-0 !rounded-full border-2 border-theme-primary focus:ring-0 ${selectedValue === option.value ? '!border-theme-primary' : '!border-theme-default'} ${className}`}

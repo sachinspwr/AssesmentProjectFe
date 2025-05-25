@@ -18,4 +18,5 @@ export enum MatchOn {
   LIKE = 'LIKE',
   IN = 'IN',
   VALUE = "VALUE",
+  BETWEEN = "BETWEEN",
 }

@@ -29,22 +29,19 @@ function ConfigureInstructions({
 
   const instructions = useMemo(() => {
     if (!instructionsFetched) return [];
-  
     return instructionsFetched.map((instructionDto) =>
       mapper.map(instructionDto, TestInstructionOptionResponseDTO, TestInstructionOption)
     );
   }, [instructionsFetched]);
 
-  // Get recommended instruction objects (filter by valueType 'boolean' and its value being true)
   const recommendedInstructions = useMemo(() => {
     if (!Array.isArray(instructions)) return [];
-    return instructions.filter((instruction) => instruction.valueType === 'boolean' && instruction.value);
+    return instructions.filter((instruction) => instruction?.isRecommended);
   }, [instructions]);
 
-  // Handle apply recommended checkbox change
   const handleApplyRecommendedChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const isChecked = (event.target as HTMLInputElement).checked;
-    
+
     if (isChecked) {
       // Store the selected instructions in previousSelection for undoing later
       setPreviousSelection(selectedInstructions);
@@ -79,7 +76,7 @@ function ConfigureInstructions({
 
   // Check if an instruction is recommended
   const isRecommended = (instruction: TestInstructionOption): boolean => {
-    return instruction.valueType === 'boolean' && Boolean(instruction.value);
+    return instruction.isRecommended ?? false;
   };
 
   // Group instructions by category
@@ -105,7 +102,7 @@ function ConfigureInstructions({
     return <VLoader />;
   }
 
-  if (!isLoading && !Array.isArray(instructions) || instructions?.length === 0) {
+  if ((!isLoading && !Array.isArray(instructions)) || instructions?.length === 0) {
     return <VTypography>No test instructions available.</VTypography>;
   }
 
@@ -116,19 +113,19 @@ function ConfigureInstructions({
           Instructions
         </VTypography>
 
-        <VTypography as="p">
-          Configure rules and regulations for your assessment
-        </VTypography>
+        <VTypography as="p">Configure rules and regulations for your assessment</VTypography>
 
         {/* Apply Recommended Instructions Checkbox */}
-        <VCheckbox
-          name="apply-recommended"
-          label="Apply recommended instructions"
-          value={'false'}
-          checked={applyRecommended}
-          onChange={(v, event) => handleApplyRecommendedChange(event!)}
-          wrapperClasses="ml-4 mt-4"
-        />
+        {recommendedInstructions?.length > 0 && (
+          <VCheckbox
+            name="apply-recommended"
+            label="Apply recommended instructions"
+            value={'false'}
+            checked={applyRecommended}
+            onChange={(v, event) => handleApplyRecommendedChange(event!)}
+            wrapperClasses="ml-4 mt-4"
+          />
+        )}
       </div>
 
       {isLoading ? (

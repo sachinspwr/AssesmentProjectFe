@@ -111,13 +111,6 @@ export function useAccountSettingsForm() {
             fields: [
                 {
                     type: 'custom',
-                    name: 'cancel',
-                    label: 'Cancel',
-                    position: '13 8 2',
-                    customContent: <VButton variant='secondary'>Close</VButton>
-                },
-                {
-                    type: 'custom',
                     name: 'saveChanges',
                     label: 'Save Changes',
                     position: '13 10 3',

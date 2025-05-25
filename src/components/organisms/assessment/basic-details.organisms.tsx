@@ -20,9 +20,10 @@ type AssessmentBasicDetailsProps = {
   test?: Test;
   renderMode: 'create' | 'edit';
   onComplete: OnCompleteHandler<Test>;
+  onTestQuestionFormatChange: (format: string) => void;
 };
 
-function AssessmentBasicDetails({ test, renderMode, onComplete }: AssessmentBasicDetailsProps) {
+function AssessmentBasicDetails({ test, renderMode, onComplete, onTestQuestionFormatChange }: AssessmentBasicDetailsProps) {
   const formRef = useRef<VDynamicFormHandle>(null);
   const exitRef = useRef<boolean>(false);
   const { data: experienceLevels, isLoading: isFetchingExperience } = useFetchExperienceLevelQuery();
@@ -51,6 +52,8 @@ function AssessmentBasicDetails({ test, renderMode, onComplete }: AssessmentBasi
       description: test.description,
       cutoffScorePercentage: test.cutoffScorePercentage?.toString(),
       isPublic: test.isPublic ?? false,
+      randomizeQuestions: test.randomizeQuestions ?? false,
+      hasNegativeMarking: test.hasNegativeMarking ?? false,
       status: test.status,
       testQuestionFormat:
         Object.entries(TestQuestionFormat).find(([, value]) => value === test.testQuestionFormat)?.[0] ?? '',
@@ -58,12 +61,15 @@ function AssessmentBasicDetails({ test, renderMode, onComplete }: AssessmentBasi
     } as FormFieldData;
   }, [test]);
 
+console.log('test.randomizeQuestions:', test?.randomizeQuestions);
+
   const handleSave = (isExit?: boolean) => {
     exitRef.current = !!isExit;
     formRef.current?.submit();
   };
 
   const handleFormSubmit = async (formData: VFormFieldData) => {
+    console.log('Saving form data:', formData);
     try {
       const requestData = {
         ...formData,
@@ -120,8 +126,12 @@ function AssessmentBasicDetails({ test, renderMode, onComplete }: AssessmentBasi
           label: 'Test Question Format',
           type: 'select',
           options: questionFormatOptions,
-
           placeholder: 'Select format',
+          onChange: (value) => {
+            onTestQuestionFormatChange(value);
+            console.log('selectedTestFormat:', value);
+
+          },
           required: true,
           position: '3 1 6',
         },
@@ -144,7 +154,7 @@ function AssessmentBasicDetails({ test, renderMode, onComplete }: AssessmentBasi
       position: '4 1 12',
       fields: [
         {
-          name: 'randomiseQuestion',
+          name: 'randomizeQuestions',
           label: 'Randomise Questions',
           type: 'switch',
           position: '5 1 4',

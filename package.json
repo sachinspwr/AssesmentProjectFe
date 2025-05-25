@@ -36,6 +36,7 @@
     "html2canvas": "^1.4.1",
     "install": "^0.13.0",
     "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "monaco-editor": "^0.52.0",
     "npm": "^11.2.0",
     "papaparse": "^5.4.1",

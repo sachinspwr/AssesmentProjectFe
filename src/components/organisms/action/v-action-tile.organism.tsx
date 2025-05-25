@@ -12,9 +12,10 @@ export function VActionTile({ title, imageSrc, onClick, className = '' }: VActio
     <div 
       className={`
         flex flex-col items-center justify-center
-        p-4 border border-theme-default rounded-xl
+        p-4 border border-theme-primary rounded-xl
         shadow-none hover:shadow-sm
         transition-all duration-200
+        w-[200px] h-[200px]
         ${onClick ? 'cursor-pointer hover:scale-[1.02]' : ''}
         ${className}
       `}
@@ -25,7 +26,7 @@ export function VActionTile({ title, imageSrc, onClick, className = '' }: VActio
         alt={title} 
         className="w-16 h-16 object-contain mb-3" 
       />
-      <span className="text-center font-medium text-theme-primary">
+      <span className="text-center font-medium text-theme-brand">
         {title}
       </span>
     </div>

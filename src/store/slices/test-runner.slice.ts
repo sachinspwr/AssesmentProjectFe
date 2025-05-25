@@ -24,8 +24,8 @@ interface SectionState {
 }
 
 export interface ParticipantResponseDTO {
-  id: String;
-  userId: String;
+  id: string;
+  userId?: string;
 }
 
 interface TestRunnerState {
@@ -34,7 +34,6 @@ interface TestRunnerState {
   participantId: string | null;
   sections: SectionState[];
 }
-
 
 //   sectionId,
 //   currentIndex,
@@ -95,7 +94,7 @@ export const testRunnerSlice = createSlice({
         });
       }
     },
-    
+
     setCurrentQuestionIndexForSection: (state, action: PayloadAction<{ sectionId: string; index: number }>) => {
       const { sectionId, index } = action.payload;
       const section = state.sections.find((s) => s.sectionId === sectionId);
@@ -123,10 +122,10 @@ export const testRunnerSlice = createSlice({
           type,
           answer: [...new Set([...existingOptions, ...answer])],
         };
-        console.log("in mcq",section.userAnswers[questionId])
+        console.log('in mcq', section.userAnswers[questionId]);
       } else {
         section.userAnswers[questionId] = { type, answer };
-        console.log("in other que",section.userAnswers[questionId])
+        console.log('in other que', section.userAnswers[questionId]);
       }
     },
     nextQuestion: (state, action: PayloadAction<{ sectionId: string; totalQuestions: number }>) => {
@@ -169,7 +168,14 @@ export const testRunnerApiSlice = createApi({
       query: (userId) => ({ url: `/participants/${userId}`, method: 'GET' }),
       onQueryStarted: handleQueryResponse,
     }),
-    
+    createParticipantByUserId: builder.mutation<ParticipantResponseDTO, { userId: string }>({
+      query: ({ userId }) => ({
+        url: `/participants`,
+        method: 'POST',
+        body: { userId, status: 'Active' },
+      }),
+    }),
+
     submitAnswer: builder.mutation<unknown, void>({
       queryFn: async (_arg, api, _extraOptions, axiosBaseQuery) => {
         const state = api.getState() as RootState;
@@ -188,14 +194,11 @@ export const testRunnerApiSlice = createApi({
 
         const currentQuestionIndex = currentSection.currentQuestionIndex;
 
-
         const currentSectionFromState = testDetails.testSections?.find(
           (section: any) => section.id === selectedSectionId
         );
-        
+
         const currentQuestion = currentSectionFromState?.questions?.[currentQuestionIndex] ?? null;
-        // const currentQuestion = currentSection?.questions?.[currentQuestionIndex] ?? null;
-        // const currentQuestion = testDetails.testSections?.find((section: any) => section.id === selectedSectionId).questions[currentQuestionIndex] ?? null
 
         if (!currentQuestion) {
           return { error: { status: 400, data: 'Question not found' } };
@@ -229,11 +232,11 @@ export const testRunnerApiSlice = createApi({
         const state = _queryApi.getState() as RootState;
         const testId = state.testRunner.testDetails?.id;
         const participantId = state.testRunner.participantId;
-    
+
         if (!testId || !participantId) {
           return { error: { status: 400, data: 'Missing testId or participantId' } };
         }
-    
+
         const result = await axiosBaseQuery({
           url: `/tests/${testId}/submit`,
           method: 'POST',
@@ -242,17 +245,20 @@ export const testRunnerApiSlice = createApi({
             participantId,
           },
         });
-    
+
         return result;
       },
       onQueryStarted: handleQueryResponse,
     }),
-    
-    
   }),
 });
 
-export const { useGetParticipantByUserIdQuery, useSubmitAnswerMutation,useSubmitTestByUserMutation } = testRunnerApiSlice;
+export const {
+  useGetParticipantByUserIdQuery,
+  useSubmitAnswerMutation,
+  useSubmitTestByUserMutation,
+  useCreateParticipantByUserIdMutation,
+} = testRunnerApiSlice;
 
 export const {
   setTestDetails,

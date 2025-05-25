@@ -6,6 +6,8 @@ class TestSectionResponseDTO {
   testId?: string;
   isPublic?: boolean;
   cutoffScore?: number;
+  score?:number;
+  outOf?:number;
   description!: string;
   questions?: QuestionResponseDTO[];
   question?: QuestionResponseDTO[]; 

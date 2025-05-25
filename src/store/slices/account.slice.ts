@@ -37,7 +37,7 @@ const accountSlice = createSlice({
         };
       }
     },
-    }
+  }
 });
 
 export const selectAccount = (state: RootState) => state.account;
@@ -129,11 +129,12 @@ export const accountApiSlice = createApi({
     }),
 
     deactivateUser: builder.mutation<ApiResponse, string>({
-      query: () => ({
+      query: (password) => ({
         url: `/account/deactive`,
         method: 'POST',
+        body: { password },
       }),
-      onQueryStarted: async (userId, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (password, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled;
           toast.success('Account Deleted successfully');

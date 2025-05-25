@@ -7,5 +7,6 @@ export class TestRegistrationFieldOption extends Audit {
     placeholder!: string;
     options!: string;
     isRequired!: boolean;
+    disabled?:boolean;
   };
   

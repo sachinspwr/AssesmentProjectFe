@@ -20,8 +20,8 @@ function VProgressBar({ label, completed, outOf }: ProgressBarProps) {
     return (
       <div>
         <div className="flex justify-between mb-1">
-          <VTypography className="text-sm font-semibold">{label}</VTypography>
-          <VTypography color='muted' className="text-sm text-theme-secondary">{percentage.toFixed(0)}% ({completed}/{outOf})</VTypography>
+          <VTypography className="!text-xs font-semibold">{label}</VTypography>
+          <VTypography color='muted' className="!text-xs text-theme-secondary">{percentage.toFixed(0)}% ({completed}/{outOf})</VTypography>
         </div>
         <div className="h-2 bg-theme-muted rounded">
           <div className={`h-full ${progressColor} rounded`} style={{ width: `${percentage}%` }} />

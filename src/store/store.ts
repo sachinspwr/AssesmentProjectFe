@@ -34,8 +34,9 @@ import { testResultApiSlice } from './slices/test-result.slice';
 import { articlesApiSlice } from './slices/articles.slice';
 import rolesReducer, { rolesApiSlice } from './slices/roles.slice';
 import fieldsReducer, { registrationFieldsApiSlice } from './slices/registration-fields.slice';
-import tenantsReducer, { tenantsApiSlice } from './slices/tenant.slice';
+import tenantReducer, { tenantsApiSlice } from './slices/tenants.slice';
 import permissionsReducer, { permissionsApiSlice } from './slices/permissions.slice';
+import tenantTeamReducer, { tenantTeamApi } from './slices/tenant-team.slice';
 
 /* eslint-disable no-underscore-dangle */
 export const store = configureStore({
@@ -63,8 +64,9 @@ export const store = configureStore({
     users: usersReducer,
     fields: fieldsReducer,
     roles: rolesReducer,
-    tenants: tenantsReducer,
+    tenant: tenantReducer,
     permissions: permissionsReducer,
+    tenantTeam: tenantTeamReducer,
     [accountApiSlice.reducerPath]: accountApiSlice.reducer,
     [authApiSlice.reducerPath]: authApiSlice.reducer,
     [questionsApiSlice.reducerPath]: questionsApiSlice.reducer,
@@ -92,12 +94,13 @@ export const store = configureStore({
     [articlesApiSlice.reducerPath]: articlesApiSlice.reducer,
     [ticketLogsApiSlice.reducerPath]: ticketLogsApiSlice.reducer,
     [usersApiSlice.reducerPath]: usersApiSlice.reducer,
-    [testResultApiSlice.reducerPath]:testResultApiSlice.reducer,
+    [testResultApiSlice.reducerPath]: testResultApiSlice.reducer,
     [codeEvaluationApiSlice.reducerPath]: codeEvaluationApiSlice.reducer,
     [registrationFieldsApiSlice.reducerPath]: registrationFieldsApiSlice.reducer,
     [rolesApiSlice.reducerPath]: rolesApiSlice.reducer,
     [tenantsApiSlice.reducerPath]: tenantsApiSlice.reducer,
-    [permissionsApiSlice.reducerPath]: permissionsApiSlice.reducer
+    [permissionsApiSlice.reducerPath]: permissionsApiSlice.reducer,
+    [tenantTeamApi.reducerPath]: tenantTeamApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -134,9 +137,10 @@ export const store = configureStore({
       registrationFieldsApiSlice.middleware,
       rolesApiSlice.middleware,
       tenantsApiSlice.middleware,
-      permissionsApiSlice.middleware
+      permissionsApiSlice.middleware,
+      tenantTeamApi.middleware,
     ),
-    devTools: process.env.NODE_ENV !== 'production'
+  devTools: process.env.NODE_ENV !== 'production'
 });
 /* eslint-enable */
 export type RootState = ReturnType<typeof store.getState>;

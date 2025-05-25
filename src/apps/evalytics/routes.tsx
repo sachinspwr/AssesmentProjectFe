@@ -1,8 +1,9 @@
 import { Navigate, Route } from 'react-router-dom';
 import React, { lazy } from 'react';
 import { EvalyticsLayout } from './layout';
+import ReviewDetailedResultPage from './pages/review-detailed-result.page';
+const ReviewResultPage = lazy(() => import('./pages/review-result.page'));
 
-const ReviewResultPage = lazy(() => import('./pages/review-result.component'));
 
 export const EvalyticsRoutes = (
   <Route
@@ -15,5 +16,6 @@ export const EvalyticsRoutes = (
   >
     <Route index element={<Navigate to="review" replace />} />
     <Route path="review" element={<ReviewResultPage />} />
+    <Route path='review-result' element={<ReviewDetailedResultPage/>} />
   </Route>
 );

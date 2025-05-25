@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchQuestionMutation } from 'store/slices/questions.slice';
 import QuestionsTable from './questions-table.organism';
 import { SectionInputFields } from './section-input-fields.organism';
@@ -6,7 +6,7 @@ import { VButton, VCard } from '@components/atoms';
 import { useCreateTestSectionMutation, useUpdateTestSectionMutation } from 'store/slices/test-section.slice';
 import { TestSectionRequestDTO } from '@dto/request/test-section-request.dto';
 import toast from 'react-hot-toast';
-import { SectionQuestionAdvanceFilter } from './section-question-filter.organism';
+import { AdvancedQuestionFilter } from './advanced-question-filter.organism';
 import { QuestionRequestDTO, SearchRequestDTO } from '@dto/request';
 import { VToggle } from '@components/organisms/toggle/v-toggle.organism';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
@@ -14,25 +14,33 @@ import { SectionStats } from './section-stat.organism';
 import { Question, TestSection } from 'models';
 import { mapper } from 'mapper';
 import { QuestionResponseDTO } from '@dto/response';
+import { VLoader } from '@components/molecules/index';
+import { VFilterRef } from '@components/organisms/filter/v-filter.organism';
 
 type SectionFormProps = {
   testId: string;
   testSection?: TestSection;
   onCancel: () => void;
   onComplete: (section: TestSection) => void;
+  testQuestionFormat: string;
 };
 
-function SectionForm({ testId, testSection, onCancel, onComplete }: SectionFormProps) {
+function SectionForm({ testId, testSection, onCancel, onComplete, testQuestionFormat }: SectionFormProps) {
   const [sectionDetails, setSectionDetail] = useState<TestSection>(testSection ?? new TestSection());
   const [createTestSection, { isLoading: isCreatingSection }] = useCreateTestSectionMutation();
   const [updateTestSection, { isLoading: isUpdatingSection }] = useUpdateTestSectionMutation();
   const [searchQuestion, { data: paginationResponse, isLoading: isSearching }] = useSearchQuestionMutation();
+  const [hasSearched, setHasSearched] = useState(false);
+  const filterRef = useRef<VFilterRef>(null);
+  const filterButtonRef = useRef<HTMLButtonElement>(null);
+  
 
   const questions = (paginationResponse?.data || []).map((question) =>
     mapper.map(question, QuestionResponseDTO, Question)
   );
 
   const handleFilterApply = (searchRequest: SearchRequestDTO<QuestionRequestDTO>) => {
+    setHasSearched(true);
     searchQuestion(searchRequest);
   };
 
@@ -73,6 +81,13 @@ function SectionForm({ testId, testSection, onCancel, onComplete }: SectionFormP
   };
 
   const hasSelectedQuestions = (sectionDetails?.questions ?? []).length > 0;
+  
+
+  const handleFilterReset = () => {
+    setHasSearched(false);
+    searchQuestion(SearchRequestDTO.default([]));
+  };
+  
 
   return (
     <div className="flex flex-col">
@@ -81,16 +96,19 @@ function SectionForm({ testId, testSection, onCancel, onComplete }: SectionFormP
       {/* Available Questions Table */}
       <VToggle title={<VTypography as="h5">Add Questions</VTypography>} defaultOpen={!hasSelectedQuestions}>
        <VCard className='shadow-sm'>
-       <SectionQuestionAdvanceFilter onFilterApply={handleFilterApply} />
-        {questions.length > 0 && (
+       <AdvancedQuestionFilter onFilterApply={handleFilterApply} onReset={handleFilterReset} selectedTestFormat={testQuestionFormat} filterRef={filterRef} filterButtonRef={filterButtonRef}/>
+        {isSearching ? (
+          <VLoader size="md" />
+        ) : questions.length > 0 ? (
           <QuestionsTable
             mode="select"
             questions={questions}
             selectedQuestions={sectionDetails?.questions ?? []}
             onSelect={handleAddQuestions}
-            loading={isSearching}
           />
-        )}
+        ) : hasSearched ? (
+          <div className="text-center text-gray-500 py-8">No results found</div>
+        ) : null }
        </VCard>
       </VToggle>
 

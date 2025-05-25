@@ -1,11 +1,10 @@
 import { BaseDTO } from '@dto/base.dto';
-import { QuestionResponseDTO } from './question-response.dto';
 
 export class TestQuestionAnswerResponseDTO extends BaseDTO {
 
   testId!: string;
 
-  questionId!: number;
+  questionId!: string;
 
   participantId!:string;
 

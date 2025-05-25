@@ -38,10 +38,25 @@ const ConfigureRegistrationFields = forwardRef<RegistrationFieldsRef, Assessment
       setLocalSelectedFields(selectedFields);
     }, [selectedFields]);
 
+    useEffect(() => {
+      if (registrationFields.length > 0) {
+        const requiredFields = registrationFields.filter((f) => f.isRequired);
+        const mergedFields = [
+          ...requiredFields,
+          ...selectedFields.filter((sf) => !requiredFields.some((rf) => rf.id === sf.id)),
+        ];
+
+        setLocalSelectedFields(mergedFields);
+        setSelectedFields(mergedFields);
+      }
+    }, [registrationFields]);
+
     const handleCheckboxChange = (field: TestRegistrationFieldOption, checked: boolean) => {
+      if (field.disabled) return;
+
       const newSelection = checked
         ? [...localSelectedFields, field]
-        : localSelectedFields.filter((f) => f.id !== field.id);
+        : localSelectedFields.filter((f) => f.id !== field.id || f.isRequired);
 
       setLocalSelectedFields(newSelection);
       setSelectedFields(newSelection);
@@ -58,13 +73,11 @@ const ConfigureRegistrationFields = forwardRef<RegistrationFieldsRef, Assessment
       <div>
         <div className="flex flex-col gap-5">
           <VTypography as="h3">Registration Fields for Candidates</VTypography>
-          <VTypography as="p">
-            Select the fields to show for candidates during assessment registration.
-          </VTypography>
+          <VTypography as="p">Select the fields to show for candidates during assessment registration.</VTypography>
         </div>
         <div className="mt-4 my-5">
           {isLoading ? (
-            <VLoader size="md" classNames='my-8' />
+            <VLoader size="md" classNames="my-8" />
           ) : Array.isArray(registrationFields) && registrationFields.length > 0 ? (
             <div className="mt-4 my-5 grid grid-cols-4 gap-4">
               {registrationFields.map((field) => (
@@ -75,6 +88,7 @@ const ConfigureRegistrationFields = forwardRef<RegistrationFieldsRef, Assessment
                   value={field.id}
                   checked={localSelectedFields.some((f) => f.id === field.id)}
                   onChange={(_, __, checked) => handleCheckboxChange(field, checked ?? false)}
+                  disabled={field.disabled}
                 />
               ))}
             </div>

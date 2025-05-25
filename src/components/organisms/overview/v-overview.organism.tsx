@@ -16,7 +16,7 @@ function VOverview({
   return (
     <>
       <div className="w-full mx-auto rounded-lg border border-theme-default">
-        <div className='flex justify-between items-center p-4'>
+        <div className='flex justify-between items-center p-5'>
         <div className={`text-md font-medium tracking-wider text-theme-primary ${titleClassName}`}>{title}</div>
         {overViewLableChildren}
         </div>

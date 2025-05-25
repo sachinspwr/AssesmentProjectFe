@@ -25,6 +25,8 @@ class UserResponseDTO {
   permissions?: string[];
 
   subscriptions?: UserSubscription[]
+
+  tenantId?: string;
 }
 
 export { UserResponseDTO };

@@ -31,12 +31,12 @@ function ConfigureSettings({
   const recommendedSettingIds = useMemo(() => {
     if (!Array.isArray(testSettingsOption)) return [];
     return testSettingsOption
-      .filter((setting) => setting.valueType === 'boolean' && setting.value === true)
+      .filter((setting) => setting?.isRecommended)
       .map((setting) => setting.id);
   }, [testSettingsOption]);
 
   const isRecommended = (setting: TestSettingOption): boolean => {
-    return setting.valueType === 'boolean' && Boolean(setting.value);
+    return setting?.isRecommended ?? false;
   };
 
   const groupedSettings = useMemo(() => {

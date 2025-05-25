@@ -104,6 +104,7 @@ function AssessmentSection({ tabRef, test, onComplete }: AssessmentSectionProps)
           testSection={selectedSection}
           onCancel={() => setActionMode('view')}
           onComplete={handleSectionAdded}
+          testQuestionFormat={test!.testQuestionFormat}
         />
       )}
 

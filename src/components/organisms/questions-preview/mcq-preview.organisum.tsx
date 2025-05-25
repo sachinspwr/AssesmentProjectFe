@@ -1,86 +1,165 @@
-import { VButton } from '@components/atoms';
+import { useMemo, useState } from 'react';
+import { VButton, VICon } from '@components/atoms';
 import { VCheckboxGroup } from '@components/molecules/checkbox-group/v-checkbox-group.mol';
+import { VRadioButtonGroup } from '@components/molecules/radio-button-group/v-radio-group.mol'; // Assuming this exists
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
-import { useState } from 'react';
 import { VFormFieldData } from '@types';
 import { VModal } from '../modal/v-modal.organism';
+import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 
 type MCQPreviewProps = {
   formData: VFormFieldData;
+  mode?: 'preview' | 'review';
+  selectedAnswers?: string[];
+  correctAnswers?: string[];
+  selectionType?: 'single' | 'multiple'; // NEW
 };
 
-function MCQPreview({ formData }: MCQPreviewProps) {
-  const options = formData.answerOptions
-    ? (formData.answerOptions as string).split(',').map((option: string) => ({
-        label: option.trim(), // Trim whitespace
-        value: option.trim(),
-      }))
-    : [];
-
+function MCQPreview({
+  formData,
+  mode = 'preview',
+  selectedAnswers = [],
+  correctAnswers = [],
+  selectionType = 'multiple', // default to checkbox
+}: MCQPreviewProps) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showGuidelines, setShowGuidelines] = useState(false);
 
-  const handleOptionChange = (values: string[]) => {
-    setSelectedValues(values);
+  const parsedOptions = useMemo(() => {
+    const opts = (formData.answerOptions as string)?.split(',') || [];
+
+    return opts.map((optRaw: string) => {
+      const opt = optRaw.trim();
+
+      let label: string | JSX.Element = opt;
+
+      if (mode === 'review') {
+        const isCorrect = correctAnswers.includes(opt);
+        const isSelected = selectedAnswers.includes(opt);
+
+        let colorClass = '';
+        if (isCorrect) {
+          colorClass = 'text-theme-positive'; // Green
+        } else if (isSelected && !isCorrect) {
+          colorClass = 'text-theme-negative'; // Red
+        }
+
+        label = <span className={`${colorClass} ${isCorrect ? 'font-semibold' : ''}`}>{opt}</span>;
+      }
+
+      return {
+        label,
+        value: opt,
+      };
+    }) as { label: string | JSX.Element; value: string }[];
+  }, [formData, correctAnswers, selectedAnswers, mode]);
+
+  const handleOptionChange = (values: string[] | string) => {
+    const normalized = Array.isArray(values) ? values : [values];
+    setSelectedValues(normalized);
   };
 
   const handleSubmit = () => {
     setIsModalOpen(true);
     console.log('Selected Options:', selectedValues);
-    // Handle submission logic here
   };
 
+  const displayValues = mode === 'preview' ? selectedValues : selectedAnswers;
+
+  const hasGuidelines = formData.answerExplanation && formData.answerExplanation !== 'NA';
+
   return (
-    <><div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-2.5">
-        <VTypography as="h4">1. {formData.questionText as string}</VTypography>
+    <>
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2.5">
+          <VTypography as="h4">1. {formData.questionText as string}</VTypography>
 
-        {formData.questionExplanation && formData.questionExplanation !== 'NA' && (
-          <VTypography as="small">{formData.questionExplanation as string}</VTypography>
-        )}
-      </div>
+          {formData.questionExplanation && formData.questionExplanation !== 'NA' && (
+            <VTypography as="small" className="text-theme-secondary">
+              {formData.questionExplanation as string}
+            </VTypography>
+          )}
+        </div>
 
-      <div className="border-b theme-border-default"></div>
+        <div className="border-b theme-border-default"></div>
 
-      <VTypography as="h5">Select options</VTypography>
-
-      <VCheckboxGroup
-        name="mcq"
-        direction="vertical"
-        selectedValues={selectedValues}
-        options={options}
-        onChange={handleOptionChange} />
-
-      <VButton variant="primary" size="md" className="!w-[74px]" onClick={() => handleSubmit()}></VButton>
-
-      {(formData.answerExplanation as string) && (formData.answerExplanation as string) !== 'NA' && (
-        <>
-          <div className="border-b theme-border-default"></div>
-          <div className="flex flex-col gap-2.5">
-            <VTypography as="h5">Interview Guidelines</VTypography>
-            <VTypography as="small">{formData.answerExplanation as string}</VTypography>
-          </div>
-        </>
-      )}
-    </div>
-    
-    <VModal
-      title="Hi User"
-      isOpen={isModalOpen}
-      showFooter={false}
-      onClose={() => setIsModalOpen(false)}
-    >
-      <div className="flex flex-col gap-2.5">
-        {selectedValues.length > 0 ? (
-          <VTypography as="p">You have selected : {selectedValues.join(', ')}</VTypography>
+        {mode === 'preview' ? (
+          <VTypography as="h6">Select option</VTypography>
         ) : (
-          <VTypography as="p">No options selected</VTypography>
+          <VTypography as="h6">Selected option</VTypography>
+        )}
+
+        {selectionType === 'single' ? (
+          <VRadioButtonGroup
+            name="mcq-radio"
+            direction="vertical"
+            defaultValue={displayValues[0]}
+            options={parsedOptions as { label: string; value: string }[]} // 👈 Explicit cast
+            onChange={(val) => handleOptionChange(val)}
+            disabled={mode === 'review'}
+          />
+        ) : (
+          <VCheckboxGroup
+            name="mcq-checkbox"
+            direction="vertical"
+            selectedValues={displayValues}
+            options={parsedOptions}
+            onChange={handleOptionChange}
+            disabled={mode === 'review'}
+          />
+        )}
+
+        {mode === 'preview' && (
+          <VButton variant="primary" size="md" className="!w-[74px]" onClick={handleSubmit}>
+            Submit
+          </VButton>
+        )}
+
+        {/* Collapsible Interview Guidelines */}
+        {hasGuidelines && (
+          <>
+            <div className="border-b theme-border-default" />
+            <div className="flex flex-col gap-2.5">
+              {/* Header Row */}
+              <div className="flex items-center justify-between">
+                {/* Left Side Icon + Label */}
+                <div className="flex items-center gap-2">
+                  <VTypography as="h6">Interview Guidelines</VTypography>
+                </div>
+
+                {/* Toggle Button */}
+                <button
+                  onClick={() => setShowGuidelines((prev) => !prev)}
+                  className="flex items-center gap-1 text-theme-primary font-medium"
+                >
+                  <VICon icon={showGuidelines ? MdArrowDropUp : MdArrowDropDown} className="text-lg" />
+                </button>
+              </div>
+
+              {/* Collapsible Content */}
+              {showGuidelines && (
+                <VTypography as="small" className="text-theme-secondary">
+                  {formData.answerExplanation as string}
+                </VTypography>
+              )}
+            </div>
+          </>
         )}
       </div>
-    </VModal>
 
-    
-  </>
+      {mode === 'preview' && (
+        <VModal title="Hi User" isOpen={isModalOpen} showFooter={false} onClose={() => setIsModalOpen(false)}>
+          <div className="flex flex-col gap-2.5">
+            {selectedValues.length > 0 ? (
+              <VTypography as="p">You have selected : {selectedValues.join(', ')}</VTypography>
+            ) : (
+              <VTypography as="p">No options selected</VTypography>
+            )}
+          </div>
+        </VModal>
+      )}
+    </>
   );
 }
 

@@ -17,8 +17,8 @@ export const userSubscriptionApiSlice = createApi({
   baseQuery: axiosBaseQuery,
   endpoints: (builder) => ({
     fetchUserSubscriptions: builder.query<UserSubscriptionResponseDTO[], string>({
-      query: (userId) => ({
-        url: `/users/${userId}/subscriptions`,
+      query: (accountId) => ({
+        url: `/accounts/${accountId}/subscriptions`,
         method: 'GET',
       }),
       providesTags: (result): readonly SubscriptionTag[] =>
@@ -31,8 +31,8 @@ export const userSubscriptionApiSlice = createApi({
     }),
 
     fetchUserSubscriptionOrders: builder.query<UserSubscriptionOrderResponseDTO[], string>({
-      query: (userId) => ({
-        url: `/users/${userId}/subscriptions/orders`,
+      query: (accountId) => ({
+        url: `/accounts/${accountId}/subscriptions/orders`,
         method: 'GET',
       }),
       providesTags: (result): readonly SubscriptionTag[] =>
@@ -45,11 +45,11 @@ export const userSubscriptionApiSlice = createApi({
     }),
 
     fetchUserSubscriptionInvoice: builder.query<InvoiceResponseDTO, {
-      userId: string;
+      accountId: string;
       userSubscriptionId: string;
     }>({
-      query: ({ userId, userSubscriptionId }) => ({
-        url: `/users/${userId}/subscriptions/${userSubscriptionId}/invoice`,
+      query: ({ accountId, userSubscriptionId }) => ({
+        url: `/accounts/${accountId}/subscriptions/${userSubscriptionId}/invoice`,
         method: 'GET',
       }),
       onQueryStarted: handleQueryResponse,

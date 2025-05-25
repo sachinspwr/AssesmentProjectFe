@@ -7,4 +7,5 @@ export class TestSection {
   description?: string;
   cutoffScore?: number;
   questions?: Question[];
+  testQuestionFormat: string;
 }

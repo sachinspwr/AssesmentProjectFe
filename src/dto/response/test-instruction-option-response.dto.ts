@@ -11,7 +11,7 @@ export class TestInstructionOptionResponseDTO {
 
   description!: string;
 
-  isRecommended: boolean;
+  isRecommended!: boolean;
 
   isPublic: boolean;
 }

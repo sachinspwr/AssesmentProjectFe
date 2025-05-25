@@ -611,7 +611,7 @@ function QuestionForm({ initialValue, renderMode = 'create', isPreview, setIsPre
           onSubmit={handleSubmit}
         />
       ) : (
-        <ManageQuestionPreviewPage type={initialValue?.type as string} formData={initialValue} />
+        <ManageQuestionPreviewPage type={initialValue?.type as string} formData={initialValue} mode='preview'/>
       )}
     </>
   );

@@ -37,13 +37,13 @@ export function useAccountActions() {
                 toast.error('Please confirm you understand this action is irreversible');
                 return;
             }
-            if (!user?.id) {
-                toast.error('User information not available');
+            if (!formData.password) {
+                toast.error('Password is required to deactivate the account');
                 return;
             }
-            await deactivateUser(user.id).unwrap();
+            await deactivateUser(formData.password as string).unwrap(); // Pass the password instead of user.id
             setIsDeactivateModalOpen(false);
-            navigate('/sign-out')
+            navigate('/sign-out');
         } catch (error) {
             console.error('Account deletion failed:', error);
         }

@@ -1,2 +1,2 @@
-export * from './pages/review-result.component';
+export * from './pages/review-result.page';
 export * from './routes';

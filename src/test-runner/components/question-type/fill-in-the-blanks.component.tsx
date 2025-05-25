@@ -14,21 +14,28 @@ type fillInTheBlanksQuestionProps = {
 };
 const FillInTheBlanks = ({ question, index }: fillInTheBlanksQuestionProps) => {
   const questionText = question?.questionText;
-  const options = JSON.parse(question?.answerOptions);
+  const options = question?.answerOptions?.split(',').map((option: string) => ({
+    label: option,
+    value: option.toLowerCase(),
+  }))
   // State for selected answers
   const [selectedAnswers, setSelectedAnswers] = useState({});
 
   // Get available options for each dropdown (excluding selected ones)
   const getAvailableOptions = (index: number) => {
     return options?.filter(
-      (option: string) => !Object.values(selectedAnswers).includes(option) || selectedAnswers[index] === option
+      (option) =>
+        !Object.values(selectedAnswers).includes(option.value) ||
+        selectedAnswers[index] === option.value
     );
   };
+
   const handleSelect = (index: number, value: string) => {
     setSelectedAnswers((prev) => ({
       ...prev,
       [index]: value,
     }));
+    handleAnswerChange(value)
   };
 
   const dispatch = useDispatch();
@@ -79,9 +86,9 @@ const FillInTheBlanks = ({ question, index }: fillInTheBlanksQuestionProps) => {
                   Select an option
                 </option>
                 {getAvailableOptions(index)?.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
+                  <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
                 ))}
               </select>
             )

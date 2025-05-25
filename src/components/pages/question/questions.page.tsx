@@ -3,16 +3,13 @@ import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { VFilterRef } from '@components/organisms/filter/v-filter.organism';
 import VFilterToggle from '@components/organisms/filter/v-filter-toggle.organism';
-import { FormFieldData } from '@types';
-import { MatchOn, Operator } from '@utils/enums';
-import { useFetchSubjectsQuery } from 'store/slices/subject.slice';
 import { useFetchQuestionsQuery, useSearchQuestionMutation } from 'store/slices/questions.slice';
-import { QuestionRequestDTO, SearchCriteria, SearchRequestDTO } from '@dto/request';
+import { QuestionRequestDTO, SearchRequestDTO } from '@dto/request';
 import QuestionList from '@components/organisms/questions/question-list.organism';
 import { useLocation } from 'react-router-dom';
 import PreviewAndSelectQuestions from '@components/organisms/import-questions/preview-and-select-questions.organisms';
 import ImportQuestions from '@components/organisms/import-questions/import-questions.organisms';
-import { QuestionFilter } from '@components/organisms/questions/filter/question-filter.organisms';
+import { AdvancedQuestionFilter } from '@components/organisms/assessment/section/advanced-question-filter.organism';
 
 // Constants
 const SERVER_PAGE_SIZE = 10; // Matches API default
@@ -51,6 +48,8 @@ function QuestionsPage() {
   const [scope, setScope] = useState<Scope>('public');
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [currentServerPage, setCurrentServerPage] = useState(1);
+  const [hasSearched, setHasSearched] = useState(false);
+
 
   const [showImportQuestions, setShowImportQuestions] = useState(false);
 
@@ -58,20 +57,22 @@ function QuestionsPage() {
     setShowImportQuestions(true);
   };
 
-  const { data: subjects = [] } = useFetchSubjectsQuery();
   const {
     data: initialQuestions,
     isFetching: isFetchingQuestions,
     refetch,
-  } = useFetchQuestionsQuery({ scope, page: currentServerPage, limit: SERVER_PAGE_SIZE });
-
+  } = useFetchQuestionsQuery(
+    { scope, page: currentServerPage, limit: SERVER_PAGE_SIZE },
+    { skip: !hasSearched || isSearchActive } // ⛔ Skip unless explicitly fetching
+  );
+  
   const [searchQuestion, { data: searchedQuestions, isLoading: isSearching, reset: resetSearch }] =
     useSearchQuestionMutation();
 
   console.log(searchedQuestions);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const questions = (isSearchActive ? searchedQuestions?.data : initialQuestions?.data) ?? [];
+  const questions = (hasSearched && isSearchActive ? searchedQuestions?.data : initialQuestions?.data) ?? [];
   const isLoading = isSearching || isFetchingQuestions;
 
   const location = useLocation();
@@ -100,70 +101,19 @@ function QuestionsPage() {
     window.history.replaceState(null, '', `?scope=${newScope}`);
   };
 
-  const handleApplyFilter = useCallback(
-    (formData: FormFieldData) => {
-      const searchCriteria: SearchCriteria<QuestionRequestDTO>[] = [];
-
-      Object.entries(formData).forEach(([key, value]) => {
-        if (!value || value === '') return;
-
-        const trimmedKey = key.trim();
-
-        if (trimmedKey === 'durationMin') {
-          searchCriteria.push({
-            operator: Operator.AND,
-            field: 'timeLimit',
-            matchOn: MatchOn.GREATER_THAN,
-            value: Number(value),
-          });
-        } else if (trimmedKey === 'durationMax') {
-          searchCriteria.push({
-            operator: Operator.AND,
-            field: 'timeLimit',
-            matchOn: MatchOn.LESS_THAN,
-            value: Number(value),
-          });
-        } else if (trimmedKey === 'maxScoreMin') {
-          searchCriteria.push({
-            operator: Operator.AND,
-            field: 'marks',
-            matchOn: MatchOn.GREATER_THAN,
-            value: Number(value),
-          });
-        } else if (trimmedKey === 'maxScoreMax') {
-          searchCriteria.push({
-            operator: Operator.AND,
-            field: 'marks',
-            matchOn: MatchOn.LESS_THAN,
-            value: Number(value),
-          });
-        } else if (!['durationRange', 'maxScoreRange'].includes(trimmedKey)) {
-          searchCriteria.push({
-            operator: Operator.AND,
-            field: trimmedKey as keyof QuestionRequestDTO,
-            value: value as string,
-            matchOn: MatchOn.EQUAL,
-          });
-        }
-      });
-
-      // Add scope-specific filter
-      searchCriteria.push({
-        operator: Operator.AND,
-        field: 'isPublic',
-        matchOn: MatchOn.EQUAL,
-        value: scope === 'public',
-      });
-
-      const payload = SearchRequestDTO.default(searchCriteria);
-      console.log('Search payload:', payload); //  Now has all filters
-      searchQuestion(payload); //  Correctly built
-      setIsSearchActive(true);
-      setCurrentServerPage(1);
-    },
-    [scope, searchQuestion]
-  );
-
+  const handleFilterApply = (searchRequest: SearchRequestDTO<QuestionRequestDTO>) => {
+    setHasSearched(true);
+    setIsSearchActive(true);
+    searchQuestion(searchRequest);
+  };  
+  
+  const handleFilterReset = () => {
+    setHasSearched(false); 
+    setIsSearchActive(false);
+    searchQuestion(SearchRequestDTO.default([]));
+  };
+  
+  
   return (
     <div>
       <div>
@@ -187,31 +137,28 @@ function QuestionsPage() {
             </div>
           </div>
 
-          <QuestionFilter
-            subjects={subjects || []}
+          <AdvancedQuestionFilter
+            onFilterApply={handleFilterApply}
             scope={scope}
-            onApplyFilter={handleApplyFilter}
-            onReset={() => {
-              resetSearch();
-              setIsSearchActive(false);
-            }}
-            filterRef={filterRef}
-            filterButtonRef={filterButtonRef}
-          />
+            onReset={handleFilterReset} selectedTestFormat={null}    
+            filterRef={filterRef} filterButtonRef={filterButtonRef}/>
         </div>
       </div>
 
       <div className="w-5xl mt-3xl mb-5 border-b theme-border-default"></div>
 
       {questionsFromFile.length > 0 ? (
-        <>
-          <PreviewAndSelectQuestions />
-        </>
+        <PreviewAndSelectQuestions />
       ) : (
         <QuestionList
-          data={questions}
+          data={hasSearched ? questions : []}
           loading={isLoading}
           onImportClick={handleImportClick}
+          noDataMessage={
+            hasSearched
+              ? 'No data available for the selected filters.'
+              : 'Apply a filter to see questions.'
+          }
           onDeleteSuccess={() => {
             refetch();
             resetSearch();
@@ -220,6 +167,8 @@ function QuestionsPage() {
           fetchMore={handleFetchMore}
         />
       )}
+
+
       {showImportQuestions && (
         <ImportQuestions
           isOpen={showImportQuestions}

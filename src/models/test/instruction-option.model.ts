@@ -7,4 +7,5 @@ export class TestInstructionOption extends Audit {
   valueType!: 'string' | 'number' | 'boolean';
   description!: string;
   category!: InstructionCategory;
+  isRecommended!:boolean;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { TbArrowLeft } from 'react-icons/tb';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -30,6 +30,8 @@ function ManageAssessment() {
   const mode: AssessmentMode = id === '0' ? 'create' : 'edit';
   const dispatch = useAppDispatch();
   const selectedTest = useSelector(selectSelectedTest);
+  const [, setTestQuestionFormat] = useState<string | null>(null);
+
 
   const { data: testFetched, isLoading: isLoadingTest } = useFetchTestByIdQuery(id, {
     skip: mode === 'create',
@@ -86,6 +88,8 @@ function ManageAssessment() {
             test={selectedTest!}
             renderMode={mode}
             onComplete={handleSaveComplete}
+            onTestQuestionFormatChange={setTestQuestionFormat}
+
           />
         ),
       },

@@ -30,7 +30,8 @@ export const testProfile = (mapper: Mapper) => {
     forMember(dest => dest.value, mapFrom(src => src.value)),
     forMember(dest => dest.valueType, mapFrom(src => src.valueType)),
     forMember(dest => dest.description, mapFrom(src => src.description)),
-    forMember(dest => dest.isConfigurable, mapFrom(src => src.isConfigurable))
+    forMember(dest => dest.isConfigurable, mapFrom(src => src.isConfigurable)),
+    forMember(dest => dest.isRecommended, mapFrom(src => src.isRecommended))
   );
 
   // TestRegistrationFieldOption mapping
@@ -44,7 +45,8 @@ export const testProfile = (mapper: Mapper) => {
     forMember(dest => dest.label, mapFrom(src => src.label)),
     forMember(dest => dest.placeholder, mapFrom(src => src.placeholder)),
     forMember(dest => dest.isRequired, mapFrom(src => src.isRequired)),
-    forMember(dest => dest.options, mapFrom(src => src.options))
+    forMember(dest => dest.options, mapFrom(src => src.options)),
+    forMember(dest => dest.disabled, mapFrom(src => src.disabled)),
   );
 
   // TestInstructionOption mapping
@@ -57,7 +59,8 @@ export const testProfile = (mapper: Mapper) => {
     forMember(dest => dest.key, mapFrom(src => src.key)),
     forMember(dest => dest.value, mapFrom(src => src.value)),
     forMember(dest => dest.valueType, mapFrom(src => src.valueType)),
-    forMember(dest => dest.description, mapFrom(src => src.description))
+    forMember(dest => dest.description, mapFrom(src => src.description)),
+    forMember(dest => dest.isRecommended, mapFrom(src => src.isRecommended))
   );
 
   // TestSection mapping

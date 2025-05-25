@@ -49,13 +49,10 @@ export function ContentEditor({
         }
     }, [docData]);
 
-
-    useEffect(() => {
-        onContentChange(draft);
-    }, [draft, onContentChange]);
-
     const handleChange = (field: keyof DocData, value: string | string[]) => {
-        setDraft((prev) => ({ ...prev, [field]: value }));
+        const updated = { ...draft, [field]: value };
+        setDraft(updated);
+        onContentChange(updated);
     };
 
     const getPlaceholderByType = (type: string) => {

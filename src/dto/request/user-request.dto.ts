@@ -19,6 +19,8 @@ class UserRequestDTO extends BaseDTO {
   companyRole?: string;
 
   password!: string;
+
+  tenantId?: string;
 }
 
 export { UserRequestDTO };

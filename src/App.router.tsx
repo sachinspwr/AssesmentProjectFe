@@ -66,7 +66,6 @@ import { HeaderOnlyLayout } from '@components/templates/layout/header-only-layou
 import { HydrationProvider } from './context';
 import { SubscriptionGuard } from 'guards';
 import TestRunnerBootstrap from 'test-runner/pages/test-runner-bootstrap';
-import CandidateTestResultPage from 'test-runner/pages/candidate-test-result.page';
 
 import { LandingPage } from 'apps/landing';
 import { SupportDeskRoutes } from 'apps/support-desk';
@@ -76,6 +75,8 @@ import { CodingTestEditor } from 'test-runner/pages/test-editor-page';
 import { QuestionResponseDTO } from '@dto/response';
 import { Answer } from 'test-runner/types';
 import { EvalyticsRoutes } from 'apps/evalytics';
+import DetailedCandidateTestResultPage from 'test-result/detailed-candidate-result.page';
+import UserResultDashboard from 'test-result/user-result-dashboard.page';
 
 function AppRouter() {
   return (
@@ -120,7 +121,9 @@ function AppRouter() {
                   <Route path="questions" element={<QuestionsPage />} />
                   <Route path="questions/:id" element={<ManageQuestionPage />} />
                   <Route path="settings" element={<AccountSettings />} />
-                </Route>
+                  <Route path='user-dashboard' element={<UserResultDashboard/>}/>
+                  <Route path='result/:testId/participants/:participantId' element={<DetailedCandidateTestResultPage/>} />
+                </Route> 
               </Route>
 
               {/* These routes are outside SubscriptionGuard */}
@@ -145,6 +148,7 @@ function AppRouter() {
           <Route path="/test-feedback" element={<FeedbackForm />} />
           <Route path="/test-runner/invalid-link" element={<InvalidLinkPage />} />
           <Route path="/test-runner/test-result" element={<TestResultPage />} />
+          <Route path='/test-runner/:testId/participants/:participantId' element={<DetailedCandidateTestResultPage className='py-6 px-6' hideBackButton={true}/>} />
           <Route path="/test-runner/code-editor" element={<CodingTestEditor question={new QuestionResponseDTO} currentQuestionId={''} questionAnswer={''} isLastQuestion={false} onAnswer={function (questionId: string, answer: Answer): void {
             throw new Error('Function not implemented.');
           } } onSubmit={function (): void {
@@ -154,7 +158,6 @@ function AppRouter() {
           } } onBack={function (): void {
             throw new Error('Function not implemented.');
           } }/>} />
-          <Route path='/test-runner/candidate-test-result' element={<CandidateTestResultPage/>} />
 
           {/* Payment Route */}
           <Route path="/payment" element={<RazorpayCheckout orderId={''} amount={0} subscriptionId={''} />} />
@@ -170,6 +173,7 @@ function AppRouter() {
 
           {/* Evaluate and Analytics Routes */}
            {EvalyticsRoutes}
+           
 
           {/* Error Handling */}
           <Route

@@ -8,4 +8,5 @@ export class TestSettingOption extends Audit {
   description!: string;
   category!: SettingCategory;
   isConfigurable!: boolean;
+  isRecommended?: boolean;
 }

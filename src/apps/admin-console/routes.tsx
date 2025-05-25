@@ -12,6 +12,8 @@ import ManageRolesPage from './pages/manage-role.page';
 // Lazy load pages
 const AdminConsoleHomePage = lazy(() => import('./pages/admin-console-home.page'));
 const TenantHomePage = lazy(() => import('./pages/tenant-home.page'));
+const ManageTenantPage = lazy(() => import('./pages/tenant/manage-tenant.page')); // <-- import the correct component
+
 // const RoleManagementPage = lazy(() => import('./pages/manage-role.page'));
 // const UserManagementPage = lazy(() => import('./pages/manage-role.page'));
 // const PermissionsPage = lazy(() => import('./pages/manage-permission.page'));
@@ -30,6 +32,7 @@ export const AdminConsoleRoutes = (
     
     {/* Tenant Management Route */}
     <Route path="tenants" element={<TenantHomePage />} />
+    <Route path="tenants/:tenantId" element={<ManageTenantPage />} />
     
     {/* Role Management Route */}
     <Route path="roles" element={<RoleManagement />} />

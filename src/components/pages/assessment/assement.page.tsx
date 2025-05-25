@@ -201,7 +201,7 @@ function AssessmentPage() {
             options={[
               { label: 'All', value: 'all' },
               { label: 'Test Engine Library', value: 'public' },
-              { label: 'My Own Questions', value: 'personal' },
+              { label: 'My Own Tests', value: 'personal' },
             ]}
             defaultValue="public"
             direction="horizontal"

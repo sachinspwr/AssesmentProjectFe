@@ -44,17 +44,33 @@ function AppDropdownButton() {
         >
           <VCard className="p-3 bg-theme-default rounded-xl shadow-lg">
             {/* Notch */}
-            <div className="absolute -top-2 right-4 w-4 h-4  rotate-45"></div>
+            <div className="absolute -top-2 right-4 w-4 h-4 bg-white rotate-45"></div>
 
             {/* App Options */}
             <ul className="grid grid-cols-2 gap-4">
-              {AppOptions.map(({ title, icon, route }) => (
-                <li key={title} className="flex items-center gap-2 !w-20 !h-20 cursor-pointer">
-                  <VButton variant='secondary' className="block p-4 rounded w-full" onClick={() => navigate(route)}>
-                    <VImage src={icon} alt={title} />
-                  </VButton>
-                </li>
-              ))}
+            {AppOptions.map(({ title, icon, route }) => (
+  <li key={title} className="cursor-pointer">
+    <div
+      onClick={() => navigate(route)}
+      className="flex flex-col items-center gap-2 p-2 rounded-lg"
+    >
+      {/* Circular Image Wrapper */}
+      <div className="p-2 border border-theme-primary rounded-full flex items-center justify-center w-[48px] h-[48px]">
+        <VImage
+          src={icon}
+          alt={title}
+          className="w-[28px] h-[28px] rounded-full object-cover hover:scale-[1.08] hover:shadow-md"
+        />
+      </div>
+
+      {/* Title Below the Image */}
+      <span className="text-center text-theme-brand text-xs whitespace-nowrap">
+        {title}
+      </span>
+    </div>
+  </li>
+))}
+
             </ul>
           </VCard>
         </div>

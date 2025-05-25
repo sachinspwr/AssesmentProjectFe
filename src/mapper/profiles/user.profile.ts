@@ -1,4 +1,5 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { UserRequestDTO } from '@dto/request';
 import { UserResponseDTO } from '@dto/response';
 import { SubscriptionResponseDTO } from '@dto/response/subscription-option-response.dto';
 import { UserSubscriptionResponseDTO } from '@dto/response/user-subscription-response.dto';
@@ -53,7 +54,8 @@ export const userProfile = (mapper: Mapper) => {
     forMember(
       (dest) => dest.userSubscriptionLimit,
       mapFrom((src) => src.userSubscriptionLimit ?? null) // Defaulting to null if not defined
-    )
+    ),
+
   );
   createMap(
     mapper,
@@ -110,6 +112,90 @@ export const userProfile = (mapper: Mapper) => {
     forMember(
       (dest) => dest.subscriptions,
       mapFrom((src) => src.subscriptions ?? [])
+    )
+  );
+
+  // for user
+  createMap(
+    mapper,
+    User,
+    UserRequestDTO,
+    forMember(
+      (dest) => dest.firstName,
+      mapFrom((src) => src.firstName)
+    ),
+    forMember(
+      (dest) => dest.lastName,
+      mapFrom((src) => src.lastName)
+    ),
+    forMember(
+      (dest) => dest.email,
+      mapFrom((src) => src.email)
+    ),
+    forMember(
+      (dest) => dest.mobile,
+      mapFrom((src) => src.mobile)
+    ),
+    forMember(
+      (dest) => dest.company,
+      mapFrom((src) => src.company)
+    ),
+    forMember(
+      (dest) => dest.companyRole,
+      mapFrom((src) => src.companyRole)
+    ),
+    forMember(
+      (dest) => dest.gender,
+      mapFrom((src) => src.gender)
+    ),
+    forMember(
+      (dest) => dest.dateOfBirth,
+      mapFrom((src) => src.dateOfBirth)
+    ),
+    forMember(
+      (dest) => dest.tenantId,
+      mapFrom((src) => src.tenantId)
+    )
+  );
+  createMap(
+    mapper,
+    UserResponseDTO,
+    User,
+    forMember(
+      (dest) => dest.firstName,
+      mapFrom((src) => src.firstName)
+    ),
+    forMember(
+      (dest) => dest.lastName,
+      mapFrom((src) => src.lastName)
+    ),
+    forMember(
+      (dest) => dest.email,
+      mapFrom((src) => src.email)
+    ),
+    forMember(
+      (dest) => dest.mobile,
+      mapFrom((src) => src.mobile)
+    ),
+    forMember(
+      (dest) => dest.company,
+      mapFrom((src) => src.company)
+    ),
+    forMember(
+      (dest) => dest.companyRole,
+      mapFrom((src) => src.companyRole)
+    ),
+    forMember(
+      (dest) => dest.gender,
+      mapFrom((src) => src.gender)
+    ),
+    forMember(
+      (dest) => dest.dateOfBirth,
+      mapFrom((src) => src.dateOfBirth)
+    ),
+    forMember(
+      (dest) => dest.tenantId,
+      mapFrom((src) => src.tenantId)
     )
   );
 };
