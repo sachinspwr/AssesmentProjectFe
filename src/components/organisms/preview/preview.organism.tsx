@@ -18,7 +18,7 @@ function Preview<T>({ title, data, columns, getId, onSelect, isRowInvalid }: Pre
         title={title}
         data={data}
         columns={columns}
-        itemsPerPage={10}
+        itemsPerviewMode={10}
         mode="select"
         getId={getId}
         headerClassName="font-[600]"

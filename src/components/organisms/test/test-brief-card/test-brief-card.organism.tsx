@@ -8,7 +8,6 @@ import { BsArrowRightCircle } from 'react-icons/bs'; // Import navigation icon
 import { Link, useNavigate } from 'react-router-dom';
 import { MdRestartAlt, MdScore } from 'react-icons/md';
 import { FaGlobe, FaUserTie } from 'react-icons/fa6';
-import UserWithGlobe from '@assets/svgs/user-with-globe.svg?react';
 import { useLoggedInUser } from '@hooks';
 import { ToolTip } from '@components/molecules/tool-tip/tool-tip.mol';
 import { ImUser } from 'react-icons/im';
@@ -49,7 +48,7 @@ function TestBriefCard({ test, className, onClick }: TestBriefCardProps) {
 
         {isPublic ? (
           createdById === userId ? (
-            <Icon type="svg" svg={<UserWithGlobe />} size={22} className="opacity-30" title="Created by You" />
+              <Icon icon={FaGlobe} size={16} className="opacity-50" title="Public Test" />
           ) : (
             <Icon icon={FaGlobe} size={16} className="opacity-50" title="Public Test" />
           )

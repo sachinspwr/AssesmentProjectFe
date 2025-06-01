@@ -6,12 +6,12 @@ import { VStatCard } from '@components/molecules/advance-card/v-stat-card.mol';
 import { VActionCard } from '@components/molecules/index';
 
 // Types for props
-interface AdminConsoleHomePageProps {
+interface AdminConsoleHomepageProps {
   userRole?: 'super_admin' | 'company_admin'; // Optional prop, defaults to 'super_admin'
 }
 
 // eslint-disable-next-line react/function-component-definition
-function AdminConsoleHomePage({ userRole = 'super_admin' }: AdminConsoleHomePageProps) {
+function AdminConsoleHomepage({ userRole = 'super_admin' }: AdminConsoleHomepageProps) {
   // Get permissions
   const isSuperAdmin = userRole === 'super_admin';
   const isCompanyAdmin = userRole === 'company_admin';
@@ -100,4 +100,4 @@ function AdminConsoleHomePage({ userRole = 'super_admin' }: AdminConsoleHomePage
 }
 
 
-export default AdminConsoleHomePage;
+export default AdminConsoleHomepage;

@@ -179,7 +179,7 @@ function UserSection({ tenant }: TenantBasicDetailsProps) {
                         columns={columns}
                         loading={isFetching}
                         getId={(row) => row.id as string}
-                        itemsPerPage={10}
+                        itemsPerviewMode={10}
                         actionsConfig={[
                             {
                                 action: 'edit',

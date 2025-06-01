@@ -67,7 +67,7 @@ function SubjectList({ data, loading, onDeleteSuccess, onAddSuccess }: SubjectLi
         title="Subjects"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Subjects Found!</div>}
         getId={(x) => x.id}

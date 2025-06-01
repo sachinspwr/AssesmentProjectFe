@@ -18,6 +18,7 @@ interface VSearchFilterProps {
   className?: string;
   wrapperClasses?: string;
   searchThrottleTime?: number;
+  showFilter?: boolean;
 }
 
 export function VSearchFilter({
@@ -33,6 +34,7 @@ export function VSearchFilter({
   className = '',
   wrapperClasses = '',
   searchThrottleTime = 300,
+  showFilter = true,
 }: VSearchFilterProps) {
   const handleSearchChange = (value: string) => {
     onSearchChange(value);
@@ -64,7 +66,7 @@ export function VSearchFilter({
         />
 
         {/* Dropdown */}
-        <div className="w-40 border-l border-theme-default">
+        {showFilter && (<div className="w-40 border-l border-theme-default">
           <VDropdown
             name="filter"
             value={filterValue}
@@ -75,7 +77,7 @@ export function VSearchFilter({
             dropdownBtnClasses="h-full !rounded-none !border-none !focus:ring-0"
             dropdownClasses='!rounded-none'
           />
-        </div>
+        </div>)}
       </div>
     </div>
   );

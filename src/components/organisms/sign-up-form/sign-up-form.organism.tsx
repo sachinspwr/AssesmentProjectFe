@@ -4,10 +4,7 @@ import { FormFieldData, VFormFields } from '@types';
 import { MdMarkEmailRead, MdOutlinePassword } from 'react-icons/md';
 import { FaUserCircle } from 'react-icons/fa';
 import { FiPlus } from 'react-icons/fi';
-import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { apiService } from '@services/api.service';
-import { ApiResponse } from '@dto/response';
 import { VLink } from '@components/atoms/link/v-link.atom';
 import { useSignUpMutation } from 'store/slices/account.slice';
 import { UserRequestDTO } from '@dto/request';
@@ -79,17 +76,11 @@ const SignUpFormConfig: VFormFields[] = [
     name: 'agreement',
     label: (
       <>
-        Accept <VLink to="/terms-and-conditions">Terms and Conditions</VLink>
+        Accept <VLink to="/compliance-page">Terms and Conditions</VLink>
       </>
     ),
     type: 'checkbox',
     required: true,
-    validate: (value) => {
-      const checked = value as boolean;
-      if (!checked) {
-        return 'You must accept the terms';
-      }
-    },
     position: '4 1 12',
   },
   {
@@ -111,12 +102,12 @@ function SignUpForm({ className }: SignUpFormProps)
 
   const handleRegistrationRequest = async (formData: FormFieldData) => {
     // Map formData to UserRequestDTO
-    const userRequestData: UserRequestDTO = {
+    const userRequestData = {
       ...formData,
-    };
+    } as unknown as UserRequestDTO;
   
     try {
-      const response: ApiResponse = await signUp(userRequestData).unwrap();
+      await signUp(userRequestData).unwrap();
       // Assuming the response contains the email
       navigate('/register-user-success', { state: { email: userRequestData.email } });
     } catch (error) {

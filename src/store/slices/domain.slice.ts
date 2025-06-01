@@ -7,7 +7,6 @@ import { handleApiError, handleQueryResponse } from 'api/api.error';
 import { DomainResponseDTO } from '@dto/response/domain-response.dto';
 import { DomainRequestDTO } from '@dto/request/domain.request.dto';
 
-
 interface DomainState {
   domains: DomainResponseDTO[];
   loading: boolean;
@@ -49,39 +48,40 @@ export const domainsApiSlice = createApi({
       },
     }),
 
-    addDomains: builder.mutation<DomainResponseDTO,{ newDomain: DomainRequestDTO }>({
-              query: ({ newDomain }) => ({
-                url: `/domains`,
-                method: 'POST',
-                body: newDomain,
-              }),
-              onQueryStarted: async (arg, api) => {
-                await handleQueryResponse(arg, api, 'Domain Added Successfully!');
-              },
-            }),
-        
-            updateDomain: builder.mutation<DomainResponseDTO,{ id: string; data: DomainRequestDTO }>({
-              query: ({ id, data }) => ({
-                url: `/domains/${id}`,
-                method: 'PUT',
-                body: data,
-              }),
-              onQueryStarted: async (arg, api) => {
-                await handleQueryResponse(arg, api, 'Domain Updated Successfully!');
-              },
-            }),
-        
-            deleteDomain: builder.mutation<boolean, { id: string }>({
-              query: ({ id }) => ({
-                url: `/domains/${id}`,
-                method: 'DELETE',
-              }),
-              onQueryStarted: async (arg, api) => {
-                await handleQueryResponse(arg, api, 'Domain Deleted Successfully!');
-              },
-            }),
+    addDomains: builder.mutation<DomainResponseDTO, { newDomain: DomainRequestDTO }>({
+      query: ({ newDomain }) => ({
+        url: `/domains`,
+        method: 'POST',
+        body: newDomain,
+      }),
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Domain Added Successfully!');
+      },
+    }),
+
+    updateDomain: builder.mutation<DomainResponseDTO, { id: string; data: DomainRequestDTO }>({
+      query: ({ id, data }) => ({
+        url: `/domains/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Domain Updated Successfully!');
+      },
+    }),
+
+    deleteDomain: builder.mutation<boolean, { id: string }>({
+      query: ({ id }) => ({
+        url: `/domains/${id}`,
+        method: 'DELETE',
+      }),
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Domain Deleted Successfully!');
+      },
+    }),
   }),
 });
 
 // Export hooks for usage in functional components
-export const { useFetchDomainsQuery, useAddDomainsMutation, useDeleteDomainMutation, useUpdateDomainMutation } = domainsApiSlice;
+export const { useFetchDomainsQuery, useAddDomainsMutation, useDeleteDomainMutation, useUpdateDomainMutation } =
+  domainsApiSlice;

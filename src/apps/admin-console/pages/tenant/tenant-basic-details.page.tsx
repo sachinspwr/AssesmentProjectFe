@@ -56,7 +56,8 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
           position: "2 1 6",
           validate: (value) => {
             if (value === "") return "Email is required";
-            if (!(value as string).includes("@")) return "Invalid email format";
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value as string)) return "Invalid email format";
           },
         },
         {
@@ -101,6 +102,11 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
           placeholder: "Enter email",
           required: true,
           position: "6 1 6",
+          validate: (value) => {
+            if (value === "") return "Email is required";
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value as string)) return "Invalid email format";
+          },
         },
         {
           name: "mobile",

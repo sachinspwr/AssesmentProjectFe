@@ -1,14 +1,14 @@
 import { useAppSelector, useAppDispatch } from 'store/store';
 import { useFetchAccountSubscriptionsQuery } from 'store/slices/account-subscription.slice';
 import { setUserSubscriptions } from 'store/slices/account.slice';
-import { UserSubscription } from 'models';
 import { useEffect, useMemo } from 'react';
 import { mapper } from 'mapper';
-import { UserSubscriptionResponseDTO } from '@dto/response/user-subscription-response.dto';
+import { AccountSubscription } from 'models/account/account-subscription.model';
+import { AccountSubscriptionResponseDTO } from '@dto/response/account/account-subscription-response.dto';
 
 interface SubscriptionStatus {
-  allSubscriptions: UserSubscription[];
-  activeSubscription: UserSubscription | null;
+  allSubscriptions: AccountSubscription[];
+  activeSubscription: AccountSubscription | null;
   hasActiveSubscription: boolean;
   isLoading: boolean;
   isError: boolean;
@@ -37,7 +37,7 @@ export const useSubscription = (): SubscriptionStatus => {
 
   // Memoize the mapped subscriptions to prevent new references
   const userSubscriptions = useMemo(() => {
-    return mapper.mapArray(subscriptions, UserSubscriptionResponseDTO, UserSubscription);
+    return mapper.mapArray(subscriptions, AccountSubscriptionResponseDTO, AccountSubscription);
   }, [subscriptions]);
 
   // Only update Redux if the data actually changed

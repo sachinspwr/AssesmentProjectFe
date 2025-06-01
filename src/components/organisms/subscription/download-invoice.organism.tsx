@@ -2,12 +2,12 @@ import React, { useRef } from 'react';
 import { jsPDF } from 'jspdf';
 import { VButton, VICon } from '@components/atoms';
 import { SubscriptionInvoice } from './subscription-invoice.organism';
-import { UserSubscription } from 'models';
 import { MdOutlineSimCardDownload } from 'react-icons/md';
 import { useFetchAccountSubscriptionInvoiceQuery } from 'store/slices/account-subscription.slice';
+import { AccountSubscription } from 'models/account/account-subscription.model';
 
 interface InvoiceOrganismProps {
-  subscription: UserSubscription;
+  subscription: AccountSubscription;
 }
 
 export function DownloadInvoice({ subscription }: InvoiceOrganismProps) {
@@ -15,8 +15,8 @@ export function DownloadInvoice({ subscription }: InvoiceOrganismProps) {
 
   const { data: invoiceDetails, isFetching } = useFetchAccountSubscriptionInvoiceQuery(
     {
-      accountId: subscription.userId,
-      userSubscriptionId: subscription.userSubscriptionPayment.userSubscriptionId
+      accountId: subscription.accountId,
+      userSubscriptionId: subscription.id
     },
     { skip: !subscription } // Only skip if subscription isn't available
   );

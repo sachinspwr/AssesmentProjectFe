@@ -12,7 +12,12 @@ import { useState } from 'react';
 import ConfirmAction from '../confirm-action/confirm-action.organisms';
 import { useAppDispatch } from 'store/store';
 import { formatDuration } from '@utils/functions';
+import { FcInvite } from 'react-icons/fc';
+import { VModal } from '@components/organisms/modal/v-modal.organism';
+import UserInvite from '../user-invite/user-invite.organisms';
 import { TbExternalLink } from 'react-icons/tb';
+import { PermissionGate } from 'guards/permission.guard';
+import { Permissions } from '@utils/enums';
 
 type AssessmentOverviewProps = {
   test: TestResponseDTO;
@@ -24,6 +29,9 @@ function AssessmentOverview({ test, onDeleteSuccess }: AssessmentOverviewProps) 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const navigate = useNavigate(); // Initialize navigate function
   const dispatch = useAppDispatch();
+
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+
 
   const handleEditClick = () => {
     dispatch(clearSelectedTest());
@@ -43,8 +51,13 @@ function AssessmentOverview({ test, onDeleteSuccess }: AssessmentOverviewProps) 
         key={test?.id}
         title={test?.title}
         overViewLableChildren={<div className='flex justify-end text-theme-muted'>
-        <VStatus type="positive" label={test?.status} />
-        <VICon onClick={()=>navigate(`/test-runner/${test?.id}/bootstrap`)} icon={MdLaunch} className='ml-3'/>
+          <VStatus type="positive" label={test?.status} className='mr-5' />
+          <VICon
+            onClick={() => setIsInviteModalOpen(true)}
+            icon={FcInvite}
+          />
+
+          <VICon onClick={() => navigate(`/test-runner/${test?.id}/bootstrap`)} icon={MdLaunch} className='ml-3' />
         </div>}
       >
         <div>
@@ -115,13 +128,18 @@ function AssessmentOverview({ test, onDeleteSuccess }: AssessmentOverviewProps) 
           </div>
           <div className="border border-theme-default"></div>
           <div className="flex">
-            <VButton variant="link" onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}>
-              {<VTypography color="negative">Delete</VTypography>}
-            </VButton>
+            <PermissionGate required={Permissions.TEST_DELETE}>
+              <VButton variant="link" onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}>
+                {<VTypography color="negative">Delete</VTypography>}
+              </VButton>
+            </PermissionGate>
             <div className="border-l border-theme-default"></div>
-            <VButton variant="link" onClick={handleEditClick}>
-              Edit
-            </VButton>
+            <PermissionGate required={Permissions.TEST_EDIT}>
+              <VButton variant="link" onClick={handleEditClick}>
+                Edit
+              </VButton>
+            </PermissionGate>
+
           </div>
         </div>
       </VOverview>
@@ -132,6 +150,20 @@ function AssessmentOverview({ test, onDeleteSuccess }: AssessmentOverviewProps) 
         onClose={() => setIsDeleteModalOpen(false)}
         isOpen={isDeleteModalOpen}
       />
+
+      <VModal
+        title="Invite Users"
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        showFooter={false}
+
+      >
+        <UserInvite
+          data={test}
+          onClose={() => setIsInviteModalOpen(false)}
+        />
+      </VModal>
+
     </>
   );
 }

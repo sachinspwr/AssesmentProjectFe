@@ -57,6 +57,10 @@ export type VFormGroup = {
   type: 'group';
   shouldRender?: ((formData: VFormFieldData) => boolean);
   fields: VFormField[];
+
+  mode?: 'view' | 'edit';
+  pageChildren?: React.ReactNode;
+
 };
 
 export type VFormField = {
@@ -67,13 +71,14 @@ export type VFormField = {
   label?: ReactNode;
   helpText?: string;
   icon?: IconType;
-  type: InputFieldTypes | 'select' | 'text-area' | 'switch' | 'list' | 'custom' | 'submit' | 'discard' | 'renderItem' | 'text' | 'string';
+  type: InputFieldTypes | 'select' | 'text-area' | 'placeholder-text-area' | 'switch' | 'list' | 'custom' | 'submit' | 'discard' | 'renderItem' | 'text' | 'string';
   shouldRender?: ((formData: VFormFieldData) => boolean);
   renderItem?: (
     value: string | string[],
     onChange: (value: string | string[], additionalUpdates?: Partial<VFormFieldData>) => void,
     formData?: VFormFieldData,
-    index?: number
+    mode?: 'view' | 'edit',
+    index?: number,
   ) => ReactNode;
   customContent?: ReactElement;
   required?: boolean | ((formData: VFormFieldData) => boolean);
@@ -92,6 +97,10 @@ export type VFormField = {
   compute?: (formData: VFormFieldData) => string | boolean | string[] | Date | undefined | null;
   onChange?: (value: string) => void;
   onClick?: () => void;
+
+  mode?: 'view' | 'edit';
+  pageChildren?: React.ReactNode;
+
 };
 
 export type VFormFieldGen<T> = {
@@ -101,7 +110,7 @@ export type VFormFieldGen<T> = {
   fieldWith?: 'label' | 'icon';
   label: ReactNode;
   icon?: IconType;
-  type: InputFieldTypes | 'select' | 'text-area' | 'list' | 'custom' | 'submit';
+  type: InputFieldTypes | 'select' | 'text-area' | 'placeholder-text-area' | 'list' | 'custom' | 'submit';
   customContent?: ReactNode; // for custom type
   required?: boolean;
   disabled?: boolean;

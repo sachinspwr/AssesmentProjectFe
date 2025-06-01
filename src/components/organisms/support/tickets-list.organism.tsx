@@ -197,7 +197,7 @@ function TicketList({
             ) : undefined
           }
           loading={isLoading}
-          itemsPerPage={6}
+          itemsPerviewMode={6}
         />
       )}
     </div>

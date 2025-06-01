@@ -14,26 +14,30 @@ export function ProblemPanel({
     width,
     onResizeStart,
     isCollapsed,
+    question,
     ...questionProps
 }: ProblemPanelProps) {
     if (isCollapsed) return null;
 
     return (
-        <div className="problem-panel h-full overflow-auto relative" style={{ width }}>
+        <div className="problem-panel py-2 h-full overflow-auto relative border rounded-lg" style={{ width }}>
             <div
-                className="absolute top-0 right-0 w-1 h-full bg-theme-default-disabled cursor-ew-resize z-10"
+                className="absolute top-0 right-0 w-0.5 h-full bg-theme-default-disabled cursor-ew-resize z-10"
                 onMouseDown={onResizeStart}
             />
             <ProblemStatementComponent
-                subjectId={''} questionText={questionProps.question.questionText}
-                subject={questionProps.question.subject}
-                topic={questionProps.question.topic}
-                difficulty={DifficultyLevel.Easy}
-                type={QuestionType.Coding}
-                timeLimit={0}
-                marks={0}
-                answerOptions={questionProps.question.answerOptions}
-                id={questionProps.question.id}
+                subjectId={question.subjectId}
+                questionText={question.questionText}
+                subject={question.subject}
+                topic={question.topic}
+                difficulty={question.difficulty as DifficultyLevel}
+                type={question.type as QuestionType}
+                timeLimit={question.timeLimit}
+                marks={question.marks}
+                answerOptions={question.answerOptions}
+                // id={question.id}
+                questionExplanation={question.questionExplanation}
+                codingQuestion={question.codingQuestion}
                 {...questionProps} />
         </div>
     );

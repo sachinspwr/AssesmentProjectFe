@@ -13,7 +13,7 @@ function NotFoundPage() {
             404
           </VTypography>
           <VTypography as='h5' className=" font-semibold text-theme-primary">
-            Page Not Found
+            page Not Found
           </VTypography>
           <VTypography as='p' className="text-theme-secondary">
             Oops! The page you're looking for doesn't exist.

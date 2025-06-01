@@ -120,7 +120,7 @@ function VTable<T>({
   const paginatedData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Handle page change
-  const handlePageChange = (page: number) => {
+  const handlepageChange = (page: number) => {
     setCurrentPage(page);
   };
 
@@ -345,7 +345,7 @@ function VTable<T>({
             <VPagination
               currentPage={currentPage}
               totalPages={Math.ceil(filteredData.length / itemsPerPage)}
-              onPageChange={handlePageChange}
+              onpageChange={handlepageChange}
             />
           </div>
         )}

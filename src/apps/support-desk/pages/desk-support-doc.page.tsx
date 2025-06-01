@@ -12,7 +12,7 @@ import { useGetSupportDocByTitleQuery } from 'store/slices/support-doc.slice';
 import NoDocumentsFound from '../components/no-documents-found.component';
 import { SupportDocStatus } from '@utils/enums/support-doc.enum';
 
-function SupportDocsManagerPage() {
+function SupportDocsManagerpage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterBy, setFilterBy] = useState<'title' | 'author'>('title');
   const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
@@ -58,7 +58,7 @@ function SupportDocsManagerPage() {
   return (
     <div className=" mx-auto space-y-6">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b-2 pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-gray-800">Support Documents</h1>
           <p className="text-gray-500 text-sm">Manage and organize your documentation</p>
@@ -207,4 +207,4 @@ function SupportDocsManagerPage() {
   );
 }
 
-export default SupportDocsManagerPage;
+export default SupportDocsManagerpage;

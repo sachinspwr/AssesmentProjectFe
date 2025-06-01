@@ -26,7 +26,7 @@ export function ViewContent({
           <VTypography as="h3">{title}</VTypography>
         </div>
 
-        <div className="flex gap-8 mr-4">
+        <div className="flex gap-4 mr-4">
           <VICon onClick={onEdit} aria-label="Edit document" icon={TbEdit}  className="text-blue-500" />
           <VICon onClick={onDelete} aria-label="Delete document" icon={TbTrash} className="text-red-500" />
         </div>

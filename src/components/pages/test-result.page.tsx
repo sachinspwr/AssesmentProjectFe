@@ -2,7 +2,7 @@ import { Button, Label } from '@components/atoms';
 import { Tabs } from '@components/organisms';
 import React from 'react';
 
-const TestResultPage: React.FC = () => {
+const TestResultpage: React.FC = () => {
     const tabs = [
         {
             name: 'questions',
@@ -61,4 +61,4 @@ const TestResultPage: React.FC = () => {
     );
 };
 
-export default TestResultPage;
+export default TestResultpage;

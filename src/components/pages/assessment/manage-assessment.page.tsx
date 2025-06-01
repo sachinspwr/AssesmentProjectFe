@@ -20,10 +20,15 @@ import { mapper } from 'mapper';
 import { TestResponseDTO } from '@dto/response';
 import { Test } from 'models';
 import toast from 'react-hot-toast';
+import { TestStatus } from '@utils/enums';
 
 type AssessmentMode = 'create' | 'edit';
 
-function ManageAssessment() {
+type ManageAssessmentProps = {
+  viewMode?: 'content' | 'review';
+}
+
+function ManageAssessment({viewMode = 'content'}: ManageAssessmentProps){
   const navigate = useNavigate();
   const tabRef = useRef<VTabsRef>(null);
   const { id = '0' } = useParams();
@@ -52,12 +57,12 @@ function ManageAssessment() {
 
   const handleSaveComplete: OnCompleteHandler<Test> = async (
     savedTest,
-    { shouldExit, shouldPublish, skipNavigation = false } = {}
+    { shouldExit, status, skipNavigation = false } = {}
   ) => {
     dispatch(setSelectedTest(savedTest));
   
     // Handle publishing first, if requested
-    if (shouldPublish) {
+    if (status === TestStatus.Published) {
       try {
         await publishTest(savedTest.id).unwrap();
         toast.success('Test Published');
@@ -85,6 +90,7 @@ function ManageAssessment() {
         label: 'Basic Details',
         content: (
           <AssessmentBasicDetails
+            viewMode={viewMode}
             test={selectedTest!}
             renderMode={mode}
             onComplete={handleSaveComplete}
@@ -96,12 +102,12 @@ function ManageAssessment() {
       {
         name: 'sections',
         label: 'Sections',
-        content: <AssessmentSection tabRef={tabRef} test={selectedTest!} onComplete={handleSaveComplete} />,
+        content: <AssessmentSection tabRef={tabRef} test={selectedTest!} onComplete={handleSaveComplete} viewMode={viewMode}/>,
       },
       {
         name: 'configuration',
         label: 'Configuration',
-        content: <AssessmentConfiguration tabRef={tabRef} test={selectedTest!} onComplete={handleSaveComplete} />,
+        content: <AssessmentConfiguration tabRef={tabRef} test={selectedTest!} onComplete={handleSaveComplete} viewMode={viewMode}/>,
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -4,7 +4,7 @@ import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VImage } from '@components/atoms/image/v-image.atom';
 import { VBrandHeader } from '@components/organisms/layout/v-brand-title.organism';
 
-function ResetPasswordSuccessPage() {
+function ResetPasswordSuccesspage() {
   return (
     <div className="h-screen flex flex-col justify-center items-center lg:flex-row gap-10">
       <div className="w-full flex justify-center items-center bg-theme-highlight h-full">
@@ -32,4 +32,4 @@ function ResetPasswordSuccessPage() {
   );
 }
 
-export default ResetPasswordSuccessPage;
+export default ResetPasswordSuccesspage;

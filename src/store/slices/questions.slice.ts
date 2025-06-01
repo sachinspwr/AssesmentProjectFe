@@ -3,10 +3,11 @@ import { RootState } from 'store/store';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { QuestionResponseDTO } from '../../dto/response/question-response.dto';
 import { axiosBaseQuery } from 'api/base.query';
-import { handleQueryResponse } from 'api/api.error';
+import { handleApiError, handleQueryResponse } from 'api/api.error';
 import { QuestionRequestDTO } from '@dto/request/question-request.dto';
 import { PaginatedResponse } from '@dto/response/pagination-response.dto';
 import { SearchRequestDTO } from '@dto/request';
+import toast from 'react-hot-toast';
 
 interface QuestionsState {
   questions: QuestionResponseDTO[];
@@ -37,7 +38,7 @@ export const questionsApiSlice = createApi({
   endpoints: (builder) => ({
     fetchQuestions: builder.query<
       PaginatedResponse<QuestionResponseDTO>,
-      { scope: 'all' | 'public' | 'personal'; limit?: number; page?: number }
+      { scope: 'all' | 'public' | 'personal'; limit?: number; viewMode?: number }
     >({
       query: ({ scope, limit, page }) => {
         const params = new URLSearchParams();
@@ -120,6 +121,64 @@ export const questionsApiSlice = createApi({
         await handleQueryResponse(arg, api, 'Bulk Questions Uploaded Successfully!');
       },
     }),
+
+    fetchQuestionsByStatus: builder.query<PaginatedResponse<QuestionResponseDTO>, { status: string }>({
+      query: ({ status }) => {
+        return {
+          url: `/questions/:id/status?status=${status}`,
+          method: 'GET',
+        };
+      },
+      providesTags: (result) =>
+        result?.data?.length
+          ? [...result.data.map(({ id }) => ({ type: 'Questions' as const, id })), { type: 'Questions', id: 'LIST' }]
+          : [{ type: 'Questions', id: 'LIST' }],
+      onQueryStarted: handleQueryResponse,
+    }),
+
+    publishQuestion: builder.mutation<QuestionResponseDTO, string>({
+      query: (id) => ({
+        url: `/questions/${id}/approve`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, error, id) => [{ type: 'Questions', id }],
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Question Published Successfully!');
+      },
+    }),
+
+    approveQuestion: builder.mutation<QuestionResponseDTO, string>({
+      query: (questionId) => ({
+        url: `/questions/${questionId}/approve`,
+        method: 'POST',
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          toast.success('Question Approved Successfully!');
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
+
+    rejectQuestion: builder.mutation<QuestionResponseDTO, { questionId: string; comment: string }>({
+      query: ({ questionId, comment }) => ({
+        url: `/questions/${questionId}/reject`,
+        method: 'POST',
+        body: { comment },
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          toast.success('Question Rejected with Reason!');
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
   }),
 });
 
@@ -133,4 +192,8 @@ export const {
   useUpdateQuestionMutation,
   useDeleteQuestionMutation,
   useUploadBulkQuestionsMutation,
+  useFetchQuestionsByStatusQuery,
+  usePublishQuestionMutation,
+  useApproveQuestionMutation,
+  useRejectQuestionMutation,
 } = questionsApiSlice;

@@ -1,5 +1,7 @@
 import { DifficultyLevel, QuestionType } from '@utils/enums';
 import { AuditResponseDTO } from './audit-response.dto';
+import { CodingQuestionResponseDTO } from './coading-question-response.dto';
+import { QuestionReviewResponseDTO } from './question-review.response.dto';
 
 // --- Main Question Response DTO ---
 class QuestionResponseDTO extends AuditResponseDTO {
@@ -30,6 +32,13 @@ class QuestionResponseDTO extends AuditResponseDTO {
 
   // **Visibility & Status**
   public declare isPublic?: boolean;
+
+  // **Coading Information**
+  public codingQuestion?: CodingQuestionResponseDTO; 
+
+  public status ?: string;
+
+  public questionReview?: QuestionReviewResponseDTO;
 }
 
 export { QuestionResponseDTO };

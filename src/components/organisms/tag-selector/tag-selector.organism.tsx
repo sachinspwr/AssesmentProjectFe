@@ -8,9 +8,11 @@ type TagSelectorProps = {
   placeholder?: string;
   wrapperClasses?: string;
   hideLabel?: boolean;
+  mode?: 'view' | 'edit';
+  pageChildren?: React.ReactNode;
 };
 
-function TagSelector({ value = [], onChange, placeholder = 'Search tags...', wrapperClasses, hideLabel = false, }: TagSelectorProps) {
+function TagSelector({ value = [], onChange, placeholder = 'Search tags...', wrapperClasses, hideLabel = false, mode = 'edit'}: TagSelectorProps) {
   const [query, setQuery] = useState('');
 
   const {
@@ -48,11 +50,13 @@ function TagSelector({ value = [], onChange, placeholder = 'Search tags...', wra
           label: tag.name,
           value: tag.name,
         }))}
+        mode={mode}
         onChange={onChange}
         onSearch={setQuery}
         loading={isFetching || isCreating}
         placeholder={placeholder}
         onAddItem={(item) => handleAddItem(item)}
+        
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'store/store';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'api/base.query';
@@ -7,8 +7,9 @@ import toast from 'react-hot-toast';
 import { handleApiError } from 'api/api.error';
 import { ApiResponse, UserResponseDTO } from '@dto/response';
 import { ResetPasswordRequestDTO } from '@dto/request/reset-password-request.dto';
-import { User, UserSubscription } from 'models';
 import { ChangePasswordDTO } from '@dto/request/change-password-request.dto';
+import { AccountSubscription } from 'models/account/account-subscription.model';
+import { User } from 'models';
 
 interface AccountState {
   isAuthenticated: boolean;
@@ -29,19 +30,29 @@ const accountSlice = createSlice({
     setUser: (state, action: PayloadAction<Partial<User> | null>) => {
       state.user = action.payload;
     },
-    setUserSubscriptions(state, action: PayloadAction<UserSubscription[]>) {
+    setUserSubscriptions(state, action: PayloadAction<AccountSubscription[]>) {
       if (state.user) {
         state.user = {
           ...state.user,
-          subscriptions: action.payload
+          subscriptions: action.payload,
         };
       }
     },
-  }
+  },
 });
 
 export const selectAccount = (state: RootState) => state.account;
 export const selectCurrentUser = (state: RootState) => state.account.user;
+export const currentUserRoles = (state: RootState) => state.account.user?.roles;
+export const currentUserPermissionNames = createSelector(
+  (state: RootState) => state.account.user?.roles ?? [],
+  (roles) => {
+    const permissionNames = roles.flatMap(role =>
+      role.permission.map(p => p.name)
+    );
+    return Array.from(new Set(permissionNames));
+  }
+);
 export const selectIsAuthenticated = (state: RootState) => state.account.isAuthenticated;
 export const { setUser, setUserSubscriptions } = accountSlice.actions;
 export default accountSlice.reducer;
@@ -152,7 +163,8 @@ export const accountApiSlice = createApi({
         method: 'PUT',
         body: userData,
       }),
-      onQueryStarted: async ({ userId, userData }, { queryFulfilled }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      onQueryStarted: async ({a, b}, { queryFulfilled }) => {
         try {
           await queryFulfilled;
         } catch (err) {
@@ -165,7 +177,7 @@ export const accountApiSlice = createApi({
     loadProfile: builder.query<UserResponseDTO, string>({
       query: () => ({
         url: `/account/me`,
-        method: 'GET'
+        method: 'GET',
       }),
       onQueryStarted: async (credentials, { queryFulfilled }) => {
         try {

@@ -6,6 +6,7 @@ export type VButtonProps = DefaultProps & {
   type?: 'button' | 'submit';
   variant?: 'primary' | 'secondary' | 'positive' | 'negative' | 'link';
   size?: 'sm' | 'md';
+  name?: string,
   isLoading?: boolean;
   disabled?: boolean;
   children?: ReactNode;
@@ -18,6 +19,7 @@ const VButton = forwardRef<HTMLButtonElement, VButtonProps>(
       label,
       type = 'button',
       size = 'md',
+      name = '',
       variant = 'primary',
       isLoading = false,
       disabled = false,
@@ -65,6 +67,7 @@ const VButton = forwardRef<HTMLButtonElement, VButtonProps>(
 
     return (
       <button
+        name={name}
         ref={ref} // <-- Attaching ref to the button
         type={type}
         className={`${defaultStyle} ${variantClass} ${sizeClass} ${className}`}

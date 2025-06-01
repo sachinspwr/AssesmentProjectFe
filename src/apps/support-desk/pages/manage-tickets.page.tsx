@@ -4,7 +4,7 @@ import { VLoader } from '@components/molecules';
 import { useGetSupportDocByTitleQuery } from 'store/slices/support-doc.slice';
 import { useNavlinkContext } from '../../../context/navlinkContext';
 
-function ManageTicketsPage() {
+function ManageTicketspage() {
   // Context and Routing
   const { setSubLinks } = useNavlinkContext();
   const { title, subTitle } = useParams();
@@ -62,4 +62,4 @@ function ManageTicketsPage() {
   );
 }
 
-export default ManageTicketsPage;
+export default ManageTicketspage;

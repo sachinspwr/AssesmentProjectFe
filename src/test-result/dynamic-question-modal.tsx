@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { TestResultResponseDTO } from '@dto/response';
 import { VLabelledInput } from '@components/molecules/index';
 import { VButton } from '@components/atoms';
-import ManageQuestionPreviewPage from '@components/pages/question/manage-question-preview.page';
+import ManageQuestionPreviewpage from '@components/pages/question/manage-question-preview.page';
 
 function DynamicQuestionModal({
   isOpen,
@@ -62,7 +62,7 @@ function DynamicQuestionModal({
       width={50}
       showFooter={false}
     >
-      <ManageQuestionPreviewPage
+      <ManageQuestionPreviewpage
         type={question?.type ?? ''}
         formData={question}
         mode="review"

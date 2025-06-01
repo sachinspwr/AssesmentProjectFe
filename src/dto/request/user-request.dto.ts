@@ -21,6 +21,8 @@ class UserRequestDTO extends BaseDTO {
   password!: string;
 
   tenantId?: string;
+
+  data: [];
 }
 
 export { UserRequestDTO };

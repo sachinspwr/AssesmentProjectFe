@@ -1,5 +1,7 @@
+import { PermissionResponseDTO } from "./permission.response.dto";
+
 export interface RolesResponseDTO {
-    permissions: any
+    permission: PermissionResponseDTO[];
     tenantId: string
     id: string
     isPublic: boolean

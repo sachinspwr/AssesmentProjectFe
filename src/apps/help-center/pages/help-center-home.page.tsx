@@ -6,7 +6,7 @@ import { FaBookOpen, FaChartBar } from 'react-icons/fa6';
 import { GrStatusGood } from 'react-icons/gr';
 import { HiOutlineAcademicCap } from 'react-icons/hi2';
 
-function HelpCenterHomePage() {
+function HelpCenterHomepage() {
   const featureCards = [
     {
       icon: <FaBookOpen className="h-8 w-8 text-theme-brand" />,
@@ -115,4 +115,4 @@ function HelpCenterHomePage() {
   );
 }
 
-export default HelpCenterHomePage;
+export default HelpCenterHomepage;

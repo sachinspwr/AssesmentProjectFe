@@ -52,3 +52,4 @@ export * from './no-result-found/no-result-found.mol';
 export * from './rating/v-rating.mol';
 export * from './social-media/v-social-media.mol';
 export * from './advance-card/v-summary-card.mol';
+export * from './placeholder-text-area/placeholder-text-area.molecules'

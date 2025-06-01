@@ -2,7 +2,7 @@ import VTable, { VTableColumn } from '@components/organisms/table/v-table.organi
 import { VICon } from '@components/atoms';
 import { FiEye } from 'react-icons/fi';
 import { TestResultResponseDTO } from '@dto/response';
-import { UserDashboardTableDTO } from '@dto/response/user-dashbaord-table.dto';
+import { UserDashboardTableDTO } from '@dto/response/inviter-assessment.response.dto';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import React from 'react';
 
@@ -88,7 +88,7 @@ function AssessmentQuestionTable({
             title={<VTypography as='small'>Questions in {section.sectionName} (Total {section.questions.length})</VTypography>}
             data={section.questions}
             columns={columnsConfig}
-            itemsPerPage={5}
+            itemsPerviewMode={5}
             emptyState={<div>No questions found in this section!</div>}
             tableClassName="table-fixed w-full"
           />

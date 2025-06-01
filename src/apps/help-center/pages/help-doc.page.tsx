@@ -8,7 +8,7 @@ import { useNavlinkContext } from '@context/navlinkContext';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2';
 
-function DocsHomePage() {
+function DocsHomepage() {
   // Context and Routing
   const { setMainLinks } = useNavlinkContext();
   const { title, subTitle } = useParams();
@@ -85,4 +85,4 @@ function DocsHomePage() {
   );
 }
 
-export default DocsHomePage;
+export default DocsHomepage;

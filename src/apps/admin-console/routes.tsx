@@ -6,17 +6,19 @@ import TestConfigurations from './pages/test-configurations/test-configurations.
 import Metadata from './pages/metadata/metadata.page';
 
 import RoleManagement from './pages/role-management/role-management.page';
-import ManageRolesPage from './pages/manage-role.page';
+import ManageRolespage from './pages/manage-role.page';
+import ManageUserspage from './pages/manage-user.page';
+import ManageSystemSettingpage from './pages/manage-system-setting.page';
 
 
 // Lazy load pages
-const AdminConsoleHomePage = lazy(() => import('./pages/admin-console-home.page'));
-const TenantHomePage = lazy(() => import('./pages/tenant-home.page'));
-const ManageTenantPage = lazy(() => import('./pages/tenant/manage-tenant.page')); // <-- import the correct component
+const AdminConsoleHomepage = lazy(() => import('./pages/admin-console-home.page'));
+const TenantHomepage = lazy(() => import('./pages/tenant-home.page'));
+const ManageTenantpage = lazy(() => import('./pages/tenant/manage-tenant.page')); // <-- import the correct component
 
-// const RoleManagementPage = lazy(() => import('./pages/manage-role.page'));
-// const UserManagementPage = lazy(() => import('./pages/manage-role.page'));
-// const PermissionsPage = lazy(() => import('./pages/manage-permission.page'));
+// const RoleManagementviewMode = lazy(() => import('./pages/manage-role.page'));
+// const UserManagementviewMode = lazy(() => import('./pages/manage-role.page'));
+// const PermissionsviewMode = lazy(() => import('./pages/manage-permission.page'));
 
 export const AdminConsoleRoutes = (
   <Route 
@@ -28,32 +30,32 @@ export const AdminConsoleRoutes = (
     }
   >
     {/* Admin Console Home */}
-    <Route index element={<AdminConsoleHomePage />} />
+    <Route index element={<AdminConsoleHomepage />} />
     
     {/* Tenant Management Route */}
-    <Route path="tenants" element={<TenantHomePage />} />
-    <Route path="tenants/:tenantId" element={<ManageTenantPage />} />
+    <Route path="tenants" element={<TenantHomepage />} />
+    <Route path="tenants/:tenantId" element={<ManageTenantpage />} />
     
     {/* Role Management Route */}
     <Route path="roles" element={<RoleManagement />} />
-    <Route path="roles/:id" element={<ManageRolesPage/>} />
+    <Route path="roles/:id" element={<ManageRolespage/>} />
     
     {/* User Management Route */}
-    <Route path="users" element={<TenantHomePage />} />
-    
-    {/* Permissions Management Route */}
-    <Route path="permissions" element={<TenantHomePage />} />
-    
+    <Route path="users" element={<ManageUserspage />} />
+        
     {/* Example route for managing specific tenants */}
-    <Route path="tenants/:tenantId" element={<TenantHomePage />} />
+    <Route path="tenants/:tenantId" element={<TenantHomepage />} />
     
     {/* Example route for managing user permissions */}
-    <Route path="permissions/:userId" element={<TenantHomePage />} />
+    <Route path="permissions/:userId" element={<TenantHomepage />} />
 
     {/* Route for test settings */}
     <Route path="metadata" element={<Metadata />} />
 
     {/* Route for test settings */}
     <Route path="test-configurations" element={<TestConfigurations />} />
+
+    {/* Route for system settings */}
+    <Route path="system-settings" element={<ManageSystemSettingpage />} />
   </Route>
 );

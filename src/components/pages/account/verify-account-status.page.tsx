@@ -5,7 +5,7 @@ import { VBrandHeader } from '@components/organisms/layout/v-brand-title.organis
 import { useLocation } from 'react-router-dom';
 import { VLink } from '@components/atoms';
 
-function VerifyAccountStatusPage() {
+function VerifyAccountStatuspage() {
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
@@ -45,4 +45,4 @@ function VerifyAccountStatusPage() {
   );
 }
 
-export default VerifyAccountStatusPage;
+export default VerifyAccountStatuspage;

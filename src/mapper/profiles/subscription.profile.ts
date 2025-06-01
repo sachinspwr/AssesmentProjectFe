@@ -3,8 +3,9 @@ import {
   SubscriptionFeatureResponseDTO,
   SubscriptionResponseDTO,
 } from '@dto/response/subscription-option-response.dto';
-import { UserSubscriptionOrderResponseDTO } from '@dto/response/user-subscription-order.response.dto';
-import { Subscription, SubscriptionFeature, UserSubscriptionOrderModel } from 'models';
+import { SubscriptionLimitResponseDTO } from '@dto/response/subscription/subscription-limit-response.dto';
+import { Subscription, SubscriptionFeature } from 'models/subscription';
+import { SubscriptionLimit } from 'models/subscription/subscription-limit-model';
 
 export const subscriptionProfile = (mapper: Mapper) => {
   createMap(
@@ -27,6 +28,53 @@ export const subscriptionProfile = (mapper: Mapper) => {
     forMember(
       (dest) => dest.featureValue,
       mapFrom((src) => src.featureValue)
+    )
+  );
+
+  createMap(
+    mapper,
+    SubscriptionLimitResponseDTO,
+    SubscriptionLimit,
+
+    forMember(
+      (dest) => dest.id,
+      mapFrom((src) => src.id)
+    ),
+    forMember(
+      (dest) => dest.isPublic,
+      mapFrom((src) => src.isPublic)
+    ),
+    forMember(
+      (dest) => dest.createdById,
+      mapFrom((src) => src.createdById)
+    ),
+    forMember(
+      (dest) => dest.updatedById,
+      mapFrom((src) => src.updatedById)
+    ),
+    forMember(
+      (dest) => dest.pricePerUnit,
+      mapFrom((src) => src.pricePerUnit)
+    ),
+    forMember(
+      (dest) => dest.enterpriseDiscount,
+      mapFrom((src) => src.enterpriseDiscount)
+    ),
+    forMember(
+      (dest) => dest.individualDiscount,
+      mapFrom((src) => src.individualDiscount)
+    ),
+    forMember(
+      (dest) => dest.subscriptionId,
+      mapFrom((src) => src.subscriptionId)
+    ),
+    forMember(
+      (dest) => dest.key,
+      mapFrom((src) => src.key)
+    ),
+    forMember(
+      (dest) => dest.value,
+      mapFrom((src) => src.value)
     )
   );
 
@@ -75,55 +123,4 @@ export const subscriptionProfile = (mapper: Mapper) => {
       )
     )
   );
-
-  createMap(
-    mapper,
-    UserSubscriptionOrderResponseDTO,
-    UserSubscriptionOrderModel,
-    forMember(
-      (dest) => dest.orderId,
-      mapFrom((src) => src.orderId)
-    ),
-    forMember(
-      (dest) => dest.subscriptionId,
-      mapFrom((src) => src.subscriptionId)
-    ),
-    forMember(
-      (dest) => dest.paymentId,
-      mapFrom((src) => src.paymentId)
-    ),
-    forMember(
-      (dest) => dest.amount,
-      mapFrom((src) => src.amount)
-    ),
-    forMember(
-      (dest) => dest.currency,
-      mapFrom((src) => src.currency)
-    ),
-    forMember(
-      (dest) => dest.method,
-      mapFrom((src) => src.method)
-    ),
-    forMember(
-      (dest) => dest.description,
-      mapFrom((src) => src.description)
-    ),
-    forMember(
-      (dest) => dest.status,
-      mapFrom((src) => src.status)
-    ),
-    forMember(
-      (dest) => dest.paymentModeMasterId,
-      mapFrom((src) => src.paymentModeMasterId)
-    ),
-    forMember(
-      (dest) => dest.createdAt,
-      mapFrom((src) => src.createdAt)
-    ),
-    forMember(
-      (dest) => dest.subscription,
-      mapFrom((src) => src.subscription)
-    )
-  );
-  
 };

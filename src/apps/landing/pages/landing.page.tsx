@@ -1,7 +1,7 @@
 import { Hero, TestFeatures, AdvanceFeatures, SupportFeature, Pricing, ContactUs } from "../components";
 import { LandingLayout } from "../layout/landing-layout";
 
-function LandingPage() {
+function Landingpage() {
   return (
       <LandingLayout>
         <div
@@ -23,4 +23,4 @@ function LandingPage() {
   );
 }
 
-export { LandingPage };
+export { Landingpage };

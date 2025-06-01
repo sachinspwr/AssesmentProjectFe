@@ -12,14 +12,14 @@ import AssessmentQuestionTable from './asssessment-question-table';
 
 import CandidateProfileDetails from './components/candidate-profile-details.component';
 
-interface DetailedCandidateTestResultPageProps {
+interface DetailedCandidateTestResultpageProps {
   className?: string;
   hideBackButton?: boolean;
 }
 
 export default function DetailedCandidateTestResultPage({
   className,
-}: DetailedCandidateTestResultPageProps) {
+}: DetailedCandidateTestResultpageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [questionInfo, setQuestionInfo] = useState({ sectionId: '', questionId: '' });
 

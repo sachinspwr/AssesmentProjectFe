@@ -13,12 +13,12 @@ import {
 import ConfirmAction from '@components/organisms/assessment/confirm-action/confirm-action.organisms';
 import { ViewContent } from '../components/view-content.component';
 
-type ManageArticlesPageProps = { mode?: 'edit' | 'create' };
+type ManageArticlespageProps = { mode?: 'edit' | 'create' };
 
 const generateSlug = (title: string) =>
   title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
 
-function ManageArticlesPage({ mode = 'edit' }: ManageArticlesPageProps) {
+function ManageArticlespage({ mode = 'edit' }: ManageArticlespageProps) {
   const isCreateMode = mode === 'create';
   const { id, slug, parentSlug } = useParams();
   const navigate = useNavigate();
@@ -172,4 +172,4 @@ function ManageArticlesPage({ mode = 'edit' }: ManageArticlesPageProps) {
   );
 }
 
-export default ManageArticlesPage;
+export default ManageArticlespage;

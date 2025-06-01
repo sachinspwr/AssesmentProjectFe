@@ -46,17 +46,17 @@ export const testAssessmentApiSlice = createApi({
   baseQuery: axiosBaseQuery,
   tagTypes: [TEST_TAG],
   endpoints: (builder) => ({
-    fetchTests: builder.query<PaginatedResponse<TestResponseDTO>, {scope: Scope, page: number; limit: number }>({
-      query: ({scope, page, limit }) => {
+    fetchTests: builder.query<PaginatedResponse<TestResponseDTO>, { scope: Scope; page: number; limit: number }>({
+      query: ({ scope, page, limit }) => {
         const params = new URLSearchParams();
         if (scope !== 'all') params.append('isPublic', String(scope === 'public'));
         if (limit) params.append('limit', String(limit));
         if (page) params.append('page', String(page));
 
-        return{
+        return {
           url: `/tests?${params.toString()}`,
           method: 'GET',
-        }
+        };
       },
       providesTags: (result) =>
         result?.data
@@ -71,7 +71,7 @@ export const testAssessmentApiSlice = createApi({
         }
       },
     }),
-    
+
     fetchTestById: builder.query<TestResponseDTO, string>({
       query: (testId) => ({
         url: `/tests/${testId}`,
@@ -205,6 +205,56 @@ export const testAssessmentApiSlice = createApi({
       },
     }),
 
+    fetchTestsByStatus: builder.query<PaginatedResponse<TestResponseDTO>, { status: string }>({
+      query: ({ status }) => {
+        return {
+          url: `/tests/:id/status?status=${status}`,
+          method: 'GET',
+        };
+      },
+      onQueryStarted: handleQueryResponse,
+    }),
+
+    approveTest: builder.mutation<TestResponseDTO, string>({
+      query: (testId) => ({
+        url: `/tests/${testId}/approve`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, error, testId) => [
+        { type: TEST_TAG, id: testId },
+        { type: TEST_TAG, id: 'LIST' },
+      ],
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          toast.success('Test Approved Successfully!');
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
+
+    rejectTest: builder.mutation<TestResponseDTO, { testId: string; comment: string }>({
+      query: ({ testId, comment }) => ({
+        url: `/tests/${testId}/reject`,
+        method: 'POST',
+        body: { comment },
+      }),
+      invalidatesTags: (result, error, { testId }) => [
+        { type: TEST_TAG, id: testId },
+        { type: TEST_TAG, id: 'LIST' },
+      ],
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          toast.success('Test Rejected with Reason!');
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
   }),
 });
 
@@ -218,4 +268,7 @@ export const {
   usePublishTestMutation,
   useDeleteTestMutation,
   useUpdateTestConfigMutation,
+  useFetchTestsByStatusQuery,
+  useApproveTestMutation,
+  useRejectTestMutation,
 } = testAssessmentApiSlice;

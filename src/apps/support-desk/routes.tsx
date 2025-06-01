@@ -3,12 +3,12 @@ import React, { lazy } from 'react';
 
 // Lazy loading the layout and page components
 const SupportDeskLayout = lazy(() => import('./layout'));
-const TicketsPage = lazy(() => import('./pages/desk-ticket-summary.page'));
-const SupportDocsPage = lazy(() => import('./pages/desk-support-doc.page'));
-const ArticlesPage = lazy(() => import('./pages/desk-articles.page'));
-const ManageSupportDocPage = lazy(() => import('./pages/manage-support-doc.page'));
-const ManageSupportSubDocPage = lazy(() => import('./pages/manage-support-sub-doc.page'));
-const ManageArticlesPage = lazy(() => import('./pages/manage-articles.page'));
+const Ticketspage = lazy(() => import('./pages/desk-ticket-summary.page'));
+const SupportDocspage = lazy(() => import('./pages/desk-support-doc.page'));
+const Articlespage = lazy(() => import('./pages/desk-articles.page'));
+const ManageSupportDocpage = lazy(() => import('./pages/manage-support-doc.page'));
+const ManageSupportSubDocpage = lazy(() => import('./pages/manage-support-sub-doc.page'));
+const ManageArticlespage = lazy(() => import('./pages/manage-articles.page'));
 
 export const SupportDeskRoutes = (
   <Route
@@ -20,20 +20,20 @@ export const SupportDeskRoutes = (
     }
   >
     <Route index element={<Navigate to="tickets" replace />} />
-    <Route path="tickets" element={<TicketsPage />} />
+    <Route path="tickets" element={<Ticketspage />} />
 
     {/* Support Document */}
-    <Route path="docs" element={<SupportDocsPage />} />
-    <Route path="docs/0" element={<ManageSupportDocPage mode="create" />} />
-    <Route path="docs/:id" element={<ManageSupportDocPage />} />
+    <Route path="docs" element={<SupportDocspage />} />
+    <Route path="docs/0" element={<ManageSupportDocpage mode="create" />} />
+    <Route path="docs/:id" element={<ManageSupportDocpage />} />
 
     {/* Support Sub Document */}
-    <Route path="docs/:parentId/sub-doc/0" element={<ManageSupportSubDocPage mode="create" />} />
-    <Route path="docs/:parentSlug/sub-doc/:slug" element={<ManageSupportSubDocPage />} />
+    <Route path="docs/:parentId/sub-doc/0" element={<ManageSupportSubDocpage mode="create" />} />
+    <Route path="docs/:parentSlug/sub-doc/:slug" element={<ManageSupportSubDocpage />} />
 
     {/* Article */}
-    <Route path="articles" element={<ArticlesPage />} />
-    <Route path="articles/0" element={<ManageArticlesPage mode="create" />} />
-    <Route path="articles/:id" element={<ManageArticlesPage />} />
+    <Route path="articles" element={<Articlespage />} />
+    <Route path="articles/0" element={<ManageArticlespage mode="create" />} />
+    <Route path="articles/:id" element={<ManageArticlespage />} />
   </Route>
 );

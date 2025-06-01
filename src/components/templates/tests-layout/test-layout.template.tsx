@@ -17,7 +17,7 @@ import { CategoryForm } from '@components/organisms/category-form/category-form.
 import { useNavigate } from 'react-router-dom';
 import { GrDocumentTest } from 'react-icons/gr';
 import { Pagination } from '@components/organisms/pagination/pagination.organism';
-import { PagedResponseDTO } from '@dto/response/page-response';
+import { pagedResponseDTO } from '@dto/response/page-response';
 import { useQueryClient } from 'react-query';
 import { FaFolderPlus } from 'react-icons/fa';
 
@@ -36,9 +36,9 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
   const [categoryId, setCategoryId] = useState<string>('');
   const [owner, setOwner] = useState<Owner>('Library');
   const [userId, setUserId] = useState<string | undefined>(undefined);
-  const searchRef = useRef<SearchComponentRef<TestRequestDTO, PagedResponseDTO<TestResponseDTO>>>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const searchRef = useRef<SearchComponentRef<TestRequestDTO, pagedResponseDTO<TestResponseDTO>>>(null);
+  const [currentpage, setCurrentpage] = useState<number>(1);
+  const [totalpages, setTotalpages] = useState<number>(1);
   const [pageSize] = useState<number>(5);
   const categoryFormRef = useRef<DynamicFormHandle>(null);
   const queryClient = useQueryClient();
@@ -60,10 +60,10 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
           },
         ],
         limit: pageSize,
-        offset: (currentPage - 1) * pageSize,
+        offset: (currentpage - 1) * pageSize,
       });
     }
-  }, [categoryId, currentPage, pageSize]);
+  }, [categoryId, currentpage, pageSize]);
 
   useEffect(() => {
     if (searchRef.current) {
@@ -77,10 +77,10 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
           },
         ],
         limit: pageSize,
-        offset: (currentPage - 1) * pageSize,
+        offset: (currentpage - 1) * pageSize,
       });
     }
-  }, [owner, userId, currentPage, pageSize]);
+  }, [owner, userId, currentpage, pageSize]);
 
   const initialCriteria = useMemo<SearchCriteria<TestRequestDTO>[]>(
     () => [
@@ -144,9 +144,9 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
     navigate('/questions', { state: { test: formData } });
   };
 
-  const handlePageChange = (page: number) => {
-    if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
+  const handlepageChange = (page: number) => {
+    if (page > 0 && page <= totalpages) {
+      setCurrentpage(page);
     }
   };
 
@@ -164,7 +164,7 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
         </div>
         <div className={`w-full p-6 pt-4 px-0 flex flex-row justify-around gap-6 ${className}`}>
           <div className="w-9/12">
-            <SearchComponent<TestRequestDTO, PagedResponseDTO<TestResponseDTO>>
+            <SearchComponent<TestRequestDTO, pagedResponseDTO<TestResponseDTO>>
               ref={searchRef}
               searchEndpoint="/tests/search"
               formConfig={searchConfig}
@@ -172,7 +172,7 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
               searchContainerSize={2}
               onResults={(data) => {
                 setTests(data.data);
-                setTotalPages(Math.ceil(data.totalItems / pageSize));
+                setTotalpages(Math.ceil(data.totalItems / pageSize));
               }}
               searchBoxBtnProps={[
                 {
@@ -185,7 +185,7 @@ const TestLayout: React.FC<TestLayoutProps> = React.memo(({ className = '' }) =>
             <TestList tests={tests} />
             {searchRef.current?.isLoading && <Loader wrapperClasses="min-h-20" bubbleClasses="bg-skin-theme-invert" />}
             {searchRef.current?.isLoading == false && tests?.length <= 0 && <NoResultsFound />}
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            <Pagination currentviewMode={currentpage} totalpages={totalpages} onpageChange={handlepageChange} />
           </div>
           <div className="w-3/12 px-2 flex flex-col gap-5">
             <div className="w-full">

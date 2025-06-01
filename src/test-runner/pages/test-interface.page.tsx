@@ -4,7 +4,7 @@ import { useAppSelector } from 'store/store';
 import TestHeader from 'test-runner/components/test-header.component';
 import TestSectionSummary from 'test-runner/components/test-section-summary.component';
 
-const TestInterfacePage = () => {
+const TestInterfacepage = () => {
   const testDetails = useAppSelector((state) => state.testRunner.testDetails);
   const vTabsRef = useRef<VTabsRef>(null);
   const testSections = testDetails?.testSections;
@@ -37,4 +37,4 @@ const TestInterfacePage = () => {
   );
 };
 
-export default TestInterfacePage;
+export default TestInterfacepage;

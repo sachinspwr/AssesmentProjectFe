@@ -1,4 +1,4 @@
-import { VButton, VICon, VImage, VStatus } from '@components/atoms';
+import { VICon, VStatus } from '@components/atoms';
 import { VLoader, VSummaryCard } from '@components/molecules/index';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VTableColumn } from '@components/organisms';
@@ -6,19 +6,22 @@ import VBarChartGraph from '@components/organisms/graph/v-bar-graph.organism';
 import { VPieGraph } from '@components/organisms/graph/v-pie-graph.organisms';
 import { VOverview } from '@components/organisms/overview/v-overview.organism';
 import VTable from '@components/organisms/table/v-table.organism';
-import { UserDashboardTableDTO } from '@dto/response/user-dashbaord-table.dto';
+import { UserResponseDTO } from '@dto/response';
+import { InviterAssessmentResponseDto } from '@dto/response/inviter-assessment.response.dto';
 import { UserTestResults } from '@dto/response/user-test-results-response.dto';
+import { ResultStatus } from '@utils/enums';
 import { defaultFormatDtTm } from '@utils/functions';
 import { AiOutlineBarChart, AiOutlineClockCircle } from 'react-icons/ai';
 import { FiEye } from 'react-icons/fi';
 import { MdAssignment, MdOutlineQuiz } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { useGetAllTestsSummaryByUserQuery } from 'store/slices/test-result.slice';
-import { useAppSelector } from 'store/store';
 
-
-
-const mapToAssessmentData = (apiData: UserTestResults[]): UserDashboardTableDTO[] => {
+const mapToAssessmentData = (
+  apiData: UserTestResults[]
+): (InviterAssessmentResponseDto & {
+  user: UserResponseDTO
+})[] => {
   return apiData.map((item) => ({
     id: item.test.id,
     testId: item.test.id,
@@ -28,29 +31,42 @@ const mapToAssessmentData = (apiData: UserTestResults[]): UserDashboardTableDTO[
     status: item.status,
     isPassed: item.isPassed,
     completedAt: item.completedAt,
+    user: {
+      firstName: item.user.firstName,
+      lastName: item.user.lastName,
+    },
   }));
 };
 
-const UserResultDashboard = () => {
+function UserResultDashboard() {
   const navigate = useNavigate();
-  const userId = useAppSelector((state) => state.account.user?.id);
 
-  const columnsConfig: VTableColumn<UserDashboardTableDTO>[] = [
+  const columnsConfig: VTableColumn<
+  InviterAssessmentResponseDto & {
+      user: UserResponseDTO
+    }
+  >[] = [
     {
       key: 'testName',
       label: 'Assessment Name',
-      customRender: (row: UserDashboardTableDTO) => <p className="font-[500]  text-theme-primary">{row.testName}</p>,
+      customRender: (row: InviterAssessmentResponseDto) => <p className="font-[500]  text-theme-primary">{row.testName}</p>,
       sortable: true,
+      searchable: true,
+    },
+    {
+      key: 'candidateName',
+      label: 'Candidate Name',
+      customRender: (row) => <p>{`${row.user.firstName} ${row.user.lastName}`}</p>,
       searchable: true,
     },
     {
       key: 'status',
       label: 'Status',
-      customRender: (row: UserDashboardTableDTO) =>
+      customRender: (row: InviterAssessmentResponseDto) =>
         row.status ? (
           <VStatus
             label={row.status}
-            type={row.status === 'Active' ? 'positive' : row?.status === 'On-Hold' ? 'warning' : 'negative'}
+            type={row.status === ResultStatus.Passed ? 'positive' : row?.status === ResultStatus.Under_Review ? 'warning' : 'negative'}
           ></VStatus>
         ) : (
           '-'
@@ -59,19 +75,19 @@ const UserResultDashboard = () => {
     {
       key: 'isPassed',
       label: 'Pass/Fail',
-      customRender: (row: UserDashboardTableDTO) => (
-        <VStatus label={row.isPassed ? 'Pass' : 'Fail'} type={row.isPassed ? 'positive' : 'negative'}></VStatus>
+      customRender: (row: InviterAssessmentResponseDto) => (
+        <VStatus label={row.isPassed ? ResultStatus.Passed : ResultStatus.Failed} type={row.isPassed ? 'positive' : 'negative'}></VStatus>
       ),
     },
     {
       key: 'completedAt',
       label: 'Completed At',
-      customRender: (row: UserDashboardTableDTO) => <span>{defaultFormatDtTm(row?.completedAt)}</span>,
+      customRender: (row: InviterAssessmentResponseDto) => <span>{defaultFormatDtTm(row?.completedAt)}</span>,
     },
     {
       key: 'actions',
       label: 'Actions',
-      customRender: (row: UserDashboardTableDTO) => (
+      customRender: (row: InviterAssessmentResponseDto) => (
         <VICon
           className="text-theme-muted"
           icon={FiEye}
@@ -81,17 +97,16 @@ const UserResultDashboard = () => {
     },
   ];
 
-  const { data: summaryData, isLoading: summaryLoading } = useGetAllTestsSummaryByUserQuery(
-    { userId: userId as string },
-    { skip: !userId }
-  );
+  const { data: summaryData, isLoading: summaryLoading } = useGetAllTestsSummaryByUserQuery();
 
-  const assessmentList: UserDashboardTableDTO[] = mapToAssessmentData(summaryData?.recentTestResults || []);
+  const assessmentList: InviterAssessmentResponseDto[] = mapToAssessmentData(summaryData?.recentTestResults || []);
 
   const pieChartData = summaryData?.subjectStats?.map((stat) => ({
     name: stat.subject,
     value: stat.passRate,
   }));
+
+  console.log(pieChartData);
 
   if (summaryLoading) {
     return <VLoader position="global" />;
@@ -108,14 +123,14 @@ const UserResultDashboard = () => {
   return (
     <div className="min-h-screen">
       <div className="flex items-center justify-between">
-        <VTypography as="h3">Result Dashboard</VTypography>
+        <VTypography as="h3">Dashboard</VTypography>
       </div>
       <div className="border border-theme-default mb-5 mt-5"></div>
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <VSummaryCard
           title="Tests Taken"
-          value={summaryData?.summaryStats?.[0]?.totalTests  as number}
+          value={summaryData?.summaryStats?.[0]?.totalTests as number}
           icon={MdAssignment}
           variant="primary"
           helperText="Total tests attempted"
@@ -161,10 +176,9 @@ const UserResultDashboard = () => {
       </div>
 
       <div className="mt-5">
-        <VTable<UserDashboardTableDTO>
+        <VTable<InviterAssessmentResponseDto & { user: UserResponseDTO }>
           title="Test Assessment"
           data={assessmentList}
-          loading={summaryLoading}
           columns={columnsConfig}
           headerClassName="font-[600] text-lg"
           itemsPerPage={5}
@@ -174,6 +188,6 @@ const UserResultDashboard = () => {
       </div>
     </div>
   );
-};
+}
 
 export default UserResultDashboard;

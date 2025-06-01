@@ -28,7 +28,7 @@ function MarkdownEditorWithPreview({
   };
 
   return (
-    <div className="flex border border-theme-default w-full">
+    <div className="flex border border-theme-default w-full rounded-lg">
       {/* Markdown Editor (full width if preview is hidden) */}
       <div className={showPreview ? 'w-1/2' : 'w-full'}>
         <MdEditor
@@ -52,7 +52,7 @@ function MarkdownEditorWithPreview({
 
       {/* Preview Panel */}
       {showPreview ? (
-        <div className="w-1/2 overflow-hidden border-l" style={{ height }}>
+        <div className="w-1/2 overflow-hidden border" style={{ height }}>
           <div className="flex flex-col h-full">
             {/* Toggle button inside preview */}
             <div className="flex justify-between items-center px-4 py-1.5 border-b" style={{backgroundColor:'#f5f5f5'}}>

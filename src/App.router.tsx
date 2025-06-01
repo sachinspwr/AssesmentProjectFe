@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Pages
+// pages
 import {
   AppLauncher,
   ComponentsPage,
-  Dashboard,
   ForgotPasswordPage,
   LoginPage,
   LogoutPage,
@@ -27,35 +26,34 @@ import {
 
 import { FeedbackForm } from '@components/organisms/test-feedback-form/test-feedback-form.organism';
 import { FeatureLayout } from '@components/templates/layout/feature-layout.template';
-import { TermsAndServices } from '@components/organisms/compliance/terms-and-services.organism';
 import ResetPasswordSuccessPage from '@components/pages/account/reset-password-success.page';
 import VerifyAccountPage from '@components/pages/account/verify-account.page';
 import VerifyAccountStatusPage from '@components/pages/account/verify-account-status.page';
 
-// Assessment and Question Pages
-import TestAssessmentPage from '@components/pages/assessment/assement.page';
-import QuestionsPage from '@components/pages/question/questions.page';
-import ManageQuestionPage from '@components/pages/question/manage-question.page';
+// Assessment and Question pages
+import TestAssessmentpage from '@components/pages/assessment/assement.page';
+import Questionspage from '@components/pages/question/questions.page';
+import ManageQuestionpage from '@components/pages/question/manage-question.page';
 import { ManageAssessment } from '@components/pages/assessment/manage-assessment.page';
 
-// Account Pages
+// Account pages
 import RegisterUserSuccessPage from '@components/pages/account/register-user-success.page';
 
-import { SubscriptionPage } from '@components/pages/subscription/subscription.page';
+import { Subscriptionpage } from '@components/pages/subscription/subscription.page';
 import RazorpayCheckout from '@services/payment.service';
 
-// Test Runner Pages
-import TestRegisterPage from 'test-runner/pages/test-register.page';
-import TestMetadataPage from 'test-runner/pages/test-metadata.page';
-import TestInterfacePage from 'test-runner/pages/test-interface.page';
+// Test Runner pages
+import TestRegisterpage from 'test-runner/pages/test-register.page';
+import TestMetadatapage from 'test-runner/pages/test-metadata.page';
+import TestInterfacepage from 'test-runner/pages/test-interface.page';
 
-// Subscription Pages
+// Subscription pages
 import { SubscriptionPlans } from '@components/organisms/subscription/subscription-plans.organism';
-import UpgradeSubscriptionPage from '@components/pages/subscription/ugrade-subscription.page';
+import UpgradeSubscriptionpage from '@components/pages/subscription/ugrade-subscription.page';
 
-// Other Pages
+// Other pages
 import { BootstrapAppPage } from '@components/pages/app/bootstrap-app.page';
-import { ErrorPage } from '@components/organisms/excel-select-preview/error.page';
+import { Errorpage } from '@components/organisms/excel-select-preview/error.page';
 import { ErrorBoundary } from '@components/organisms/error/error-bountry.organism';
 
 // Support Docs
@@ -67,127 +65,144 @@ import { HydrationProvider } from './context';
 import { SubscriptionGuard } from 'guards';
 import TestRunnerBootstrap from 'test-runner/pages/test-runner-bootstrap';
 
-import { LandingPage } from 'apps/landing';
+import { Landingpage } from 'apps/landing';
 import { SupportDeskRoutes } from 'apps/support-desk';
 import { HelpCenterRoutes } from 'apps/help-center';
 import { AdminConsoleRoutes } from 'apps/admin-console';
-import { CodingTestEditor } from 'test-runner/pages/test-editor-page';
-import { QuestionResponseDTO } from '@dto/response';
-import { Answer } from 'test-runner/types';
 import { EvalyticsRoutes } from 'apps/evalytics';
 import DetailedCandidateTestResultPage from 'test-result/detailed-candidate-result.page';
 import UserResultDashboard from 'test-result/user-result-dashboard.page';
+import ProtectedRoute from 'guards/ProtectedRoute.guard';
+import { Permissions } from '@utils/enums';
+import InvitationPage from '@components/pages/invitation/invitation.page';
+import InvitationAcceptPage from '@components/pages/invitation/invitation-accept.page';
+import InvitationRejectPage from '@components/pages/invitation/invitation-reject.page';
+import LinkRegisterPage from '@components/pages/invitation/link-register.page';
+import { CompliancePage } from '@components/pages/compliance.page';
+import PrivacyPolicy from '@components/organisms/compliance/privacy-policy.organism';
+import Dashboard from '@components/pages/dashboard.page';
+import MaintenanceCheckProvider from '@context/maintenance-check-provider';
 
 function AppRouter() {
   return (
     <div className="w-full h-screen">
       <Router>
-        <Routes>
-          {/* General Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/components" element={<ComponentsPage />} />
+        <MaintenanceCheckProvider>
+          <Routes>
+            {/* General Routes */}
+            <Route path="/" element={<Landingpage />} />
+            <Route path="/components" element={<ComponentsPage />} />
 
-          {/* Account Routes */}
-          <Route path="/sign-in" element={<LoginPage />} />
-          <Route path="/sign-up" element={<RegisterPage />} />
-          <Route path="/register-user-success" element={<RegisterUserSuccessPage />} />
-          <Route path="/sign-out" element={<LogoutPage />} />
-          <Route path="/verify-account" element={<VerifyAccountPage />} />
-          <Route path="/verify-account-status" element={<VerifyAccountStatusPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/reset-password-success" element={<ResetPasswordSuccessPage />} />
-          <Route path="/request-demo" element={<RequestaDemoPage />} />
-          <Route path="/terms-and-conditions" element={<TermsAndServices />} />
+            {/* Account Routes */}
+            <Route path="/sign-in" element={<LoginPage />} />
+            <Route path="/sign-up" element={<RegisterPage />} />
+            <Route path="/register-user-success" element={<RegisterUserSuccessPage />} />
+            <Route path="/sign-out" element={<LogoutPage />} />
+            <Route path="/verify-account" element={<VerifyAccountPage />} />
+            <Route path="/verify-account-status" element={<VerifyAccountStatusPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/reset-password-success" element={<ResetPasswordSuccessPage />} />
+            <Route path="/request-demo" element={<RequestaDemoPage />} />
+            <Route path="/compliance-page" element={<CompliancePage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-          {/* // Authenticated Layout */}
-          <Route path="/" element={<AuthenticatedLayout />}>
-            <Route element={<HydrationProvider />}>
-              {/* Bootstrap Page */}
-              <Route path="/bootstrap" element={<BootstrapAppPage />} />
+            {/* // Authenticated Layout */}
+            <Route path="/" element={<AuthenticatedLayout />}>
+              <Route path="invitations/accept" element={<InvitationAcceptPage />} />
+              <Route path="invitations/reject" element={<InvitationRejectPage />} />
+              <Route path="link/register" element={<LinkRegisterPage />} />
 
-              <Route path="/apps" element={<AppLauncher />} />
+              <Route element={<HydrationProvider />}>
+                {/* Bootstrap Page */}
+                <Route path="/bootstrap" element={<BootstrapAppPage />} />
+                <Route path="/apps" element={<AppLauncher />} />
 
-              {/* Protect these routes with SubscriptionGuard */}
-              <Route element={<SubscriptionGuard />}>
-                <Route path="/" element={<FeatureLayout />}>
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="assessments" element={<TestAssessmentPage />} />
-                  <Route path="assessments/:id" element={<ManageAssessment />} />
-                  <Route path="support" element={<SupportPage />} />
-                  <Route path="pricing" element={<SubscriptionPlans />} />
-                  <Route path="subscriptions" element={<SubscriptionPage />} />
-                  <Route path="tickets/:id" element={<ManageTicketPage />} />
-                  <Route path="questions" element={<QuestionsPage />} />
-                  <Route path="questions/:id" element={<ManageQuestionPage />} />
-                  <Route path="settings" element={<AccountSettings />} />
-                  <Route path='user-dashboard' element={<UserResultDashboard/>}/>
-                  <Route path='result/:testId/participants/:participantId' element={<DetailedCandidateTestResultPage/>} />
-                </Route> 
-              </Route>
+                {/* Protect these routes with SubscriptionGuard */}
+                <Route element={<SubscriptionGuard />}>
+                  <Route path="/" element={<FeatureLayout />}>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="assessments" element={<TestAssessmentpage />} />
+                    <Route path="assessments/:id" element={<ManageAssessment />} />
+                    <Route path="support" element={<SupportPage />} />
+                    <Route path="pricing" element={<SubscriptionPlans />} />
+                    <Route path="subscriptions" element={<Subscriptionpage />} />
+                    <Route path="tickets/:id" element={<ManageTicketPage />} />
+                    <Route path="questions" element={<Questionspage />} />
+                    <Route path="questions/:id" element={<ManageQuestionpage />} />
+                    <Route path="settings" element={<AccountSettings />} />
+                    <Route path="user-dashboard" element={<UserResultDashboard />} />
+                    <Route
+                      path="result/:testId/participants/:participantId"
+                      element={<DetailedCandidateTestResultPage />}
+                    />
+                    <Route path="invite" element={<InvitationPage />} />
+                  </Route>
+                </Route>
 
-              {/* These routes are outside SubscriptionGuard */}
-              <Route path="/" element={<HeaderOnlyLayout />}>
-                <Route path="subscriptions">
-                  <Route path="upgrade" element={<UpgradeSubscriptionPage />} />
+                {/* These routes are outside SubscriptionGuard */}
+                <Route path="/" element={<HeaderOnlyLayout />}>
+                  <Route path="subscriptions">
+                    <Route path="upgrade" element={<UpgradeSubscriptionpage />} />
+                  </Route>
                 </Route>
               </Route>
-
             </Route>
-          </Route>
 
-          {/* Test Runner Routes */}
-          <Route path="/test-runner/:id/bootstrap" element={<TestRunnerBootstrap />} />
-          <Route path="/test-runner/:id/register" element={<TestRegisterPage />} />
-          <Route path="/test-runner/:id/test-metadata" element={<TestMetadataPage />} />
-          <Route path="/test-runner/:id/test-interface" element={<TestInterfacePage />} />
-          <Route path="/test-runner/redirect/:testLinkToken" element={<TestRedirectPage />} />
-          <Route path="/test-runner/test/:testId" element={<TestLandingPage />} />
-          <Route path="/test-runner/test/:testId/questions" element={<TestQuestionPage />} />
-          <Route path="/test-runner/sign-off" element={<TestSignoffPage />} />
-          <Route path="/test-feedback" element={<FeedbackForm />} />
-          <Route path="/test-runner/invalid-link" element={<InvalidLinkPage />} />
-          <Route path="/test-runner/test-result" element={<TestResultPage />} />
-          <Route path='/test-runner/:testId/participants/:participantId' element={<DetailedCandidateTestResultPage className='py-6 px-6' hideBackButton={true}/>} />
-          <Route path="/test-runner/code-editor" element={<CodingTestEditor question={new QuestionResponseDTO} currentQuestionId={''} questionAnswer={''} isLastQuestion={false} onAnswer={function (questionId: string, answer: Answer): void {
-            throw new Error('Function not implemented.');
-          } } onSubmit={function (): void {
-            throw new Error('Function not implemented.');
-          } } onNext={function (): void {
-            throw new Error('Function not implemented.');
-          } } onBack={function (): void {
-            throw new Error('Function not implemented.');
-          } }/>} />
+            {/* Test Runner Routes */}
+            <Route path="/test-runner/:id/bootstrap" element={<TestRunnerBootstrap />} />
+            <Route path="/test-runner/:id/register" element={<TestRegisterpage />} />
+            <Route path="/test-runner/:id/test-metadata" element={<TestMetadatapage />} />
+            <Route path="/test-runner/:id/test-interface" element={<TestInterfacepage />} />
+            <Route path="/test-runner/redirect/:testLinkToken" element={<TestRedirectPage />} />
+            <Route path="/test-runner/test/:testId" element={<TestLandingPage />} />
+            <Route path="/test-runner/test/:testId/questions" element={<TestQuestionPage />} />
+            <Route path="/test-runner/sign-off" element={<TestSignoffPage />} />
+            <Route path="/test-feedback" element={<FeedbackForm />} />
 
-          {/* Payment Route */}
-          <Route path="/payment" element={<RazorpayCheckout orderId={''} amount={0} subscriptionId={''} />} />
+            <Route path="/test-runner/invalid-link" element={<InvalidLinkPage />} />
+            <Route path="/test-runner/test-result" element={<TestResultPage />} />
+            <Route
+              path="/test-runner/:testId/participants/:participantId"
+              element={<DetailedCandidateTestResultPage className="py-6 px-6" hideBackButton={true} />}
+            />
 
-          {/* Support Doc Routes */}
-          {HelpCenterRoutes}
+            <Route path="/test-runner/invalid-link" element={<InvalidLinkPage />} />
+            <Route path="/test-runner/test-result" element={<TestResultPage />} />
+            <Route
+              path="/test-runner/:testId/participants/:participantId"
+              element={<DetailedCandidateTestResultPage className="py-6 px-6" hideBackButton={true} />}
+            />
 
-           {/* Support Routes */}
-          {SupportDeskRoutes}
+            {/* Payment Route */}
+            <Route path="/payment" element={<RazorpayCheckout orderId={''} amount={0} subscriptionId={''} />} />
 
-           {/* Admin Routes */}
-           {AdminConsoleRoutes}
+            {/* Support Doc Routes */}
+            {HelpCenterRoutes}
 
-          {/* Evaluate and Analytics Routes */}
-           {EvalyticsRoutes}
-           
+            {/* Support Routes */}
+            {SupportDeskRoutes}
 
-          {/* Error Handling */}
-          <Route
-            path="/error"
-            element={
-              <ErrorBoundary>
-                <ErrorPage />
-              </ErrorBoundary>
-            }
-          />
+            {/* Admin Routes */}
+            {AdminConsoleRoutes}
 
-          {/* 404 Not Found */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* Evaluate and Analytics Routes */}
+            {EvalyticsRoutes}
+
+            {/* Error Handling */}
+            <Route
+              path="/error"
+              element={
+                <ErrorBoundary>
+                  <Errorpage />
+                </ErrorBoundary>
+              }
+            />
+
+            {/* 404 Not Found */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </MaintenanceCheckProvider>
       </Router>
     </div>
   );

@@ -4,7 +4,7 @@ import MCQPreview from '@components/organisms/questions-preview/mcq-preview.orga
 import ShortAnswerPreview from '@components/organisms/questions-preview/short-answer-preview.organisum';
 import TrueFalsePreview from '@components/organisms/questions-preview/true-false-preview.organisum';
 
-type ManageQuestionPreviewPageProps = {
+type ManageQuestionPreviewpageProps = {
   type: string;
   formData: any; // Prefer VFormFieldData if available
   mode?: 'preview' | 'review';
@@ -12,13 +12,13 @@ type ManageQuestionPreviewPageProps = {
   correctAnswers?: string[] | string;
 };
 
-function ManageQuestionPreviewPage({
+function ManageQuestionPreviewpage({
   type,
   formData,
   mode = 'preview',
   selectedAnswers = [] ,
   correctAnswers = [],
-}: ManageQuestionPreviewPageProps) {
+}: ManageQuestionPreviewpageProps) {
     // Normalize to ensure both are arrays
     const normalizedSelectedAnswers = Array.isArray(selectedAnswers)
     ? selectedAnswers
@@ -90,4 +90,4 @@ function ManageQuestionPreviewPage({
   return <div>{renderPreview()}</div>;
 }
 
-export default ManageQuestionPreviewPage;
+export default ManageQuestionPreviewpage;

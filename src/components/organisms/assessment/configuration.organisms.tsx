@@ -7,14 +7,16 @@ import { TestRegistrationFieldOption } from 'models/test/registration-field-opit
 import { VTabsRef } from '../tabs/v-tab.organism';
 import AssessmentNavigation from './navigation/assessment-navigation.organism';
 import { useUpdateTestConfigMutation } from 'store/slices/test-assessment.slice';
+import { VButton } from '@components/atoms';
 
 export type AssessmentConfigurationProps = {
-  tabRef: React.RefObject<VTabsRef>;
+  tabRef?: React.RefObject<VTabsRef>;
   test: Test;
   onComplete: OnCompleteHandler<Test>;
+  viewMode?: 'review' | 'content';
 };
 
-function AssessmentConfiguration({ tabRef, test, onComplete }: AssessmentConfigurationProps) {
+function AssessmentConfiguration({ tabRef, test, onComplete, viewMode }: AssessmentConfigurationProps) {
   const [activeTab, setActiveTab] = useState('default');
 
   const [selectedTestInstructions, setSelectedTestInstructions] = useState<TestInstructionOption[]>([]);
@@ -40,10 +42,10 @@ function AssessmentConfiguration({ tabRef, test, onComplete }: AssessmentConfigu
       await updateTestConfig({
         testId,
         configData: {
-          testInstructionsIds: selectedTestInstructions.map(i => i.id),
-          testSettingsIds: selectedTestSettings.map(s => s.id),
-          testRegistrationFieldIds: selectedRegistrationFields.map(f => f.id)
-        }
+          testInstructionsIds: selectedTestInstructions.map((i) => i.id),
+          testSettingsIds: selectedTestSettings.map((s) => s.id),
+          testRegistrationFieldIds: selectedRegistrationFields.map((f) => f.id),
+        },
       }).unwrap();
 
       const updatedTest = {
@@ -97,16 +99,21 @@ function AssessmentConfiguration({ tabRef, test, onComplete }: AssessmentConfigu
         )}
       </div>
 
-      <AssessmentNavigation
-        isLoading={isUpdatingConfig}
-        onPrevious={() => tabRef.current?.prevTab()}
-        onSaveExit={() => handleSave(true)}
-        {...(test.status === 'Draft' && {
-          saveProceedLabel: 'Save & Publish',
-          onSaveProceed: () => handleSave(true, true),
-        })}
-      />
-
+      {viewMode === 'content' ? (
+        <AssessmentNavigation
+          isLoading={isUpdatingConfig}
+          onPrevious={() => tabRef.current?.prevTab()}
+          onSaveExit={() => handleSave(true)}
+          {...(test?.status === 'Draft' && {
+            saveProceedLabel: 'Save & Publish',
+            onSaveProceed: () => handleSave(true, true),
+          })}
+        />
+      ) : (
+        <VButton variant="link" size="md" className="!w-48 mt-5" onClick={() => handleSave()}>
+          Save Configurations
+        </VButton>
+      )}
     </div>
   );
 }

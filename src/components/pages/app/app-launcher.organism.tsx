@@ -16,7 +16,7 @@ export const AppOptions: AppOption[] = [
   { title: 'Test Portal', icon: '../../src/assets/svgs/test-portal.svg', route: '/dashboard' },
   { title: 'Support Desk', icon: '../../src/assets/svgs/support.svg', route: '/support-desk' },
   { title: 'Admin Console', icon: '../../src/assets/svgs/admin-console.svg', route: '/admin-console' },
-  { title: 'Review & Results', icon: '../../src/assets/svgs/review-result.svg', route: '/evalytics' },
+  { title: 'Review & Results', icon: '../../src/assets/svgs/review-result.svg', route: '/evalytics/review/result' },
 ];
 
 export function AppLauncher() {

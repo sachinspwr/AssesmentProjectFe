@@ -3,6 +3,7 @@ export enum Operator {
   AND = 'AND',
   OR = 'OR',
   GREATER_THAN = "GREATER_THAN",
+  CONTAINS = "CONTAINS",
 }
 
 export enum OrderDirection {
@@ -19,4 +20,5 @@ export enum MatchOn {
   IN = 'IN',
   VALUE = "VALUE",
   BETWEEN = "BETWEEN",
+  ANY = "ANY",
 }

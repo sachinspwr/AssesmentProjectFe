@@ -17,7 +17,7 @@ interface SectionWiseData {
   duration?: number;
   score?: number;
 }
-const TestMetadataPage = () => {
+const TestMetadatapage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const testDetails = useAppSelector((state) => state.testRunner.testDetails);
@@ -205,7 +205,7 @@ const TestMetadataPage = () => {
           data={sectionWiseData}
           columns={columnsConfig}
           headerClassName="font-[600]"
-          itemsPerPage={5}
+          itemsPerviewMode={5}
           tableClassName="w-full border border-gray-200"
           emptyState={<div>No Section found!</div>}
         />
@@ -248,4 +248,4 @@ const TestMetadataPage = () => {
   );
 };
 
-export default TestMetadataPage;
+export default TestMetadatapage;

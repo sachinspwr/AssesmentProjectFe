@@ -37,6 +37,14 @@ import fieldsReducer, { registrationFieldsApiSlice } from './slices/registration
 import tenantReducer, { tenantsApiSlice } from './slices/tenants.slice';
 import permissionsReducer, { permissionsApiSlice } from './slices/permissions.slice';
 import tenantTeamReducer, { tenantTeamApi } from './slices/tenant-team.slice';
+import emailAssignmentRuleReducer, { emailAssignmentRuleApiSlice } from './slices/email-assignment-rule.slice';
+
+import maintenanceReducer, { settingsApiSlice } from './slices/settings.slice'
+import featureToggleReducer, { featureManagerApiSlice } from './slices/feature-manager.slice';
+import testinvitationReducer, { testInvitationApiSlice } from './slices/test-invitation.slice'
+import linkRegistrationReducer, { linkRegistrationApiSlice } from './slices/link-registration.slice';
+import dashboardReducer, { dashboardApiSlice } from './slices/dashboard.slice';
+import userTestSummaryReducer, { userTestSummaryApiSlice } from './slices/user-test-summary.slice';
 
 /* eslint-disable no-underscore-dangle */
 export const store = configureStore({
@@ -67,6 +75,13 @@ export const store = configureStore({
     tenant: tenantReducer,
     permissions: permissionsReducer,
     tenantTeam: tenantTeamReducer,
+    rules: emailAssignmentRuleReducer,
+    maintenance: maintenanceReducer,
+    featureToggle: featureToggleReducer,
+    test_invitation: testinvitationReducer,
+    linkRegistration: linkRegistrationReducer,
+    guests: dashboardReducer,
+    userTestSummary: userTestSummaryReducer,
     [accountApiSlice.reducerPath]: accountApiSlice.reducer,
     [authApiSlice.reducerPath]: authApiSlice.reducer,
     [questionsApiSlice.reducerPath]: questionsApiSlice.reducer,
@@ -101,6 +116,13 @@ export const store = configureStore({
     [tenantsApiSlice.reducerPath]: tenantsApiSlice.reducer,
     [permissionsApiSlice.reducerPath]: permissionsApiSlice.reducer,
     [tenantTeamApi.reducerPath]: tenantTeamApi.reducer,
+    [emailAssignmentRuleApiSlice.reducerPath]: emailAssignmentRuleApiSlice.reducer,
+    [settingsApiSlice.reducerPath]: settingsApiSlice.reducer,
+    [featureManagerApiSlice.reducerPath]: featureManagerApiSlice.reducer,
+    [testInvitationApiSlice.reducerPath]: testInvitationApiSlice.reducer,
+    [linkRegistrationApiSlice.reducerPath]: linkRegistrationApiSlice.reducer,
+    [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
+    [userTestSummaryApiSlice.reducerPath]: userTestSummaryApiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -139,6 +161,13 @@ export const store = configureStore({
       tenantsApiSlice.middleware,
       permissionsApiSlice.middleware,
       tenantTeamApi.middleware,
+      emailAssignmentRuleApiSlice.middleware,
+      settingsApiSlice.middleware,
+      featureManagerApiSlice.middleware,
+      testInvitationApiSlice.middleware,
+      linkRegistrationApiSlice.middleware,
+      dashboardApiSlice.middleware,
+      userTestSummaryApiSlice.middleware
     ),
   devTools: process.env.NODE_ENV !== 'production'
 });

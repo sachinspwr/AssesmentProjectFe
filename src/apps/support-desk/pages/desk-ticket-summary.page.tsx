@@ -1,6 +1,6 @@
 import SupportDashboard from '../components/ticket-dashboard.component';
 
-function ManageDocsPage() {
+function ManageDocspage() {
 
   return (
     <article className="support-doc-container ">
@@ -9,4 +9,4 @@ function ManageDocsPage() {
   );
 }
 
-export default ManageDocsPage;
+export default ManageDocspage;

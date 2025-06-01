@@ -1,4 +1,4 @@
-import { VImage, VStatus } from "@components/atoms";
+import { VImage, VInput, VStatus } from "@components/atoms";
 import { VTableColumn } from "@components/organisms";
 import VTable from "@components/organisms/table/v-table.organism";
 import { useNavigate } from "react-router-dom";
@@ -86,14 +86,14 @@ function AllReviewsList () {
                 title="Reviews"
                 data={reviews ?? []}
                 columns={columns}
-                itemsPerPage={8}
+                itemsPerviewMode={8}
                 emptyState={<div>No Questions Found!</div>}
                 getId={(x) => x.id}
                 actionsConfig={[
                     {
                         action: 'edit',
                         responder: (id?: string) => {
-                          navigate('/evalytics/review-result');
+                          navigate('../result/detailed-result');
                         },
                     },
                     {
@@ -104,8 +104,9 @@ function AllReviewsList () {
                     }
                 ]}
                 tableClassName="table-fixed w-full"
-            />
-        </>
+            />   
+            
+            </>
     )
 }
 

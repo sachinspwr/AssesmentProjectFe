@@ -53,6 +53,7 @@ function VCheckbox({
         disabled={disabled}
         onChange={(value, e) => handleChange(value, e as ChangeEvent<HTMLInputElement>)}
         className={`cursor-pointer !w-4 !h-4 !p-0 !rounded ${className}`}
+        reflectErrors={false}
       />
       <VLabel className={`w-full ml-2 tracking-wide  ${labelClasses}`}>{label}</VLabel>
     </div>

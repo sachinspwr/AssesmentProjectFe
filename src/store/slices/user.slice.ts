@@ -4,6 +4,9 @@ import { axiosBaseQuery } from 'api/base.query';
 import { RootState } from 'store/store';
 import { createSlice } from '@reduxjs/toolkit';
 import { handleQueryResponse } from 'api/api.error';
+import { SearchRequestDTO } from '@dto/request';
+import { PaginatedResponse } from '@dto/response/pagination-response.dto';
+import { UserResponseDTO } from '@dto/response';
 
 interface BulkUserResponse {
   createdRecords: number;
@@ -54,10 +57,29 @@ export const usersApiSlice = createApi({
       onQueryStarted: handleQueryResponse,
     }),
 
+    searchUser: builder.mutation<PaginatedResponse<UserResponseDTO>, SearchRequestDTO<UserRequestDTO>>({
+      query: (searchCriteria) => ({
+        url: '/users/search',
+          method: 'POST',
+          body: searchCriteria,
+        }),
+      onQueryStarted: handleQueryResponse,
+    }),
+
+    searchUsers: builder.query<UserResponseDTO[], string>({
+      query: (queryText: string) => ({
+        url: `/users/search?query=${queryText}`,
+        method: 'GET',
+      }),
+      onQueryStarted: handleQueryResponse,
+    }),
+
   }),
 });
 
 export const {
   useCreateBulkUsersMutation,
   useGetAllUsersQuery,
+  useSearchUserMutation,
+  useSearchUsersQuery
 } = usersApiSlice;

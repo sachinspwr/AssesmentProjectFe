@@ -8,6 +8,8 @@ import { VLabelledInput } from '@components/molecules/labelled-input/v-labelled-
 import { VLabelledDatePicker } from '@components/molecules/date-picker/v-labelled-date-picker.mol';
 import { VFormFieldData, VFormField, VFormFields } from '@types';
 import { FaTrashAlt } from 'react-icons/fa';
+import PlaceholderTextArea from '@components/molecules/placeholder-text-area/placeholder-text-area.molecules';
+import { splitAndCapitalize } from '@utils/index';
 
 export type VDynamicFormProps = {
   config: VFormFields[];
@@ -17,7 +19,8 @@ export type VDynamicFormProps = {
   className?: string;
   contentClasses?: string;
   initialValues?: VFormFieldData; // New prop for initial values
-  onSubmit: (fieldData: VFormFieldData) => void;
+  onSubmit: (fieldData: VFormFieldData, source?: string) => void;
+  mode?: 'view' | 'edit';
 };
 
 export type VDynamicFormHandle = {
@@ -27,7 +30,7 @@ export type VDynamicFormHandle = {
 
 const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
   (
-    { config, spacing = 5, isFormSubmitting, className, contentClasses, initialValues, onSubmit},
+    { config, spacing = 5, isFormSubmitting, className, contentClasses, initialValues, onSubmit, mode = 'edit' },
     ref
   ) => {
     const [formData, setFormData] = useState<VFormFieldData>({}); // Initialize with initialValues
@@ -35,10 +38,10 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
     const lastPosition = useRef<{ row: number; col: number; span: number }>({ row: 1, col: 1, span: 12 });
 
     useEffect(() => {
-      if(initialValues){
-        setFormData(initialValues)
-      } 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (initialValues) {
+        setFormData(initialValues);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useImperativeHandle(ref, () => ({
@@ -79,13 +82,13 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
     ) => {
       const { name, value, type } = e.target;
       const fieldValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-    
-      setFormData(prevData => {
+
+      setFormData((prevData) => {
         const updatedData = { ...prevData, [name]: fieldValue };
-        
+
         // Process computed fields
         const processFields = (fields: VFormFields[]) => {
-          fields.forEach(field => {
+          fields.forEach((field) => {
             if ('fields' in field) {
               processFields(field.fields);
             } else if (field.computeDependencies?.includes(name) && field.compute) {
@@ -93,11 +96,11 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
             }
           });
         };
-        
+
         processFields(config);
         return updatedData;
       });
-    
+
       validateField(name, fieldValue);
       customHandler?.(fieldValue as string);
     };
@@ -155,19 +158,21 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
           }
         }
       };
-    
+
       const targetField = findField(config);
       if (!targetField) return;
-    
-      setFormErrors(prevErrors => {
+
+      setFormErrors((prevErrors) => {
         const updatedErrors = { ...prevErrors };
         let hasError = false;
-    
+
         // Check required field validation
         if (targetField.required && !value) {
-          updatedErrors[name] = `${targetField.label ?? 'field'} is required`;
+          const label =
+            typeof targetField.label === 'string' ? targetField.label : splitAndCapitalize(targetField.name) ?? 'field';
+          updatedErrors[name] = `${label} is required`;
           hasError = true;
-        } 
+        }
         // Check custom validation if provided
         else if (targetField.validate) {
           const error = targetField.validate(value, formData);
@@ -176,18 +181,21 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
             hasError = true;
           }
         }
-    
+
         // If no errors found for this field and it previously had an error, remove it
         if (!hasError && updatedErrors[name]) {
           delete updatedErrors[name];
         }
-    
+
         return updatedErrors;
       });
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+      const source = submitter?.name || 'form';
 
       const newFormErrors: { [key: string]: string } = {};
       const configFields = config.flatMap((item) => (item.type == 'group' ? item.fields : [item]));
@@ -208,11 +216,11 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
         return;
       }
 
-      onSubmit(formData);
+      onSubmit(formData, source);
     };
 
     const shouldRenderField = (field: VFormField, data: VFormFieldData) => {
-      return typeof field.shouldRender === "function" ? field.shouldRender(data) : true;
+      return typeof field.shouldRender === 'function' ? field.shouldRender(data) : true;
     };
 
     const renderField = (field: VFormField) => {
@@ -247,6 +255,7 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
                 helpText={field.helpText}
                 onChange={(_, originalEvent) => handleChange(originalEvent!, field.onChange)}
                 reflectErrors={false}
+                mode={mode}
               />
             ) : (
               <VLabelledInput
@@ -260,6 +269,7 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
                 onChange={(_, originalEvent) => handleChange(originalEvent!, field.onChange)}
                 helpText={field.helpText}
                 reflectErrors={false}
+                mode={mode}
               />
             )
           ) : field.type === 'date' ? (
@@ -277,6 +287,7 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
               placeholder={field.placeholder ?? 'Select value'}
               value={formData[field.name] as string} // Use formData value
               onChange={(_, originalEvent) => handleChange(originalEvent!, field.onChange)}
+              mode={mode}
             />
           ) : field.type === 'checkbox' ? (
             <VCheckbox
@@ -298,10 +309,23 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
               labelClasses="text-md"
               helpText={field.helpText}
               onChange={(value, originalEvent) => {
-                  handleChange(originalEvent!);
-                  field.onChange?.(value);
-                }}
+                handleChange(originalEvent!);
+                field.onChange?.(value);
+              }}
               reflectErrors={false}
+              mode={mode}
+            />
+          ) : field.type === 'placeholder-text-area' ? (
+            <PlaceholderTextArea
+              rows={field.textAreaRows ?? 3}
+              label={field.label as string}
+              placeholder={field.placeholder}
+              helpText={field.helpText}
+              required={typeof field.required === 'function' ? field.required(formData) : field.required}
+              disabled={typeof field.disabled === 'function' ? field.disabled(formData) : field.disabled}
+              labelClasses="text-md"
+              reflectErrors={true}
+              mode={mode}
             />
           ) : field.type === 'switch' ? (
             <VSwitch
@@ -312,9 +336,9 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
               label={field.label}
               labelClasses="text-md"
               onChange={(value, originalEvent) => {
-                  handleChange(originalEvent!);
-                  field.onChange?.(value);
-                }}
+                handleChange(originalEvent!);
+                field.onChange?.(value);
+              }}
               className={field.classNames}
             />
           ) : field.type === 'list' ? (
@@ -357,16 +381,18 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
                   </VButton>
                 </div>
               ))}
-              <VButton
-                variant="link"
-                disabled={typeof field.disabled === 'function' ? field.disabled(formData) : field.disabled}
-                type="button"
-                onClick={() => handleAddToList(field.name)}
-                className="!w-fit"
-              >
-                <VICon icon={IoAdd} className="mt-0.5" size={20} />
-                <span className="mt-1">Add Option</span>
-              </VButton>
+              {mode !== 'view' && (
+                <VButton
+                  variant="link"
+                  disabled={typeof field.disabled === 'function' ? field.disabled(formData) : field.disabled}
+                  type="button"
+                  onClick={() => handleAddToList(field.name)}
+                  className="!w-fit"
+                >
+                  <VICon icon={IoAdd} className="mt-0.5" size={20} />
+                  <span className="mt-1">Add Option</span>
+                </VButton>
+              )}
             </div>
           ) : field.type === 'renderItem' && field.renderItem ? (
             field.renderItem(
@@ -383,13 +409,14 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
                 );
                 validateField(field.name, newValue as string);
               },
-              formData
+              formData,
+              mode
             )
           ) : field.type === 'custom' && field.customContent ? (
             React.cloneElement(field.customContent)
           ) : field.type === 'submit' ? (
             <div key={field.name}>
-              <VButton type="submit" isLoading={isFormSubmitting} className={field.classNames}>
+              <VButton name={field.name} type="submit" isLoading={isFormSubmitting} className={field.classNames}>
                 {field.label ?? 'SUBMIT'}
               </VButton>
             </div>
@@ -427,7 +454,6 @@ const VDynamicForm = forwardRef<VDynamicFormHandle, VDynamicFormProps>(
         >
           {config.map((field) => {
             if (field.type === 'group') {
-
               if (field.shouldRender && !field.shouldRender(formData)) {
                 return null;
               }

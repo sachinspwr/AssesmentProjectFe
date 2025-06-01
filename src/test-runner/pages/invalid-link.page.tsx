@@ -7,7 +7,7 @@ function InvalidLinkPage() {
         <b>Oops!</b> This link seems to be invalid or has expired. Please reach out to your inviter for a new one.
       </p>
       <Link to="/" className="text-blue-500 hover:underline text-lg">
-        Return to Home Page
+        Return to Home page
       </Link>
     </div>
   );

@@ -12,7 +12,7 @@ import ImportQuestions from '@components/organisms/import-questions/import-quest
 import { AdvancedQuestionFilter } from '@components/organisms/assessment/section/advanced-question-filter.organism';
 
 // Constants
-const SERVER_PAGE_SIZE = 10; // Matches API default
+const SERVER_page_SIZE = 10; // Matches API default
 
 type Scope = 'all' | 'public' | 'personal';
 
@@ -42,12 +42,12 @@ interface Question {
   'Is Public': boolean;
 }
 
-function QuestionsPage() {
+function Questionspage() {
   const filterRef = useRef<VFilterRef>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
   const [scope, setScope] = useState<Scope>('public');
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [currentServerPage, setCurrentServerPage] = useState(1);
+  const [currentServerpage, setCurrentServerpage] = useState(1);
   const [hasSearched, setHasSearched] = useState(false);
 
 
@@ -62,8 +62,8 @@ function QuestionsPage() {
     isFetching: isFetchingQuestions,
     refetch,
   } = useFetchQuestionsQuery(
-    { scope, page: currentServerPage, limit: SERVER_PAGE_SIZE },
-    { skip: !hasSearched || isSearchActive } // ⛔ Skip unless explicitly fetching
+    { scope, page: currentServerpage, limit: SERVER_page_SIZE },
+    { skip: !hasSearched || isSearchActive } // Skip unless explicitly fetching
   );
   
   const [searchQuestion, { data: searchedQuestions, isLoading: isSearching, reset: resetSearch }] =
@@ -90,13 +90,13 @@ function QuestionsPage() {
 
   //handler functions
   const handleFetchMore = useCallback((page: number) => {
-    setCurrentServerPage(page);
+    setCurrentServerpage(page);
   }, []);
 
   const handleScopeChange = (value: string) => {
     const newScope = value as Scope;
     setScope(newScope);
-    setCurrentServerPage(1);
+    setCurrentServerpage(1);
     resetSearch();
     window.history.replaceState(null, '', `?scope=${newScope}`);
   };
@@ -118,7 +118,7 @@ function QuestionsPage() {
     <div>
       <div>
         <VTypography as="h3">Questions</VTypography>
-        <div className="w-full flex flex-col justify-between my-2 mb-[40px]">
+        <div className="w-full flex flex-col justify-between my-2">
           <div className="flex gap-6 items-center">
             <VRadioButtonGroup
               name="group"
@@ -145,8 +145,6 @@ function QuestionsPage() {
         </div>
       </div>
 
-      <div className="w-5xl mt-3xl mb-5 border-b theme-border-default"></div>
-
       {questionsFromFile.length > 0 ? (
         <PreviewAndSelectQuestions />
       ) : (
@@ -162,8 +160,9 @@ function QuestionsPage() {
           onDeleteSuccess={() => {
             refetch();
             resetSearch();
-            setCurrentServerPage(1);
+            setCurrentServerpage(1);
           }}
+          
           fetchMore={handleFetchMore}
         />
       )}
@@ -182,4 +181,4 @@ function QuestionsPage() {
   );
 }
 
-export default QuestionsPage;
+export default Questionspage;

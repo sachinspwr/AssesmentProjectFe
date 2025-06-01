@@ -80,7 +80,7 @@ function SettingsList({ data, loading, onDeleteSuccess, onAddSuccess }: Settings
         title="Settings"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Settings Found!</div>}
         getId={(x) => x.id}

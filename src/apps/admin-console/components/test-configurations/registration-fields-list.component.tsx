@@ -69,7 +69,7 @@ function RegistrationFieldsList({ data, loading, onDeleteSuccess, onAddSuccess }
         title="Registration Fields"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Registration Fields Found!</div>}
         getId={(x) => x.id}

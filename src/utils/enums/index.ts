@@ -15,3 +15,5 @@ export * from './ticket-status.enum';
 export * from './setting-category.enum';
 export * from './instruction-category.enum';
 export * from './article-status.enum';
+export * from './permissions.enum';
+export * from './system-setting-key.enum';

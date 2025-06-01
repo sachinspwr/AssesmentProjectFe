@@ -206,7 +206,7 @@ function TenantTeamDetails({ tenant }: TenantTeamDetailsProps) {
           data={teamList}
           columns={columns}
           loading={isFetching}
-          itemsPerPage={10}
+          itemsPerviewMode={10}
           getId={(row) => row.id as string}
           actionsConfig={[
             {

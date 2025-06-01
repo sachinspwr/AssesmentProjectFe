@@ -11,6 +11,8 @@ type VSearchBoxProps = {
   className?: string;
   throttleTime?: number;
   wrapperClasses?: string;
+  mode?: 'view' | 'edit';
+  pageChildren?: React.ReactNode;
 };
 
 function VSearchBox({
@@ -21,7 +23,9 @@ function VSearchBox({
   className = '',
   wrapperClasses = '',
   throttleTime = 300,
+  mode = 'edit'
 }: VSearchBoxProps) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleChange = useCallback(
     throttle((value: string) => {
       onChange(value);
@@ -41,6 +45,7 @@ function VSearchBox({
         iconProps={{ icon: IoSearchOutline }}
         aria-label={placeholder}
         className={className}
+        mode={mode}
       />
     </div>
   );

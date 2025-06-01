@@ -13,7 +13,7 @@ import { useFetchTestsQuery, useSearchTestsMutation } from 'store/slices/test-as
 
 type Scope ='public' | 'personal';
 
-function TestAssessmentPage () 
+function TestAssessmentpage () 
 {
   const filterRef = useRef<VFilterRef>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
@@ -23,8 +23,8 @@ function TestAssessmentPage ()
 
   // Fetch experience level and tests on initial load
   const { data: experienceLevel } = useFetchExperienceLevelQuery();
-  const [currentPage,] = useState(1);
-  const { data: tests, isLoading, isError } = useFetchTestsQuery({ page: currentPage, limit: 6 });
+  const [currentpage,] = useState(1);
+  const { data: tests, isLoading, isError } = useFetchTestsQuery({ page: currentpage, limit: 6 });
   const [searchTests, { data: searchedTests }] = useSearchTestsMutation();
   const [filteredTests, setFilteredTests] = useState<TestResponseDTO[]>([]);
 
@@ -158,8 +158,8 @@ function TestAssessmentPage ()
       <VTestList 
         data={{ 
           data: filteredTests, 
-          totalPages: tests?.totalPages ?? 0, 
-          currentPage, 
+          totalpages: tests?.totalpages ?? 0, 
+          currentpage, 
           pageSize: tests?.pageSize ?? 0, 
           totalItems: tests?.totalItems ?? 0 
         }}  
@@ -173,4 +173,4 @@ function TestAssessmentPage ()
   );
 };
 
-export default TestAssessmentPage;
+export default TestAssessmentpage;

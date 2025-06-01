@@ -3,6 +3,8 @@ import { SearchCriteria } from '@dto/request';
 import { UserResponseDTO } from '@dto/response';
 import { FormField } from '@types';
 import { MatchOn, Operator } from '@utils/enums';
+import { currentUserPermissionNames } from 'store/slices/account.slice';
+import { useAppSelector } from 'store/store';
 
 function tryParseJson<T>(jsonString: string): T | null {
   try {
@@ -114,6 +116,13 @@ function extractPlaceholders(input: string, regex:RegExp = /\{([^}]+)\}/g): stri
   return matches.map(match => match[1]); // Extract only the names inside {}
 }
 
+function hasPermission(
+  requiredPermission: string
+): boolean {
+   const userPermissions=useAppSelector(currentUserPermissionNames) ?? [];
+  return userPermissions.includes(requiredPermission);
+}
+
 export {
   getOptionsFromEnum,
   throttle,
@@ -122,5 +131,6 @@ export {
   getFullName,
   splitAndCapitalize,
   tryParseJson,
-  extractPlaceholders
+  extractPlaceholders,
+  hasPermission
 };

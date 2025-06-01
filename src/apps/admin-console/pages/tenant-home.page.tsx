@@ -3,15 +3,16 @@ import { VTableColumn } from '@components/organisms';
 import VTable from '@components/organisms/table/v-table.organism';
 import { TenantsResponseDTO } from '@dto/response/tenants.response.dto';
 import React from 'react';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import { clearSelectedTenant, useFetchTenantsQuery } from 'store/slices/tenants.slice';
 import { useAppDispatch } from 'store/store';
 
 // eslint-disable-next-line react/function-component-definition
-const ManageTenantPage: React.FC = () => {
+const ManageTenantpage: React.FC = () => {
 
-  const { data: tenants ,isLoading } = useFetchTenantsQuery();
+  const { data: tenants, isLoading } = useFetchTenantsQuery();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -55,14 +56,11 @@ const ManageTenantPage: React.FC = () => {
       label: 'Actions',
       customRender: (row) => (
         <div className="flex gap-2">
-          <VButton size="sm" variant="link" onClick={() => handleView(row.id)}>
-            View
+          <VButton variant="link" type="button" className="!text-theme-primary-hover !w-8" onClick={() => handleEdit(row.id)}>
+            <VICon icon={FaEdit} size={20} />
           </VButton>
-          <VButton size="sm" variant="secondary" onClick={() => handleEdit(row.id)}>
-            Edit
-          </VButton>
-          <VButton size="sm" variant="negative" onClick={() => handleDelete(row.id)}>
-            Delete
+          <VButton variant="link" className="!text-theme-negative !w-8" onClick={() => handleDelete(row.id)}>
+            <VICon icon={FaTrashAlt} size={18} />
           </VButton>
         </div>
       ),
@@ -78,10 +76,6 @@ const ManageTenantPage: React.FC = () => {
   function handleEdit(id: string) {
     console.log('Edit', id);
     navigate(`/admin-console/tenants/${id}`);
-  }
-
-  function handleView(id: string) {
-    console.log('View', id);
   }
 
   function handleDelete(id: string) {
@@ -103,7 +97,7 @@ const ManageTenantPage: React.FC = () => {
       <VTable<TenantsResponseDTO>
         data={tenants?.data || []}
         columns={columns}
-        itemsPerPage={10}
+        itemsPerviewMode={10}
         title={null}
         getId={(row) => row.id}
         mode="view"
@@ -117,4 +111,4 @@ const ManageTenantPage: React.FC = () => {
   );
 };
 
-export default ManageTenantPage;
+export default ManageTenantpage;

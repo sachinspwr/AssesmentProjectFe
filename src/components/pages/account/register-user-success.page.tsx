@@ -4,7 +4,7 @@ import { VBrandHeader } from '@components/organisms/layout/v-brand-title.organis
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { useNavigate } from 'react-router-dom';
 
-function RegisterUserSuccessPage() {
+function RegisterUserSuccesspage() {
   const navigate = useNavigate();
   return (
     <div className="h-screen flex flex-col lg:flex-row justify-center items-center gap-10">
@@ -35,4 +35,4 @@ function RegisterUserSuccessPage() {
   );
 }
 
-export default RegisterUserSuccessPage;
+export default RegisterUserSuccesspage;

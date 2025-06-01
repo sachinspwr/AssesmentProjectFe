@@ -2,14 +2,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { UserResponseDTO } from '@dto/response';
-import { UserSubscriptionResponseDTO } from '@dto/response/user-subscription-response.dto';
 import { tokenService } from '@services/token.service';
 import { mapper } from 'mapper';
-import { User, UserSubscription } from 'models';
+import { User} from 'models';
 import { accountApiSlice, setUser, setUserSubscriptions } from 'store/slices/account.slice';
 import { accountSubscriptionApiSlice } from 'store/slices/account-subscription.slice';
 import { useAppDispatch } from 'store/store';
 import { VLoader } from '@components/molecules/index';
+import { AccountSubscriptionResponseDTO } from '@dto/response/account/account-subscription-response.dto';
+import { AccountSubscription } from 'models/account/account-subscription.model';
 
 interface HydrationProviderProps {
   redirectOptions?: {
@@ -48,8 +49,8 @@ export function HydrationProvider({ redirectOptions }: HydrationProviderProps) {
         const user = mapper.map(userProfile, UserResponseDTO, User);
         const userSubscriptions = mapper.mapArray(
           subscriptions,
-          UserSubscriptionResponseDTO,
-          UserSubscription
+          AccountSubscriptionResponseDTO,
+          AccountSubscription
         );
 
         // Store updates

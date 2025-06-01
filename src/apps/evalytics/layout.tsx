@@ -2,9 +2,29 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { VHeader } from '@components/organisms/layout/v-header.organism';
 import { VSidebar } from '@components/organisms';
+import { FaSlidersH } from 'react-icons/fa';
+import { BsQuestionSquare } from 'react-icons/bs';
 
 function EvalyticsLayout() {
   const [isSidebarExpanded, setSidebarExpanded] = useState(true);
+
+  const sidebarItems = [
+      {
+        label: 'Review Result',
+        path: '/evalytics/review/result',
+        icon: BsQuestionSquare,
+      },
+      {
+        label: 'Review Questions',
+        path: '/evalytics/review/question',
+        icon: BsQuestionSquare,
+      },
+      {
+        label: 'Review Test',
+        path: '/evalytics/review/test',
+        icon: FaSlidersH,
+      }
+    ];
 
   const handleSidebarToggle = (isExpanded: boolean) => {
     setSidebarExpanded(isExpanded);
@@ -22,7 +42,7 @@ function EvalyticsLayout() {
         } bg-theme-default-alt`}
       >
         <VSidebar
-          items={[]}
+          items={sidebarItems}
           onSidebarToggle={handleSidebarToggle}
           classes={{ wrapper: 'mt-16 z-20' }}
           allowCollapse={false}

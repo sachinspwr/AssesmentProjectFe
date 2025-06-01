@@ -62,7 +62,7 @@ export const generateResultPDF = (resultData:TestResultResponseDTO) => {
       qLines.forEach((line, i) => {
         const textY = y + i * 6;
         if (textY > 280) {
-          doc.addPage();
+          doc.addpage();
           y = 20;
         }
         doc.setFont(undefined, line.startsWith('Q') ? 'bold' : 'normal');

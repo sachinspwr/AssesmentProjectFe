@@ -7,14 +7,16 @@ import { TestSectionsSummary } from './section/test-sections-summary';
 import { Test, TestSection } from 'models';
 import { VTabsRef } from '../tabs/v-tab.organism';
 import AssessmentNavigation from './navigation/assessment-navigation.organism';
+import { VButton } from '@components/atoms';
 
 interface AssessmentSectionProps {
-  tabRef: React.RefObject<VTabsRef>;
+  tabRef?: React.RefObject<VTabsRef>;
   test: Test;
   onComplete: OnCompleteHandler<Test>;
+  viewMode?: 'review' | 'content';
 }
 
-function AssessmentSection({ tabRef, test, onComplete }: AssessmentSectionProps) {
+function AssessmentSection({ tabRef, test, onComplete, viewMode }: AssessmentSectionProps) {
   const { id: testId } = test ?? {};
   const [actionMode, setActionMode] = useState<ActionMode>('view');
   const [selectedSection, setSelectedSection] = useState<TestSection>();
@@ -24,7 +26,7 @@ function AssessmentSection({ tabRef, test, onComplete }: AssessmentSectionProps)
   console.log(test);
 
   useEffect(() => {
-    if (test.testSections) {
+    if (test && test.testSections) {
       setSections(test.testSections);
     }
   }, [test]);
@@ -48,7 +50,7 @@ function AssessmentSection({ tabRef, test, onComplete }: AssessmentSectionProps)
         testSections: (test?.testSections ?? []).filter((s) => s.id !== section.id),
       };
 
-      onComplete(updatedTestDetails,{skipNavigation: true});
+      onComplete(updatedTestDetails, { skipNavigation: true });
     } catch (error) {
       console.error('Delete section error:', error);
       toast.error('Failed to delete section. Please try again.');
@@ -75,7 +77,7 @@ function AssessmentSection({ tabRef, test, onComplete }: AssessmentSectionProps)
           ? (test?.testSections ?? []).map((s) => (s.id === section.id ? section : s))
           : [...(test?.testSections ?? []), section],
     };
-    onComplete(updatedTestDetails, {skipNavigation: true});
+    onComplete(updatedTestDetails, { skipNavigation: true });
   };
 
   const handleProceed = (isExit?: boolean) => {
@@ -108,14 +110,19 @@ function AssessmentSection({ tabRef, test, onComplete }: AssessmentSectionProps)
         />
       )}
 
-      {actionMode === 'view' && (
-        <AssessmentNavigation
-          isSaveDisabled={sections.length === 0}
-          onPrevious={() => tabRef.current?.prevTab()}
-          onSaveProceed={() => handleProceed()}
-          onSaveExit={() => handleProceed(true)}
-        />
-      )}
+      {actionMode === 'view' &&
+        (viewMode === 'content' ? (
+          <AssessmentNavigation
+            isSaveDisabled={sections.length === 0}
+            onPrevious={() => tabRef.current?.prevTab()}
+            onSaveProceed={() => handleProceed()}
+            onSaveExit={() => handleProceed(true)}
+          />
+        ) : (
+          <VButton variant="link" size="md" className="!w-48 mt-4" onClick={() => handleSave()}>
+            Save Section Details
+          </VButton>
+        ))}
     </div>
   );
 }

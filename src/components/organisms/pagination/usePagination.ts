@@ -3,8 +3,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 interface UsePaginationProps<T> {
   data?: T[];
   serverSideData?: T[];
-  serverPageSize?: number;
-  clientPageSize?: number;
+  serverpageSize?: number;
+  clientpageSize?: number;
   totalItems?: number;
   fetchMore?: (page: number) => void;
 }
@@ -12,13 +12,13 @@ interface UsePaginationProps<T> {
 export function usePagination<T>({
     data = [],
     serverSideData,
-    clientPageSize = 6,
+    clientpageSize = 6,
     totalItems,
     fetchMore,
   }: UsePaginationProps<T>) {
     const [allItems, setAllItems] = useState<T[]>(data);
-    const [currentServerPage, setCurrentServerPage] = useState(1);
-    const [currentClientPage, setCurrentClientPage] = useState(1);
+    const [currentServerpage, setCurrentServerpage] = useState(1);
+    const [currentClientpage, setCurrentClientpage] = useState(1);
   
     // Merge new server data with existing items
     useEffect(() => {
@@ -28,43 +28,43 @@ export function usePagination<T>({
     }, [serverSideData]);
   
     // Get current page items
-    const currentPageItems = useMemo(() => {
-      const startIndex = (currentClientPage - 1) * clientPageSize;
-      return allItems.slice(startIndex, startIndex + clientPageSize);
-    }, [allItems, currentClientPage, clientPageSize]);
+    const currentpageItems = useMemo(() => {
+      const startIndex = (currentClientpage - 1) * clientpageSize;
+      return allItems.slice(startIndex, startIndex + clientpageSize);
+    }, [allItems, currentClientpage, clientpageSize]);
   
     // Calculate total pages
-    const totalPages = useMemo(() => {
+    const totalpages = useMemo(() => {
       if (totalItems !== undefined) {
-        return Math.ceil(totalItems / clientPageSize);
+        return Math.ceil(totalItems / clientpageSize);
       }
-      return Math.ceil(allItems.length / clientPageSize);
-    }, [allItems, clientPageSize, totalItems]);
+      return Math.ceil(allItems.length / clientpageSize);
+    }, [allItems, clientpageSize, totalItems]);
   
     // Handle page change
-    const handlePageChange = useCallback((page: number) => {
-      setCurrentClientPage(page);
+    const handlepageChange = useCallback((page: number) => {
+      setCurrentClientpage(page);
       
       // Check if we need to fetch more data
-      const lastNeededItemIndex = page * clientPageSize;
+      const lastNeededItemIndex = page * clientpageSize;
       const totalLoadedItems = allItems.length;
       
-      if (fetchMore && lastNeededItemIndex >= totalLoadedItems - clientPageSize) {
-        const nextServerPage = currentServerPage + 1;
-        setCurrentServerPage(nextServerPage);
-        fetchMore(nextServerPage);
+      if (fetchMore && lastNeededItemIndex >= totalLoadedItems - clientpageSize) {
+        const nextServerviewMode = currentServerpage + 1;
+        setCurrentServerpage(nextServerpage);
+        fetchMore(nextServerpage);
       }
-    }, [allItems.length, clientPageSize, currentServerPage, fetchMore]);
+    }, [allItems.length, clientpageSize, currentServerpage, fetchMore]);
   
     return {
-      currentPageItems,
-      currentPage: currentClientPage,
-      totalPages,
-      handlePageChange,
+      currentpageItems,
+      currentpage: currentClientpage,
+      totalpages,
+      handlepageChange,
       allItems,
       resetPagination: () => {
-        setCurrentClientPage(1);
-        setCurrentServerPage(1);
+        setCurrentClientpage(1);
+        setCurrentServerpage(1);
         setAllItems(data);
       }
     };

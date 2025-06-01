@@ -2,8 +2,8 @@ import { Route } from 'react-router-dom';
 import React, { lazy } from 'react';
 import { HelpCenterLayout } from './layout';
 
-const HelpCenterHomePage = lazy(() => import('./pages/help-center-home.page'));
-const DocPage = lazy(() => import('./pages/help-doc.page'));
+const HelpCenterHomepage = lazy(() => import('./pages/help-center-home.page'));
+const Docpage = lazy(() => import('./pages/help-doc.page'));
 
 export const HelpCenterRoutes = (
   <Route 
@@ -14,9 +14,9 @@ export const HelpCenterRoutes = (
       </React.Suspense>
     }
   >
-    <Route index element={<HelpCenterHomePage />} /> 
-    <Route path="docs" element={<DocPage />} /> {/* Can be used for the docs landing page */}
-    <Route path="docs/:docTitle" element={<DocPage />} /> {/* Specific doc page */}
-    <Route path="docs/:docTitle/:subTitle" element={<DocPage />} /> {/* Sub-section within a specific doc */}
+    <Route index element={<HelpCenterHomepage />} /> 
+    <Route path="docs" element={<Docpage />} /> {/* Can be used for the docs landing page */}
+    <Route path="docs/:docTitle" element={<Docpage />} /> {/* Specific doc page */}
+    <Route path="docs/:docTitle/:subTitle" element={<Docpage />} /> {/* Sub-section within a specific doc */}
   </Route>
 );

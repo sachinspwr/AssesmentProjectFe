@@ -81,7 +81,7 @@ function DomainList({ data, loading, onDeleteSuccess, onAddSuccess, industries }
         title="Domains"
         data={enrichedData ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Domains Found!</div>}
         getId={(x) => x.id}

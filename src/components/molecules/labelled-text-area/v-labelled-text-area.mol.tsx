@@ -1,4 +1,4 @@
-import { InputProps, LabelProps } from '@components/atoms';
+import {  LabelProps } from '@components/atoms';
 import { VLabel } from '@components/atoms/label/v-label.atom';
 import { VTextArea, VTextAreaProps } from '@components/atoms/text-area/v-text-area.atom';
 import { ReactNode } from 'react';
@@ -10,6 +10,8 @@ type VLabelledTextAreaProps = LabelProps &
     wrapperClasses?: ClassName;
     labelClasses?: ClassName;
     inputClasses?: ClassName;
+    mode?: 'view' | 'edit';
+    pageChildren?: React.ReactNode;
   };
 
 function VLabelledTextArea({
@@ -24,6 +26,7 @@ function VLabelledTextArea({
   wrapperClasses = '',
   labelClasses,
   inputClasses,
+  mode = 'edit',
   onChange,
 }: VLabelledTextAreaProps) {
   return (
@@ -41,6 +44,7 @@ function VLabelledTextArea({
         disabled={disabled}
         required={true}
         reflectErrors = {reflectErrors}
+        mode={mode}
       />
     </div>
   );

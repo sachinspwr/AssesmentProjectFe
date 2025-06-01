@@ -6,7 +6,7 @@ import { useFetchArticlesQuery } from 'store/slices/articles.slice';
 import { ArticleList } from '@components/organisms/support/articles-list.organism';
 import { useNavigate } from 'react-router-dom';
 
-function ArticlesPage() {
+function Articlespage() {
   const [, setArticleToEdit] = useState<ArticleResponseDTO | null>(null);
   const navigate = useNavigate();
   const { data: articles = [], isLoading } = useFetchArticlesQuery(undefined, {
@@ -20,7 +20,7 @@ function ArticlesPage() {
   return (
     <div className="mx-auto space-y-6">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b-2 pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-gray-800">Knowledge Base Articles</h1>
           <p className="text-gray-500 text-sm">Create and manage help articles for your users</p>
@@ -44,4 +44,4 @@ function ArticlesPage() {
   );
 }
 
-export default ArticlesPage;
+export default Articlespage;

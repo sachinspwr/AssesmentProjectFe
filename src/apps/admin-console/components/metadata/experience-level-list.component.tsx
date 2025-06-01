@@ -67,7 +67,7 @@ function ExperienceLevelList({ data, loading, onDeleteSuccess, onAddSuccess }: E
         title="Experience Level"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Experience Level Found!</div>}
         getId={(x) => x.id}

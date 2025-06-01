@@ -15,15 +15,25 @@ import {
   usePatchBasicTestDetailMutation,
 } from 'store/slices/test-assessment.slice';
 import AssessmentNavigation from './navigation/assessment-navigation.organism';
+import { VButton } from '@components/atoms';
 
 type AssessmentBasicDetailsProps = {
   test?: Test;
   renderMode: 'create' | 'edit';
   onComplete: OnCompleteHandler<Test>;
   onTestQuestionFormatChange: (format: string) => void;
+  mode?: 'edit' | 'view';
+  viewMode?: 'review' | 'content';
 };
 
-function AssessmentBasicDetails({ test, renderMode, onComplete, onTestQuestionFormatChange }: AssessmentBasicDetailsProps) {
+function AssessmentBasicDetails({
+  test,
+  renderMode,
+  onComplete,
+  onTestQuestionFormatChange,
+  mode = 'edit',
+  viewMode,
+}: AssessmentBasicDetailsProps) {
   const formRef = useRef<VDynamicFormHandle>(null);
   const exitRef = useRef<boolean>(false);
   const { data: experienceLevels, isLoading: isFetchingExperience } = useFetchExperienceLevelQuery();
@@ -61,7 +71,7 @@ function AssessmentBasicDetails({ test, renderMode, onComplete, onTestQuestionFo
     } as FormFieldData;
   }, [test]);
 
-console.log('test.randomizeQuestions:', test?.randomizeQuestions);
+  console.log('test.randomizeQuestions:', test?.randomizeQuestions);
 
   const handleSave = (isExit?: boolean) => {
     exitRef.current = !!isExit;
@@ -130,7 +140,6 @@ console.log('test.randomizeQuestions:', test?.randomizeQuestions);
           onChange: (value) => {
             onTestQuestionFormatChange(value);
             console.log('selectedTestFormat:', value);
-
           },
           required: true,
           position: '3 1 6',
@@ -214,11 +223,19 @@ console.log('test.randomizeQuestions:', test?.randomizeQuestions);
         ref={formRef}
         initialValues={initialValues}
       />
-      <AssessmentNavigation
-        isLoading={isSaving}
-        onSaveProceed={() => handleSave()}
-        onSaveExit={() => handleSave(true)}
-      />
+      {viewMode === 'content' ? (
+        <AssessmentNavigation
+          isLoading={isSaving}
+          onSaveProceed={() => handleSave()}
+          onSaveExit={() => handleSave(true)}
+        />
+      ) : (
+        <div>
+          <VButton variant="link" size="md" className="!w-48 mt-4" onClick={() => handleSave()}>
+            Save Basic Details
+          </VButton>
+        </div>
+      )}
     </div>
   );
 }

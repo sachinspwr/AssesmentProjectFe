@@ -65,7 +65,7 @@ function LoginForm({ className }: LoginFormProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [triggerLogin, { isLoading }] = useSignInMutation();
-
+  
   const handleLoginRequest = async (formData: VFormFieldData) => {
     try {
       await dispatch(setUser(null));
@@ -74,16 +74,22 @@ function LoginForm({ className }: LoginFormProps) {
 
       // Save token and set user
       localStorageService.setItem(StorageKeys.TOKEN, response.token);
+      
       navigate('/bootstrap');
+
     } catch (error) {
       console.error('Login error:', error);
     }
   };
 
+  
+
   return (
-    <div className={`w-full ${className}`}>
-      <VDynamicForm config={loginFormConfig} isFormSubmitting={isLoading} onSubmit={handleLoginRequest} />
-    </div>
+    <>
+      <div className={`w-full ${className}`}>
+        <VDynamicForm config={loginFormConfig} isFormSubmitting={isLoading} onSubmit={handleLoginRequest} />
+      </div>
+    </>
   );
 }
 

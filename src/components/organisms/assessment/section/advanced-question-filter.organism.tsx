@@ -345,7 +345,7 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
   ];
 
   return (
-    <div className="mb-6">
+    <div className="">
       <VFilter
         initiallyOpen={true}
         ref={filterRef}

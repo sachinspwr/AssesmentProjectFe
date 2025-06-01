@@ -7,7 +7,7 @@ export * from './account/reset-password.page';
 export * from './account/verify-account.page';
 export * from './app/app-launcher.organism';
 export * from './request-demo.page';
-export * from './dashboard.page';
+export * from './recruiter-dashboard.page';
 export * from './not-found.page';
 export * from './support/support.page';
 export * from './support/manage-ticket.page';

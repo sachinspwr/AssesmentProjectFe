@@ -8,7 +8,7 @@ import { useFetchRoleByIdQuery } from 'store/slices/roles.slice';
 import AddRoleForm from '../components/role-management/add-role-form.component';
 import { RolesResponseDTO } from '@dto/response/roles.response.dto';
 
-function ManageRolesPage() {
+function ManageRolespage() {
   const navigate = useNavigate();
   const { id = '0' } = useParams();
   const bootstrapMode = id === '0' ? 'create' : 'edit';
@@ -48,4 +48,4 @@ function ManageRolesPage() {
   );
 }
 
-export default ManageRolesPage;
+export default ManageRolespage;

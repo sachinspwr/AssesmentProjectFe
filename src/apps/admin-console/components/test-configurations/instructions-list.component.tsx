@@ -81,7 +81,7 @@ function InstructionsList({ data, loading, onDeleteSuccess, onAddSuccess }: Inst
         title="Instructions"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Instructions Found!</div>}
         getId={(x) => x.id}

@@ -1,21 +1,23 @@
 import { format } from 'date-fns';
-import { UserSubscription } from 'models';
 import { PaymentStatus } from '@utils/enums/payment-status.enum';
 import { InvoiceResponseDTO } from '@dto/response/invoice-response.dto';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
+import { AccountSubscription } from 'models/account/account-subscription.model';
 
 interface InvoiceProps {
-  subscription: UserSubscription;
+  subscription: AccountSubscription;
   invoiceDetails?: InvoiceResponseDTO;
 }
 
 export function SubscriptionInvoice({ subscription, invoiceDetails }: InvoiceProps) {
 
+
+
   // User details
-  const user = (subscription.user.firstName) + (subscription.user.lastName);
-  const compony = subscription.user.company || 'N/A';
-  const mail = subscription.user.email;
-  const mobile = subscription.user.mobile || 'Not Provided';
+  const user = (subscription.account.user.firstName) + (subscription.account.user.lastName);
+  const compony = subscription.account.user.company || 'N/A';
+  const mail = subscription.account.user.email;
+  const mobile = subscription.account.user.mobile || 'Not Provided';
   //subscription Details
   const subscriptionName = subscription.subscription.name;
   //Invoice Details
@@ -30,8 +32,8 @@ export function SubscriptionInvoice({ subscription, invoiceDetails }: InvoicePro
   const endDate = format(new Date(subscription.endDate), 'MMM d, yyyy');
   // Format amounts
   const amount = subscription.subscription.priceUsd.toFixed(2);
-  const paymentStatus = subscription.userSubscriptionPayment?.status || PaymentStatus.PENDING;
-  const paymentMethod = subscription.userSubscriptionPayment?.subscriptionPaymentOrder?.method || 'Credit Card';
+  const paymentStatus = subscription.accountSubscriptionPayment?.status || PaymentStatus.PENDING;
+  const paymentMethod = subscription.accountSubscriptionPayment?.subscriptionPaymentOrder?.method || 'Credit Card';
 
   // Get status color based on PaymentStatus
   const getStatusColor = (status: string) => {

@@ -82,7 +82,7 @@ function DomainRolesList({ data, loading, onDeleteSuccess, onAddSuccess, domains
         title="Domain Roles"
         data={enrichedData ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Domain Roles Found!</div>}
         getId={(x) => x.id}

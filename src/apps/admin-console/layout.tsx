@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { VHeader } from '@components/organisms/layout/v-header.organism';
 import { FaBuilding, FaUserShield } from 'react-icons/fa6';
 import { VSidebar } from '@components/organisms';
-import { FaSlidersH, FaUserAlt, FaUsersCog } from 'react-icons/fa';
+import { FaSlidersH, FaUserAlt } from 'react-icons/fa';
 import { BsQuestionSquare } from 'react-icons/bs';
 
 function AdminConsoleLayout() {
@@ -30,11 +30,6 @@ function AdminConsoleLayout() {
       label: 'Role Management',
       path: '/admin-console/roles',
       icon: FaUserShield,
-    },
-    {
-      label: 'Permissions',
-      path: '/admin-console/permissions',
-      icon: FaUsersCog,
     },
     {
       label: 'Metadata',

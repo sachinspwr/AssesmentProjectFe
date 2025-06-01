@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { VRadioButtonGroup } from '@components/molecules';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
-import { UserSubscriptionOrders } from '@components/organisms/subscription/user-subscription-orders-organism';
-import { UserSubscriptions } from '@components/organisms/subscription/user-subscriptions.organism';
 import { VButton } from '@components/atoms';
 import { useScroll } from '@hooks';
+import { AccountSubscriptions } from '@components/organisms/subscription/account-subscriptions.organism';
+import { AccountSubscriptionOrders } from '@components/organisms/subscription/account-subscription-orders-organism';
 
-type SubscriptionViewMode = 'my-subscriptions' | 'billing';
+type SubscriptionviewMode = 'my-subscriptions' | 'billing';
 
 const SUBSCRIPTION_TAB_OPTIONS = [
   { label: 'My Subscriptions', value: 'my-subscriptions' },
   { label: 'Billing History', value: 'billing' },
 ];
 
-function SubscriptionPage({ className = '' }: { className?: string }) {
+function Subscriptionpage({ className = '' }: { className?: string }) {
   const { scrollToTop } = useScroll();
-  const [currentView, setCurrentView] = useState<SubscriptionViewMode>('my-subscriptions');
+  const [currentView, setCurrentView] = useState<Subscriptionpage>('my-subscriptions');
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
 
   const handleViewChange = (value: string) => {
-    setCurrentView(value as SubscriptionViewMode);
+    setCurrentView(value as Subscriptionpage);
     setIsManagingSubscription(false);
   };
 
@@ -56,15 +56,15 @@ function SubscriptionPage({ className = '' }: { className?: string }) {
       </div>
 
       {currentView === 'my-subscriptions' ? (
-        <UserSubscriptions
+        <AccountSubscriptions
           isManagingSubscription={isManagingSubscription}
           onManageModeToggle={handleManageModeChange}
         />
       ) : (
-        <UserSubscriptionOrders />
+        <AccountSubscriptionOrders />
       )}
     </div>
   );
 }
 
-export { SubscriptionPage };
+export { Subscriptionpage };

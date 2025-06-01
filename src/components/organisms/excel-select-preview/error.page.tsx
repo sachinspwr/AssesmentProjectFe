@@ -1,4 +1,4 @@
-// pages/ErrorPage.tsx
+// pages/Errorpage.tsx
 
 import { VButton } from '@components/atoms';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
@@ -9,7 +9,7 @@ type ErrorState = {
   statusCode?: number;
 };
 
-export function ErrorPage() {
+export function Errorpage() {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as ErrorState | undefined;

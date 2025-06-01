@@ -20,12 +20,12 @@ function QuestionTypeRenderer({question, index }: QuestionProps) {
         return <SingleChoiceQuestion question={question} index={index} />;
       case QuestionType.MultipleChoice:
         return <MultipleChoiceQuestion question={question} index={index} />;
-      case QuestionType.FillInTheBlanks:
+      case QuestionType.FillInTheBlanks:3
         return <FillInTheBlanks question={question} index={index} />;
       case QuestionType.TrueFalse:
         return <SingleChoiceQuestion question={question} index={index} />;
       case QuestionType.Coding:
-        return <CodingQuestion question={question} currentQuestionId={question.id} />;
+        return <CodingTestEditor question={question} currentQuestionId={question.id} />;
       case QuestionType.Essay:
         return <ShortAnswerQuestion question={question} index={index} />;
       case QuestionType.ShortAnswer:

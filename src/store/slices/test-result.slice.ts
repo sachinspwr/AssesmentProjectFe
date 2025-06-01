@@ -50,8 +50,8 @@ export const testResultApiSlice = createApi({
       },
     }),
 
-    getAllTestsSummaryByUser: builder.query<UserDashbaordSummaryDTO, { userId: string }>({
-      query: ({ userId }) => ({ url: `/tests/:testId/results/users/${userId}/test-summary`, method: 'GET' }),
+    getAllTestsSummaryByUser: builder.query<UserDashbaordSummaryDTO, void>({
+      query: () => ({ url: `/dashboard/test-summary`, method: 'GET' }),
       onQueryStarted: async (_, { queryFulfilled }) => {
         try {
           await queryFulfilled;

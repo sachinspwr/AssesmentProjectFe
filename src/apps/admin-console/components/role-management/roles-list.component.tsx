@@ -69,7 +69,7 @@ function RolesList({ data, loading, onDeleteSuccess }: RolesListProps) {
         title="Roles"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Roles Found!</div>}
         getId={(x) => x.id}

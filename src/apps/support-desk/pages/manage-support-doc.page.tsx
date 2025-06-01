@@ -17,7 +17,7 @@ import { ViewContent } from '../components/view-content.component';
 const generateSlug = (title: string) =>
   title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
 
-function ManageSupportDocPage({ mode = 'edit' }: { mode?: 'edit' | 'create' }) {
+function ManageSupportDocpage({ mode = 'edit' }: { mode?: 'edit' | 'create' }) {
   const isCreateMode = mode === 'create';
   const { id, slug, parentSlug } = useParams();
   const navigate = useNavigate();
@@ -143,4 +143,4 @@ function ManageSupportDocPage({ mode = 'edit' }: { mode?: 'edit' | 'create' }) {
   );
 }
 
-export default ManageSupportDocPage;
+export default ManageSupportDocpage;

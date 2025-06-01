@@ -5,6 +5,7 @@ import { ExperienceLevelResponseDTO } from './experience-level-response.dto';
 import { TestSettingOptionResponseDTO } from './test-setting-option.response.dto';
 import { TestRegistrationFieldOptionResponseDTO } from './registration-field-option-response.dto';
 import { TestInstructionOptionResponseDTO } from './test-instruction-option-response.dto';
+import { TestReviewResponseDTO } from './test-review.response.dto';
 
 class TestResponseDTO extends AuditResponseDTO {
   
@@ -33,6 +34,8 @@ class TestResponseDTO extends AuditResponseDTO {
 
   public randomizeQuestions?: boolean;
   public hasNegativeMarking?: boolean;
+
+  public testReview?: TestReviewResponseDTO;
 }
 
 export { TestResponseDTO };

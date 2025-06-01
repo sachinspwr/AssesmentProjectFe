@@ -1,4 +1,4 @@
-export interface TenantResponseDTO {
+export class TenantResponseDTO {
     isPublic: boolean
     ownerUserId: string
     subscriptionId: string

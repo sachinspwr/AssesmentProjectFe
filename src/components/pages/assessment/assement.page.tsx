@@ -7,7 +7,7 @@ import { VRadioButtonGroup } from '../../molecules';
 import VFilterToggle from '@components/organisms/filter/v-filter-toggle.organism';
 import { TestResponseDTO } from '@dto/response';
 import { clearSelectedTest, useFetchTestsQuery, useSearchTestsMutation } from 'store/slices/test-assessment.slice';
-import { MatchOn, Operator } from '@utils/enums';
+import { MatchOn, Operator, Permissions } from '@utils/enums';
 import { useFetchExperienceLevelQuery } from 'store/slices/experience-level.slice';
 import { SearchCriteria, SearchRequestDTO, TestRequestDTO } from '@dto/request';
 import { useNavigate } from 'react-router-dom';
@@ -18,18 +18,19 @@ import { FormFieldData } from '@types';
 import { TestFilter } from '@components/organisms/assessment/filter/test-filter.organism';
 import { VPaginatedList } from '@components/organisms/pagination';
 import { AxiosBaseQueryError } from 'api/base.query';
+import { PermissionGate } from 'guards/permission.guard';
 
 // Constants
-const SERVER_PAGE_SIZE = 10; // Matches API default
-const CLIENT_PAGE_SIZE = 6;
+const SERVER_page_SIZE = 10; // Matches API default
+const CLIENT_page_SIZE = 6;
 
 type Scope = 'all' | 'public' | 'personal';
 
-function AssessmentPage() {
+function Assessmentpage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentServerPage, setCurrentServerPage] = useState(1);
+  const [currentServerpage, setCurrentServerpage] = useState(1);
   const [scope, setScope] = useState<Scope>('public');
   const [isSearchActive, setIsSearchActive] = useState(false);
   // Track all loaded items
@@ -44,8 +45,8 @@ function AssessmentPage() {
     isFetching,
   } = useFetchTestsQuery({
     scope,
-    page: currentServerPage,
-    limit: SERVER_PAGE_SIZE,
+    page: currentServerpage,
+    limit: SERVER_page_SIZE,
   });
 
   const [searchTests, { data: searchedTests, error, reset: resetSearch, isLoading: isSearchLoading }] =
@@ -61,7 +62,7 @@ function AssessmentPage() {
   // Accumulate data from all fetches
   useEffect(() => {
     if (currentData?.data) {
-      if (currentData.currentPage === 1) {
+      if (currentData.currentpage === 1) {
         // Reset on first page or new search
         setAllLoadedTests(currentData.data ?? []);
       } else {
@@ -72,7 +73,7 @@ function AssessmentPage() {
         ]);
       }
     }
-  }, [currentData, currentServerPage]);
+  }, [currentData, currentServerpage]);
 
   //filter data based on search query
   useEffect(() => {
@@ -93,13 +94,13 @@ function AssessmentPage() {
 
   //handler functions
   const handleFetchMore = useCallback((page: number) => {
-    setCurrentServerPage(page);
+    setCurrentServerpage(page);
   }, []);
 
   const handleScopeChange = (value: string) => {
     const newScope = value as Scope;
     setScope(newScope);
-    setCurrentServerPage(1);
+    setCurrentServerpage(1);
     resetSearch();
     window.history.replaceState(null, '', `?scope=${newScope}`);
   };
@@ -169,7 +170,7 @@ function AssessmentPage() {
 
       searchTests(SearchRequestDTO.default(searchCriteria));
       setIsSearchActive(true);
-      setCurrentServerPage(1);
+      setCurrentServerpage(1);
     },
     [scope, searchTests]
   );
@@ -212,9 +213,12 @@ function AssessmentPage() {
             <VFilterToggle ref={filterButtonRef} filterRef={filterRef} />
           </div>
         </div>
+        <PermissionGate required={Permissions.TEST_CREATE}>
         <div>
           <VButton onClick={handleCreateAssessment}>Create Assessment</VButton>
         </div>
+        </PermissionGate>
+       
       </div>
 
       <TestFilter
@@ -258,13 +262,13 @@ function AssessmentPage() {
             onDeleteSuccess={() => {
               refetch();
               resetSearch();
-              setCurrentServerPage(1);
+              setCurrentServerpage(1);
             }}
           />
         )}
         emptyState={renderEmptyState()}
-        serverPageSize={SERVER_PAGE_SIZE}
-        clientPageSize={CLIENT_PAGE_SIZE}
+        serverpageSize={SERVER_page_SIZE}
+        clientpageSize={CLIENT_page_SIZE}
         totalItems={filteredData.length}
         fetchMore={handleFetchMore}
         gridClasses="grid grid-cols-3 gap-5 mt-5"
@@ -273,4 +277,4 @@ function AssessmentPage() {
   );
 }
 
-export default AssessmentPage;
+export default Assessmentpage;

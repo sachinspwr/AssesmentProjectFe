@@ -239,7 +239,7 @@ type ApiField = {
 //   },
 // ];
 
-const TestRegisterPage = () => {
+function TestRegisterpage  () {
   const { id } = useParams();
   const testDetails = useAppSelector((state) => state.testRunner.testDetails);
   // const [formConfig, setFormConfig] = useState<VFormFields[]>(testDetails?.testRegistrationFields);
@@ -405,4 +405,4 @@ console.log("testRegistrationFields",testRegistrationFields)
   );
 };
 
-export default TestRegisterPage;
+export default TestRegisterpage;

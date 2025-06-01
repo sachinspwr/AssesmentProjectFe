@@ -67,7 +67,7 @@ function IndustryList({ data, loading, onDeleteSuccess, onAddSuccess }: Industry
         title="Industries"
         data={data ?? []}
         columns={columns}
-        itemsPerPage={8}
+        itemsPerviewMode={8}
         loading={loading}
         emptyState={<div>No Industries Found!</div>}
         getId={(x) => x.id}

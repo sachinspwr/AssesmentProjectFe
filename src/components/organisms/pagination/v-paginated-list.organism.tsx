@@ -8,8 +8,8 @@ interface VPaginatedListProps<T> {
   loading?: boolean;
   renderItem: (item: T) => React.ReactNode;
   emptyState?: React.ReactNode;
-  serverPageSize?: number;
-  clientPageSize?: number;
+  serverpageSize?: number;
+  clientpageSize?: number;
   totalItems?: number;
   fetchMore?: (page: number) => void;
   gridClasses?: string;
@@ -20,17 +20,17 @@ export function VPaginatedList<T>({
   loading = false,
   renderItem,
   emptyState,
-  serverPageSize = 20,
-  clientPageSize = 6,
+  serverpageSize = 20,
+  clientpageSize = 6,
   totalItems,
   fetchMore,
   gridClasses = 'grid grid-cols-3 gap-5',
 }: VPaginatedListProps<T>) {
-  const { currentPageItems, currentPage, totalPages, handlePageChange, allItems } = usePagination({
+  const { currentpageItems, currentpage, totalpages, handlepageChange, allItems } = usePagination({
     data,
     serverSideData,
-    serverPageSize,
-    clientPageSize,
+    serverpageSize,
+    clientpageSize,
     totalItems,
     fetchMore,
   });
@@ -49,14 +49,14 @@ export function VPaginatedList<T>({
   return (
     <div>
       <div className={gridClasses}>
-        {currentPageItems.map((item, index) => (
+        {currentpageItems.map((item, index) => (
           <div key={index}>{renderItem(item)}</div>
         ))}
       </div>
 
-      {totalPages > 1 && (
+      {totalpages > 1 && (
         <div className="mt-4 flex justify-center">
-          <VPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+          <VPagination currentPage={currentpage} totalPages={totalpages} onpageChange={handlepageChange} />
         </div>
       )}
     </div>

@@ -8,6 +8,9 @@ interface ConfirmActionProps {
   okButtonLabel?: string;
   cancelButtonLabel?: string;
   isOpen: boolean;
+  showFooter?: boolean;
+  width?: number;
+  hideCloseButton?: boolean;
 }
 
 function ConfirmAction({
@@ -18,6 +21,9 @@ function ConfirmAction({
   okButtonLabel = 'Yes',
   cancelButtonLabel = 'No',
   isOpen,
+  width = 50,
+  showFooter = true,
+  hideCloseButton
 }: ConfirmActionProps) {
   if (!isOpen) return null;
 
@@ -34,10 +40,12 @@ function ConfirmAction({
         isOpen={isOpen}
         onClose={onClose}
         title={title}
-        width={50}
+        width={width}
         okButtonLabel={okButtonLabel}
         cancelButtonLabel={cancelButtonLabel}
         onSubmit={handleModalSubmit}
+        showFooter={showFooter}
+        hideCloseButton={hideCloseButton}
       >
         {message}
       </VModal>

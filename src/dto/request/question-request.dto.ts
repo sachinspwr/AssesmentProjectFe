@@ -1,5 +1,6 @@
 import { DifficultyLevel, QuestionType } from '@utils/enums';
 import { AuditRequestDTO } from './audit-request.dto';
+import { CodingQuestionRequestDTO } from './coading-question-request.dto';
 
 class QuestionRequestDTO extends AuditRequestDTO {
   public questionText!: string;
@@ -15,6 +16,8 @@ class QuestionRequestDTO extends AuditRequestDTO {
   public industryId!: string;
 
   public industryRoleId!: string;
+
+  public status: string;
 
   public topic!: string;
 
@@ -35,6 +38,8 @@ class QuestionRequestDTO extends AuditRequestDTO {
   public answerExplanation?: string;
 
   public tags?: string[];
+
+  public codingQuestion?: CodingQuestionRequestDTO;
 }
 
 export { QuestionRequestDTO };

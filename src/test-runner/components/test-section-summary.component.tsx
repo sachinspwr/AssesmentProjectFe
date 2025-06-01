@@ -14,7 +14,7 @@ interface SectionDetailsProps {
   sectionId?: string;
 }
 const TestSectionSummary = ({ sectionId }: SectionDetailsProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentpage, setCurrentpage] = useState(1);
   const dispatch = useDispatch();
   const currentIndex = useAppSelector(
     (state) => state.testRunner.sections.find((s) => s.sectionId === sectionId)?.currentQuestionIndex ?? 0
@@ -24,25 +24,25 @@ const TestSectionSummary = ({ sectionId }: SectionDetailsProps) => {
   }, [sectionId]);
 
   useEffect(() => {
-    setCurrentPage(currentIndex + 1); // Pages are 1-based
+    setCurrentpage(currentIndex + 1); // pages are 1-based
   }, [sectionId, currentIndex]);
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top on page change
-  }, [currentPage]);
+  }, [currentpage]);
 
   const sectionDetails = useAppSelector((state) =>
     state.testRunner.testDetails?.testSections?.find((section) => section.id === sectionId)
   );
 
   const questionDetails = sectionDetails?.questions ?? [];
-  const currentQuestion = questionDetails[currentPage - 1];
+  const currentQuestion = questionDetails[currentpage - 1];
 
-  const handlePageChange = (page: number) => {
+  const handlepageChange = (page: number) => {
     if (sectionId) {
       dispatch(setCurrentQuestionIndexForSection({ sectionId, index: page - 1 }));
     }
-    setCurrentPage(page);
+    setCurrentpage(page);
   };
   return (
     <>
@@ -74,10 +74,10 @@ const TestSectionSummary = ({ sectionId }: SectionDetailsProps) => {
           </div>
           <div>
             <VPagination
-              totalPages={questionDetails.length}
-              onPageChange={handlePageChange}
-              currentPage={currentPage}
-              maxVisiblePages={5}
+              totalpages={questionDetails.length}
+              onpageChange={handlepageChange}
+              currentviewMode={currentpage}
+              maxVisiblepages={5}
             />
           </div>
         </div>
@@ -85,7 +85,7 @@ const TestSectionSummary = ({ sectionId }: SectionDetailsProps) => {
       <div className="mt-3">
         {questionDetails.length > 0 && currentQuestion && (
           <div key={currentQuestion.id}>
-            <QuestionTypeRenderer question={currentQuestion} index={currentPage} />
+            <QuestionTypeRenderer question={currentQuestion} index={currentpage} />
             <InterviewGuidelines />
             <TestNavigationButtons key={currentQuestion.id} totalQuestions={questionDetails.length} />
           </div>

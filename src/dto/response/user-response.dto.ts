@@ -1,5 +1,6 @@
-import { Gender } from '@utils/enums';
-import { UserSubscription } from 'models';
+import { Gender, Permissions } from '@utils/enums';
+import {  UserSubscription } from 'models';
+import { RolesResponseDTO } from './roles.response.dto';
 
 class UserResponseDTO {
   id?: string;
@@ -20,13 +21,13 @@ class UserResponseDTO {
 
   companyRole?: string;
 
-  roles?: string[];
-
-  permissions?: string[];
+  permissions?: Permissions[];
 
   subscriptions?: UserSubscription[]
 
   tenantId?: string;
+
+  role!:RolesResponseDTO[];
 }
 
 export { UserResponseDTO };

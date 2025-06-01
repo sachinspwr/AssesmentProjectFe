@@ -23,6 +23,8 @@ type VSearchSelectProps = {
   throttleTime?: number;
   wrapperClasses?: string;
   options: Option[];
+  mode?: 'view' | 'edit';
+  pageChildren?: React.ReactNode;
 };
 
 function VSearchSelect({
@@ -38,6 +40,7 @@ function VSearchSelect({
   wrapperClasses = "",
   throttleTime = 1000,
   options = [],
+  mode = 'edit'
 }: VSearchSelectProps){
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -113,6 +116,7 @@ function VSearchSelect({
         value={inputValue}
         placeholder={placeholder}
         disabled={disabled}
+        mode={mode}
         selectContentOnFocus={true}
         onChange={(_, e) => {
           setIsOpen(true);

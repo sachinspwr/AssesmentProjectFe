@@ -16,7 +16,7 @@ import { ViewContent } from '../components/view-content.component';
 const generateSlug = (title: string) =>
     title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
 
-function ManageSubDocPage({ mode = 'edit' }: { mode?: 'edit' | 'create' }) {
+function ManageSubDocpage({ mode = 'edit' }: { mode?: 'edit' | 'create' }) {
     const isCreateMode = mode === 'create';
     const { slug, parentSlug, parentId } = useParams();
     const navigate = useNavigate();
@@ -146,4 +146,4 @@ function ManageSubDocPage({ mode = 'edit' }: { mode?: 'edit' | 'create' }) {
     );
 }
 
-export default ManageSubDocPage;
+export default ManageSubDocpage;

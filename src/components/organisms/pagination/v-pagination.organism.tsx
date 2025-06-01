@@ -5,40 +5,40 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 interface VPaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onpageChange: (page: number) => void;
   onLoadMore?: () => void; // Fetch more data if needed
-  maxVisiblePages?: number; // E.g., 5
+  maxVisiblepages?: number; // E.g., 5
 }
 
 // eslint-disable-next-line react/function-component-definition
 const VPagination: React.FC<VPaginationProps> = ({
   currentPage,
   totalPages,
-  onPageChange,
+  onpageChange,
   onLoadMore,
-  maxVisiblePages = 5,
+  maxVisiblepages = 5,
 }) => {
-  const [inputPage, setInputPage] = useState<string>('');
+  const [inputpage, setInputpage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // reset input when page changes
-    setInputPage('');
+    setInputpage('');
   }, [currentPage]);
 
-  const generatePageRange = (): (number | '...')[] => {
+  const generatepageRange = (): (number | '...')[] => {
     const pages: (number | '...')[] = [];
-    const half = Math.floor(maxVisiblePages / 2);
+    const half = Math.floor(maxVisiblepages / 2);
 
     let start = Math.max(1, currentPage - half);
     let end = Math.min(totalPages, currentPage + half);
 
     if (currentPage <= half) {
-      end = Math.min(totalPages, maxVisiblePages);
+      end = Math.min(totalPages, maxVisiblepages);
     }
 
     if (currentPage + half >= totalPages) {
-      start = Math.max(1, totalPages - maxVisiblePages + 1);
+      start = Math.max(1, totalPages - maxVisiblepages + 1);
     }
 
     if (start > 1) {
@@ -58,7 +58,7 @@ const VPagination: React.FC<VPaginationProps> = ({
     return pages;
   };
 
-  const handleChangePage = async (page: number) => {
+  const handleChangepage = async (page: number) => {
     if (page < 1 || page === currentPage) return;
 
     if (page > totalPages && onLoadMore) {
@@ -69,16 +69,16 @@ const VPagination: React.FC<VPaginationProps> = ({
         setIsLoading(false);
       }
     } else {
-      onPageChange(page);
+      onpageChange(page);
     }
   };
 
   const handleQuickJump = () => {
-    const page = parseInt(inputPage);
-    if (!isNaN(page)) handleChangePage(page);
+    const page = parseInt(inputpage);
+    if (!isNaN(page)) handleChangepage(page);
   };
 
-  const pageList = generatePageRange();
+  const pageList = generatepageRange();
 
   return (
     <div className="flex flex-wrap items-center gap-2 mt-4">
@@ -86,14 +86,14 @@ const VPagination: React.FC<VPaginationProps> = ({
       <VButton
         variant="link"
         className="!w-8 !h-8 !rounded-full"
-        onClick={() => handleChangePage(currentPage - 1)}
+        onClick={() => handleChangepage(currentPage - 1)}
         disabled={currentPage <= 1 || isLoading}
         aria-label="Previous page"
       >
         <AiOutlineLeft />
       </VButton>
 
-      {/* Page Buttons */}
+      {/* page Buttons */}
       {pageList.map((item, idx) =>
         item === '...' ? (
           <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">…</span>
@@ -102,7 +102,7 @@ const VPagination: React.FC<VPaginationProps> = ({
             key={`page-${item}`}
             variant={item === currentPage ? 'primary' : 'link'}
             className={`!w-8 !h-8 !rounded-full ${item === currentPage ? '!text-theme-on-primary' : ''}`}
-            onClick={() => handleChangePage(item)}
+            onClick={() => handleChangepage(item)}
             disabled={isLoading}
             aria-current={item === currentPage ? 'page' : undefined}
           >
@@ -115,7 +115,7 @@ const VPagination: React.FC<VPaginationProps> = ({
       <VButton
         variant="link"
         className="!w-8 !h-8 !rounded-full"
-        onClick={() => handleChangePage(currentPage + 1)}
+        onClick={() => handleChangepage(currentPage + 1)}
         disabled={isLoading || (currentPage === totalPages && !onLoadMore)}
         aria-label="Next page"
       >
@@ -126,7 +126,7 @@ const VPagination: React.FC<VPaginationProps> = ({
       <div className="flex items-center ml-4 space-x-2">
         <VNumberInput
           name="page-jump"
-          onChange={(value) => setInputPage(String(value))}
+          onChange={(value) => setInputpage(String(value))}
           className="!w-20 h-8 "
           min={1}
           max={totalPages}
@@ -136,7 +136,7 @@ const VPagination: React.FC<VPaginationProps> = ({
           size="sm"
           variant="secondary"
           onClick={handleQuickJump}
-          disabled={isLoading || !inputPage}
+          disabled={isLoading || !inputpage}
         >
           Go
         </VButton>

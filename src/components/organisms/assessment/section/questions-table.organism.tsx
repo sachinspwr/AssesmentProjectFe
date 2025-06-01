@@ -19,7 +19,7 @@ const questionColumns: VTableColumn<Question>[] = [
 
 interface SectionQuestionsTableProps {
   tableLabel?: string;
-  itemsPerPage?: number;
+  itemsPerviewMode?: number;
   mode: 'select' | 'view';
   questions: Question[];
   selectedQuestions?: Question[];
@@ -29,7 +29,7 @@ interface SectionQuestionsTableProps {
 
 function SectionQuestionsTable({
   tableLabel,
-  itemsPerPage,
+  itemsPerpage,
   mode = 'view',
   questions,
   selectedQuestions,
@@ -56,7 +56,7 @@ function SectionQuestionsTable({
           <VTypography as="p">No Questions Available</VTypography>
         </div>
       }
-      itemsPerPage={itemsPerPage}
+      itemsPerviewMode={itemsPerpage}
       onSelect={onSelect}
     />
   );

@@ -73,7 +73,7 @@ export function SectionCard({
       {/* Questions */}
       {expanded && hasQuestions && (
         <div className="overflow-y-auto max-h-[310px] border-t px-4">
-          <SectionQuestionsTable mode="view" itemsPerPage={100} questions={section.questions ?? []} />
+          <SectionQuestionsTable mode="view" itemsPerviewMode={100} questions={section.questions ?? []} />
         </div>
       )}
     </Card>
