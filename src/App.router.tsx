@@ -121,10 +121,7 @@ function AppRouter() {
                     <Route path="user-dashboard" element={<UserResultDashboard />} />
 
                     <Route path="result" element={<ResultPage />} />
-                    <Route
-                      path="test-results/:id"
-                      element={<DetailedCandidateTestResultPage />}
-                    />
+                    <Route path="test-results/:id" element={<DetailedCandidateTestResultPage />} />
 
                     <Route path="invite" element={<InvitationPage />} />
                     {/* <Route path="invite" element={<InvitationPage />} /> */}
@@ -141,15 +138,29 @@ function AppRouter() {
               </Route>
             </Route>
 
-            <Route path="/test-runner/code-editor" element={<CodingTestEditor question={new QuestionResponseDTO} currentQuestionId={''} questionAnswer={''} isLastQuestion={false} onAnswer={function (questionId: string, answer: Answer): void {
-              throw new Error('Function not implemented.');
-            } } onSubmit={function (): void {
-              throw new Error('Function not implemented.');
-            } } onNext={function (): void {
-              throw new Error('Function not implemented.');
-            } } onBack={function (): void {
-              throw new Error('Function not implemented.');
-            } } />} />
+            <Route
+              path="/test-runner/code-editor"
+              element={
+                <CodingTestEditor
+                  question={new QuestionResponseDTO()}
+                  currentQuestionId={''}
+                  questionAnswer={''}
+                  isLastQuestion={false}
+                  onAnswer={function (): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                  onSubmit={function (): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                  onNext={function (): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                  onBack={function (): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                />
+              }
+            />
 
             {/* Support Doc Routes */}
             {HelpCenterRoutes}
