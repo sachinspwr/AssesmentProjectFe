@@ -11,8 +11,8 @@ import { TestSection } from 'models';
 
 interface SectionCardProps {
   section: TestSection;
-  onEdit: (section: TestSection) => void;
-  onDelete: (section: TestSection) => void;
+  onEdit?: (section: TestSection) => void;
+  onDelete?: (section: TestSection) => void;
   defaultExpanded?: boolean;
 }
 
@@ -24,22 +24,10 @@ interface SectionActionIconProps {
 
 function SectionActionIcon({ icon, color, onClick }: SectionActionIconProps) {
   const colorClass = color === 'brand' ? 'text-theme-brand' : 'text-theme-negative';
-  return (
-    <VICon
-      icon={icon}
-      size={16}
-      className={`cursor-pointer hover:opacity-80 ${colorClass}`}
-      onClick={onClick}
-    />
-  );
+  return <VICon icon={icon} size={16} className={`cursor-pointer hover:opacity-80 ${colorClass}`} onClick={onClick} />;
 }
 
-export function SectionCard({
-  section,
-  onEdit,
-  onDelete,
-  defaultExpanded = true,
-}: SectionCardProps) {
+export function SectionCard({ section, onEdit, onDelete, defaultExpanded = true }: SectionCardProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const hasQuestions = section.questions?.length;
 
@@ -60,8 +48,8 @@ export function SectionCard({
               <VICon icon={expanded ? FiChevronUp : FiChevronDown} size={24} />
             </button>
           )}
-          <SectionActionIcon icon={FiEdit} color="brand" onClick={() => onEdit(section)} />
-          <SectionActionIcon icon={FaRegTrashCan} color="negative" onClick={() => onDelete(section)} />
+          {onEdit && <SectionActionIcon icon={FiEdit} color="brand" onClick={() => onEdit(section)} />}
+          {onDelete && <SectionActionIcon icon={FaRegTrashCan} color="negative" onClick={() => onDelete(section)} />}
         </div>
       </div>
 

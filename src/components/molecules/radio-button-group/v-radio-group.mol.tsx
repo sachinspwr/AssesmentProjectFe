@@ -64,7 +64,9 @@ function VRadioButtonGroup({
               disabled={disabled}
               checked={selectedValue === option.value}
               onChange={() => handleChange(option.value)} // Update selected value on change
-              className={`!w-4 !h-4 !p-0 !rounded-full border-2 border-theme-primary focus:ring-0 ${selectedValue === option.value ? '!border-theme-primary' : '!border-theme-default'} ${className}`}
+              className={`!w-4 !h-4 !p-0 !rounded-full border-2 
+              ${selectedValue === option.value ? 'bg-theme-primary border-theme-primary' : 'bg-transparent border-theme-default'} 
+              focus:ring-0 transition-colors duration-150 ease-in-out ${className}`}
             />
             <label
               className={`ml-2 font-normal ${labelClasses} ${selectedValue === option.value ? 'text-theme-brand font-semibold' : 'text-theme-secondary'}`}

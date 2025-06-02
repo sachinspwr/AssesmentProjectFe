@@ -1,45 +1,78 @@
 import React from 'react';
-import { QuestionType, TestQuestionFormat } from '@utils/enums';
-import { MultipleChoiceQuestion } from './question-type/mcq.component';
-import SingleChoiceQuestion from './question-type/single-choice-question.component';
-import FillInTheBlanks from './question-type/fill-in-the-blanks.component';
+import { QuestionType } from '@utils/enums';
 import { QuestionResponseDTO } from '@dto/response';
+
+import {
+  selectSectionPaginationState,
+  useTestRunnerSelector,
+} from 'test-runner/store';
+
+import { selectCurrentQuestionAnswer } from 'test-runner/store/session/answer';
+
 import { CodingQuestion } from './code-editor/coding-question.component';
-import ShortAnswerQuestion from './question-type/short-answer.component';
+import FillInTheBlanks from './question-type/fill-in-the-blanks.component';
+import { MultipleChoiceQuestion } from './question-type/mcq.component';
+import ShortAnswerQuestion from './question-type/short-answer-question.component';
+import {SingleChoiceQuestion} from './question-type/single-choice-question.component';
 
 type QuestionProps = {
   question: QuestionResponseDTO;
-  index: number;
 };
 
-function QuestionTypeRenderer({question, index }: QuestionProps) {
-  const { type: questionType } = question;
-  const renderQuestionComponent = () => {
-    switch (questionType) {
+type BaseQuestionProps = {
+  question: QuestionResponseDTO;
+  index: number;
+  defaultSelection: string;
+};
+
+// Separate component definition
+function QuestionTypeRendererComponent({ question }: QuestionProps) {
+  const userAnswer = useTestRunnerSelector(
+    React.useCallback(selectCurrentQuestionAnswer, [])
+  );
+
+  const currentPage = useTestRunnerSelector(
+    React.useCallback((state) => selectSectionPaginationState(state).currentPage, [])
+  );
+
+  const commonProps: BaseQuestionProps = React.useMemo(() => ({
+    question,
+    index: currentPage,
+    defaultSelection: userAnswer || '',
+  }), [question, currentPage, userAnswer]);
+
+  console.log("defaultSelection", question)
+
+  const questionComponent = React.useMemo(() => {
+    switch (question.type) {
       case QuestionType.SingleChoice:
-        return <SingleChoiceQuestion question={question} index={index} />;
-      case QuestionType.MultipleChoice:
-        return <MultipleChoiceQuestion question={question} index={index} />;
-      case QuestionType.FillInTheBlanks:3
-        return <FillInTheBlanks question={question} index={index} />;
       case QuestionType.TrueFalse:
-        return <SingleChoiceQuestion question={question} index={index} />;
+        return <SingleChoiceQuestion {...commonProps} />;
+
+      case QuestionType.MultipleChoice:
+        return <MultipleChoiceQuestion {...commonProps} />;
+
+      case QuestionType.FillInTheBlanks:
+        return <FillInTheBlanks {...commonProps} />;
+
       case QuestionType.Coding:
-        return <CodingTestEditor question={question} currentQuestionId={question.id} />;
-      case QuestionType.Essay:
-        return <ShortAnswerQuestion question={question} index={index} />;
+        return <CodingQuestion {...commonProps} />;
+
       case QuestionType.ShortAnswer:
-        return <ShortAnswerQuestion question={question} index={index} />;
+      case QuestionType.Essay:
+        return <ShortAnswerQuestion {...commonProps} />;
+
       default:
         return <div>Unsupported question type</div>;
     }
-  };
+  }, [question.type, commonProps]);
 
   return (
-    <>
-      <div className="w-full">{renderQuestionComponent()}</div>
-    </>
+    <div className="w-full !min-h-[50vh]">
+      {questionComponent}
+    </div>
   );
 }
 
-export { QuestionTypeRenderer };
+// Export memoized version
+export const QuestionTypeRenderer = React.memo(QuestionTypeRendererComponent);

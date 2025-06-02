@@ -90,7 +90,7 @@ function getInitials(fullName: string): string {
 }
 
 function getFullName(user?: UserResponseDTO): string {
-  if(!user) {
+  if (!user) {
     return '';
   }
   return `${user.lastName}, ${user.firstName}`;
@@ -105,15 +105,19 @@ function splitAndCapitalize(input: string): string {
     .join(' '); // Join back into a sentence
 }
 
-function extractPlaceholders(input: string, regex:RegExp = /\{([^}]+)\}/g): string[] {
-  
-  if(!input) {
+function extractPlaceholders(input: string, regex: RegExp = /\{([^}]+)\}/g): string[] {
+  if (!input) {
     return [];
   }
 
   const matches = [...input.matchAll(regex)];
-  
-  return matches.map(match => match[1]); // Extract only the names inside {}
+
+  return matches.map((match) => match[1]); // Extract only the names inside {}
+}
+
+function handleContactSupport() {
+  window.location.href =
+    'mailto:support@valt.com?subject=Privacy%20Policy%20Concerns&body=I%20have%20questions%20about...';
 }
 
 function hasPermission(
@@ -132,5 +136,6 @@ export {
   splitAndCapitalize,
   tryParseJson,
   extractPlaceholders,
+  handleContactSupport,
   hasPermission
 };

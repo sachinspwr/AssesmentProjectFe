@@ -7,7 +7,7 @@ import TrueFalsePreview from '@components/organisms/questions-preview/true-false
 type ManageQuestionPreviewpageProps = {
   type: string;
   formData: any; // Prefer VFormFieldData if available
-  mode?: 'preview' | 'review';
+  mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[] | string;
   correctAnswers?: string[] | string;
 };
@@ -16,21 +16,21 @@ function ManageQuestionPreviewpage({
   type,
   formData,
   mode = 'preview',
-  selectedAnswers = [] ,
+  selectedAnswers = [],
   correctAnswers = [],
 }: ManageQuestionPreviewpageProps) {
-    // Normalize to ensure both are arrays
-    const normalizedSelectedAnswers = Array.isArray(selectedAnswers)
+  // Normalize to ensure both are arrays
+  const normalizedSelectedAnswers = Array.isArray(selectedAnswers)
     ? selectedAnswers
     : selectedAnswers
-    ? [selectedAnswers]
-    : [];
+      ? [selectedAnswers]
+      : [];
 
   const normalizedCorrectAnswers = Array.isArray(correctAnswers)
     ? correctAnswers
     : correctAnswers
-    ? [correctAnswers]
-    : [];
+      ? [correctAnswers]
+      : [];
 
   const renderPreview = () => {
     if (type === 'Single Choice' || type === 'Multiple Choice') {

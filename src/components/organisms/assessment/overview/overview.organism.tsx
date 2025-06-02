@@ -53,7 +53,7 @@ function AssessmentOverview({ test, onDeleteSuccess }: AssessmentOverviewProps) 
         overViewLableChildren={<div className='flex justify-end text-theme-muted'>
           <VStatus type="positive" label={test?.status} className='mr-5' />
           <VICon
-            onClick={() => setIsInviteModalOpen(true)}
+            onClick={() => navigate(`/link/${test?.id}`)}
             icon={FcInvite}
           />
 

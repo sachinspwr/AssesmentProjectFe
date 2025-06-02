@@ -6,8 +6,5 @@ export enum QuestionType {
   FillInTheBlanks = 'Fill in the Blanks',
   ShortAnswer = 'Short Answer',
   Essay = 'Essay',
-  // Matching = 'Matching',
-  // NumericEntry = 'Numeric Entry',
   Coding = 'Coding',
-  // ProjectBased = 'Project-Based',
 }

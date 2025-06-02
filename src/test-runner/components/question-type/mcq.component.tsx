@@ -1,87 +1,99 @@
+import React from 'react';
 import { VCheckboxGroup } from '@components/molecules/index';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { QuestionResponseDTO } from '@dto/response';
 import QuestionSection from '../question-section.component';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { setUserAnswer } from 'store/slices/test-runner.slice';
-import { RootState } from 'store/store';
-import { useMemo } from 'react';
-import { ErrorBoundary } from '@components/organisms/error/error-bountry.organism';
+import { setAnswer } from 'test-runner/store/session';
+import { useTestRunnerDispatch } from 'test-runner/store';
 
-type multipleChoiceQuestionProps = {
+type MultipleChoiceQuestionProps = {
   question: QuestionResponseDTO;
+  defaultSelection: string;
   index: number;
 };
-function MultipleChoiceQuestion({ question, index }: multipleChoiceQuestionProps) {
-  const dispatch = useDispatch();
-  const questionId = question.id;
-  const type = question.type;
-  const selectedSectionId = useSelector((state: RootState) => state.testRunner.selectedSectionId);
 
-  const section = useSelector((state: RootState) =>
-    state.testRunner.sections.find((sec) => sec.sectionId === selectedSectionId)
-  );
-  // const userAnswer= section?.userAnswers[questionId]?.answer ?? [];
-  const rawAnswer = section?.userAnswers[questionId]?.answer;
-  // const userAnswer = Array.isArray(rawAnswer) ? rawAnswer : rawAnswer ? [rawAnswer] : [];
-  const userAnswer = useMemo(() => {
-    if (Array.isArray(rawAnswer)) return rawAnswer;
-    if (rawAnswer) return [rawAnswer];
-    return [];
-  }, [rawAnswer]);
-  
-  console.log(userAnswer);
-  
-  const handleAnswerChange = (answer: string[]) => {
-    if (!selectedSectionId) return;
+const MultipleChoiceQuestion = React.memo(
+  ({ index, question, defaultSelection }: MultipleChoiceQuestionProps) => {
+    const dispatch = useTestRunnerDispatch();
+    const questionId = question.id;
 
-    // Check if the answer actually changed
-    if (JSON.stringify(userAnswer) === JSON.stringify(answer)) return;
-
-    dispatch(setUserAnswer({ sectionId: selectedSectionId, questionId, type, answer }));
-
-    // if (!selectedSectionId) return;
-    // dispatch(setUserAnswer({ sectionId: selectedSectionId, questionId, type, answer }));
-  };
-
-  const options = useMemo(() => {
-    try {
-      return (
-        question.answerOptions?.split(',').map((option: string) => ({
-          label: option,
-          value: option,
-        })) ?? []
-      );
-    } catch (e) {
-      console.error('Invalid answer options', e);
-      return [];
-    }
-  }, [question.answerOptions]);
-
-  return (
-    <div className="">
-      <QuestionSection question={question} index={index} />
-      <VTypography as="h5" className="mb-3">
-        Select Options
-      </VTypography>
-         {/* <ErrorBoundary> */}
-
-         {question.answerOptions && (
-        <VCheckboxGroup
-          name={`answerOptions-${questionId}`}
-          direction="vertical"
-          selectedValues={userAnswer}
-          options={options}
-          onChange={(v) => handleAnswerChange(v)}
-        />
-      )}
-
-         {/* </ErrorBoundary> */}
+    // Convert comma-separated string to array of unique selected values (lowercase)
+    const selectedValues = React.useMemo(() => {
+      if (!defaultSelection || defaultSelection === '') return [];
       
+      return Array.from(
+        new Set(
+          defaultSelection
+            .split(',')
+            .map((item) => item.trim().toLowerCase())
+            .filter(Boolean)
+        )
+      );
+    }, [defaultSelection]);
 
-    </div>
-  );
-}
+    // Stable callback for answer changes
+    const handleAnswerChange = React.useCallback(
+      (selectedOptions: string[]) => {
+        const uniqueOptions = Array.from(
+          new Set(
+            selectedOptions
+              .map((opt) => opt.trim().toLowerCase())
+              .filter(Boolean)
+          ));
+        
+        const answerString = uniqueOptions.join(',');
+        dispatch(
+          setAnswer({
+            questionId,
+            answer: answerString,
+          })
+        );
+      },
+      [dispatch, questionId]
+    );
+
+    // Parse and normalize answer options
+    const options = React.useMemo(() => {
+      const uniqueOptions = Array.from(
+        new Set(
+          question.answerOptions
+            ?.split(',')
+            .map((option) => option.trim())
+            .filter(Boolean)
+        )
+      );
+
+      return uniqueOptions.map((option) => ({
+        label: option,
+        value: option.toLowerCase(),
+      }));
+    }, [question.answerOptions]);
+
+    return (
+      <div className="">
+        <QuestionSection question={question} index={index} />
+        <VTypography as="h5" className="mb-3">
+          Select Options (Multiple)
+        </VTypography>
+
+        {options.length > 0 && (
+          <VCheckboxGroup
+            key={question.id}
+            name={`mcq-${questionId}`}
+            direction="vertical"
+            selectedValues={selectedValues}
+            options={options}
+            onChange={handleAnswerChange}
+          />
+        )}
+      </div>
+    );
+  },
+  // Custom comparison function for props
+  (prevProps, nextProps) => 
+    prevProps.question.id === nextProps.question.id &&
+    prevProps.defaultSelection === nextProps.defaultSelection &&
+    prevProps.index === nextProps.index
+);
 
 export { MultipleChoiceQuestion };

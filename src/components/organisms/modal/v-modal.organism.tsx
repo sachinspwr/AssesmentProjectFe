@@ -13,6 +13,7 @@ type VModalProps = DefaultProps & {
   okButtonIcon?: IconType;
   okButtonClasses?: ClassName;
   okButtonDisabled?: boolean;
+  isOkLoading?: boolean;
   cancelButtonLabel?: string;
   cancelButtonIcon?: IconType;
   cancelButtonClasses?: ClassName;
@@ -44,6 +45,7 @@ function VModal({
   okButtonIcon,
   okButtonClasses,
   okButtonDisabled,
+  isOkLoading,
   cancelButtonLabel = 'CANCEL',
   cancelButtonClasses,
   cancelButtonIcon,
@@ -99,7 +101,7 @@ function VModal({
                   {cancelButtonLabel}
                 </VButton>
               )}
-              <VButton onClick={onSubmit} className={okButtonClasses} disabled={okButtonDisabled} isLoading={isLoading}>
+              <VButton onClick={onSubmit} className={okButtonClasses} disabled={okButtonDisabled} isLoading={isLoading || isOkLoading}>
                 {okButtonIcon && <VICon icon={okButtonIcon} size={20} />}
                 {okButtonLabel}
               </VButton>

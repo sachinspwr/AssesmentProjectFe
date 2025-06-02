@@ -6,7 +6,6 @@ import { ReactNode } from 'react';
 type VLabelledTextAreaProps = LabelProps &
   VTextAreaProps & {
     label: ReactNode;
-    rows?: number;
     wrapperClasses?: ClassName;
     labelClasses?: ClassName;
     inputClasses?: ClassName;
@@ -20,7 +19,7 @@ function VLabelledTextArea({
   name,
   value,
   placeholder,
-  rows = 5,
+  rows,
   disabled,
   reflectErrors,
   wrapperClasses = '',

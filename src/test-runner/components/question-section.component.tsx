@@ -9,30 +9,34 @@ type QuestionSectionProps = {
   question: QuestionResponseDTO;
   index: number; // question number in the test
 };
-const QuestionSection = ({ question, index }: QuestionSectionProps) => {
+function QuestionSection({ question, index }: QuestionSectionProps) {
+  const timeLimit = question.timeLimit;
+
   return (
     <div>
       <div className="border border-theme-default mb-5 mt-5"></div>
       <div className="flex justify-between">
-        <VTypography as="h5">
-          {`${index}. ${question?.questionText}`}
-          {/* 3.This is sample MCQ question, Lorem Ipsum is simply dummy text of the printing and typesetting industry? */}
-        </VTypography>
+        <VTypography as="h5">{`${index}. ${question?.questionText}`}</VTypography>
         <div className="flex items-center gap-2">
-          <VTypography as="label" className="text-[12px]" color="muted">
-            Time for question(In Mins)
+          <VTypography as="label" className="text-[12px] flex gap-2" color="muted">
+            <VICon icon={IoMdStopwatch} size={22} />
           </VTypography>
-          <VICon icon={IoMdStopwatch} size={22} />
-          <Timer mode="plain" timeValue={question?.timeLimit} onTimeElapsed={() => {}} />
+          <Timer
+            duration={timeLimit}
+            warningThreshold={timeLimit * 0.5} // 50% of timeLimit
+            criticalThreshold={timeLimit * 0.2} // 20% of timeLimit
+            mode="minimal"
+            className="text-xl font-bold"
+          />
         </div>
       </div>
-      <VTypography as="p" color="muted">
+      <VTypography as="p" color="secondary">
         {question?.questionExplanation}
         {/* question descrpition */}
       </VTypography>
       <div className="border border-theme-default mb-5 mt-5"></div>
     </div>
   );
-};
+}
 
 export default QuestionSection;

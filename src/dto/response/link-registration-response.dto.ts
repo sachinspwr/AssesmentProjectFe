@@ -29,5 +29,28 @@ export class LinkRegistrationResponseDto {
 
     public visibility: string;
 
-    public linkRegistrations: string[];
+    public linkRegistrations: LinkRegistrationUserResponseDto[];
+}
+
+export class LinkRegistrationUserResponseDto {
+    id?: string;
+
+    testLinkId?: string;
+
+    email!: string;
+
+    firstName!: string;
+
+    lastName!: string;
+
+    status!: RegistrationStatus;
+
+    registeredAt?: Date;
+}
+
+export enum RegistrationStatus {
+    Pending = 'Pending',
+    Registered = 'Registered',
+    Cancelled = 'Cancelled',
+    Expired = 'Expired',
 }

@@ -2,8 +2,17 @@ import { TestResultResponseDTO } from '@dto/response';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export const generateResultPDF = (resultData:TestResultResponseDTO) => {
-  const { user, testResults, test, testQuestionAnswer } = resultData;
+// Extend jsPDF type to recognize lastAutoTable
+declare module 'jspdf' {
+  interface jsPDF {
+    lastAutoTable: {
+      finalY: number;
+    };
+  }
+}
+
+export const generateResultPDF = (resultData: TestResultResponseDTO) => {
+  const { participant, sections } = resultData;
   const doc = new jsPDF();
 
   // Title
@@ -12,13 +21,12 @@ export const generateResultPDF = (resultData:TestResultResponseDTO) => {
 
   // Candidate Info
   doc.setFontSize(12);
-  const result = testResults[0];
   const basicInfo = [
-    `Name: ${user.firstName} ${user.lastName}`,
-    `Email: ${user.email}`,
-    `Date: ${new Date(result.completedAt).toLocaleDateString()}`,
-    `Result: ${result.isPassed ? 'Pass' : 'Fail'}`,
-    `Score: ${result.score}/${result.outOf} (${result.correctionPercentage}%)`
+    `Name: ${participant?.profile?.firstName} ${participant?.profile?.lastName}`,
+    `Email: ${participant?.email}`,
+    `Date: ${new Date(resultData.completedAt).toLocaleDateString()}`,
+    `Result: ${resultData.isPassed ? 'Pass' : 'Fail'}`,
+    `Score: ${resultData?.maxPossibleScore} (${resultData?.percentageScore}%)`,
   ];
 
   basicInfo.forEach((line, index) => {
@@ -31,43 +39,32 @@ export const generateResultPDF = (resultData:TestResultResponseDTO) => {
   autoTable(doc, {
     startY: y,
     head: [['Section', 'Score', 'Out Of']],
-    body: test.testSections.map((sec) => [sec.name, sec.score, sec.outOf]),
+    body: sections.map((sec) => [sec.title, sec.maxScore, sec.cutoffScore]),
   });
 
   y = doc.lastAutoTable.finalY + 10;
 
   // Questions
-  test?.testSections.forEach((section) => {
-    section.question.forEach((question, idx) => {
-      const answer = testQuestionAnswer.find(
-        (a) => a.sectionId === section.id && a.questionId === question.id
-      );
-
-      const selected = Array.isArray(answer?.answerText)
-        ? answer.answerText
-        : answer?.answerText?.split(',') ?? [];
-
-      const correct = question.correctAnswer?.split(',') ?? [];
-
-      const isCorrect = selected.every(ans => correct.includes(ans)) && selected.length === correct.length;
+  sections.forEach((section) => {
+    section.questions.forEach((question, idx) => {
 
       const qLines = [
-        `Q${idx + 1}: ${question.questionText}`,
-        `Your Answer: ${selected.join(', ') || 'No answer given'}`,
-        `Correct Answer: ${correct.join(', ')}`,
-        `Explanation: ${question.answerExplanation || 'No explanation provided.'}`,
-        `Status: ${isCorrect ? 'Correct' : 'Wrong'}`
+        `Q${idx + 1}: ${question.text}`,
+        `Your Answer: ${question?.userAnswer || 'No answer given'}`,
+        `Correct Answer: ${question?.correctAnswer}`,
+        `Explanation: ${question.explanation || 'No explanation provided.'}`,
+        `Status: ${question?.isCorrect ? 'Correct' : 'Wrong'}`,
       ];
 
       qLines.forEach((line, i) => {
         const textY = y + i * 6;
         if (textY > 280) {
-          doc.addpage();
+          doc.addPage();
           y = 20;
         }
-        doc.setFont(undefined, line.startsWith('Q') ? 'bold' : 'normal');
+        doc.setFont(line.startsWith('Q') ? 'bold' : 'normal');
         doc.setTextColor(
-          line.startsWith('Your Answer') ? (isCorrect ? 'green' : 'red') : 'black'
+          line.startsWith('Your Answer') ? (question?.isCorrect ? 'green' : 'red') : 'black'
         );
         doc.text(line, 14, y + i * 6);
       });
@@ -76,6 +73,5 @@ export const generateResultPDF = (resultData:TestResultResponseDTO) => {
     });
   });
 
-  // Save PDF
-  doc.save(`Result-${user.firstName}-${user.lastName}.pdf`);
+  doc.save(`Result-${participant?.profile.firstName}-${participant?.profile.lastName}.pdf`);
 };

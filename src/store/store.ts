@@ -43,8 +43,10 @@ import maintenanceReducer, { settingsApiSlice } from './slices/settings.slice'
 import featureToggleReducer, { featureManagerApiSlice } from './slices/feature-manager.slice';
 import testinvitationReducer, { testInvitationApiSlice } from './slices/test-invitation.slice'
 import linkRegistrationReducer, { linkRegistrationApiSlice } from './slices/link-registration.slice';
+import { testLinkApiSlice } from './slices/test-link.slice.';
 import dashboardReducer, { dashboardApiSlice } from './slices/dashboard.slice';
 import userTestSummaryReducer, { userTestSummaryApiSlice } from './slices/user-test-summary.slice';
+import { testGuestsApiSlice } from './slices/test-guest.slice';
 
 /* eslint-disable no-underscore-dangle */
 export const store = configureStore({
@@ -121,6 +123,7 @@ export const store = configureStore({
     [featureManagerApiSlice.reducerPath]: featureManagerApiSlice.reducer,
     [testInvitationApiSlice.reducerPath]: testInvitationApiSlice.reducer,
     [linkRegistrationApiSlice.reducerPath]: linkRegistrationApiSlice.reducer,
+    [testLinkApiSlice.reducerPath]:testLinkApiSlice.reducer,
     [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
     [userTestSummaryApiSlice.reducerPath]: userTestSummaryApiSlice.reducer
   },
@@ -153,6 +156,7 @@ export const store = configureStore({
       articlesApiSlice.middleware,
       ticketLogsApiSlice.middleware,
       usersApiSlice.middleware,
+      testGuestsApiSlice.middleware,
       testResultApiSlice.middleware,
       codeEvaluationApiSlice.middleware,
       usersApiSlice.middleware,
@@ -166,6 +170,7 @@ export const store = configureStore({
       featureManagerApiSlice.middleware,
       testInvitationApiSlice.middleware,
       linkRegistrationApiSlice.middleware,
+      testLinkApiSlice.middleware,
       dashboardApiSlice.middleware,
       userTestSummaryApiSlice.middleware
     ),

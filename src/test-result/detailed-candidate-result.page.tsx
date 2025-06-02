@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import {  VStatus } from '@components/atoms';
-import {  VLoader } from '@components/molecules';
+import { useLocation } from 'react-router-dom';
+import { VStatus } from '@components/atoms';
+import { VLoader } from '@components/molecules';
 import { VProgressBar } from '@components/molecules/progress-bar/v-progress-bar.mol';
 import { VOverview } from '@components/organisms/overview/v-overview.organism';
-import { useFetchBriefResultQuery, useGetDetailedResultQuery } from 'store/slices/test-result.slice';
+import { useGetDetailedResultQuery } from 'store/slices/test-result.slice';
 
 import { generateResultPDF } from './generateResultPDF';
 import DynamicQuestionModal from './dynamic-question-modal';
@@ -17,57 +17,43 @@ interface DetailedCandidateTestResultpageProps {
   hideBackButton?: boolean;
 }
 
-export default function DetailedCandidateTestResultPage({
-  className,
-}: DetailedCandidateTestResultpageProps) {
+export default function DetailedCandidateTestResultPage({ className }: DetailedCandidateTestResultpageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [questionInfo, setQuestionInfo] = useState({ sectionId: '', questionId: '' });
 
-  const { testId, participantId } = useParams<{ testId: string; participantId: string }>();
   const location = useLocation();
   const useDummyData = location.state?.useDummyData ?? false;
 
-  const { data: briefResultData, isLoading } = useFetchBriefResultQuery({
-    testId: testId!,
-    participantId: participantId!,
-  });
+  const resultId = 'c187bf11-353d-4843-9e21-50e7cc578aa1';
 
-  const resultId = briefResultData?.data?.[0]?.id ?? '';
+  const { data: detailedResultDataFromApi, isLoading: detailedLoading } = useGetDetailedResultQuery({ resultId });
 
-  const { data: detailedResultDataFromApi, isLoading: detailedLoading } = useGetDetailedResultQuery(
-    { testId: testId!, resultId },
-    { skip: !resultId }
-  );
-
-  
   const finalResultData = detailedResultDataFromApi;
 
-  console.log("Data from Api : ", finalResultData);
-  
+  console.log('Data from Api : ', finalResultData);
+
   const handleReviewQuestion = ({ questionId, sectionId }: { questionId: string; sectionId: string }) => {
     setQuestionInfo({ questionId, sectionId });
     setIsModalOpen(true);
   };
 
-
-  if (isLoading || (detailedLoading && !useDummyData)) {
+  if (detailedLoading && !useDummyData) {
     return <VLoader position="global" />;
   }
 
   return (
     <div className={className}>
-      
       <CandidateProfileDetails
-        user={finalResultData?.user}
-        test={finalResultData?.test}
-        testResults={finalResultData?.testResults[0]}
+        testResults={finalResultData}
         onDownload={() => generateResultPDF(finalResultData!)}
         statusElement={
-          <VStatus
-            className="w-7 h-7 px-3"
-            label={finalResultData?.testResults[0].isPassed ? "Pass" : "Fail"}
-            type={finalResultData?.testResults[0].isPassed ? "positive" : "negative"}
-          />
+          finalResultData ? (
+            <VStatus
+              className="w-7 h-7 px-3"
+              label={finalResultData.isPassed ? 'Pass' : 'Fail'}
+              type={finalResultData.isPassed ? 'positive' : 'negative'}
+            />
+          ) : null
         }
       />
 
@@ -76,12 +62,12 @@ export default function DetailedCandidateTestResultPage({
       {/* Section Wise Performance */}
       <VOverview title="Section-wise performance" titleClassName="text-sm">
         <div className="px-5 flex flex-col gap-5 pb-5">
-          {finalResultData?.test?.testSections?.map((section) => (
+          {finalResultData?.sections?.map((section) => (
             <VProgressBar
               key={section?.id}
-              label={section?.name}
-              completed={section?.score ?? 0}
-              outOf={section?.outOf ?? 0}
+              label={section?.title}
+              completed={section?.maxScore ?? 0}
+              outOf={section?.cutoffScore ?? 0}
             />
           ))}
         </div>

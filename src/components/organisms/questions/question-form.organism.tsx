@@ -13,7 +13,7 @@ import {
   usePublishQuestionMutation,
   useUpdateQuestionMutation,
 } from 'store/slices/questions.slice';
-import { mapToFormFieldData, VFormFields } from '@types';
+import { mapToFormFieldData, VFormFieldData, VFormFields } from '@types';
 import TagSelector from '@components/organisms/tag-selector/tag-selector.organism';
 import { QuestionResponseDTO } from '@dto/response';
 import { DomainResponseDTO } from '@dto/response/domain-response.dto';
@@ -55,6 +55,7 @@ function QuestionForm({
   const [domainRoles, setDomainRoles] = useState<IndustryRoleResponseDTO[]>([]);
 
   const [isPublic, setIsPublic] = useState(true);
+  const [formData, setIsFormData] = useState<VFormFieldData>();
   const [isSavedOrSubmitted, setIsSavedOrSubmitted] = useState(false);
   const [publishQuestion, { isLoading: isPublishing }] = usePublishQuestionMutation();
 
@@ -534,13 +535,9 @@ function QuestionForm({
       ],
     },
     {
-      name: 'custom',
-      type: 'custom',
-      customContent: (
-        <VButton name="preview-button" variant="secondary" onClick={() => setIsPreview(true)}>
-          Preview Question
-        </VButton>
-      ),
+      name: 'preview',
+      type: 'submit',
+      label: 'Preview Question',
       position: '18 1 2',
     },
     {
@@ -576,7 +573,7 @@ function QuestionForm({
   const handleSubmit = async (formData: any, source: string) => {
     console.log('Form Data : ', formData);
     console.log('Source : ', source);
-
+    setIsFormData(formData);
     const selectedSubject = subjects.find((subject) => subject.id === formData.subjectId);
     const problemConfig = formData.problemConfiguration;
 
@@ -614,18 +611,18 @@ function QuestionForm({
     };
 
     try {
-      if (renderMode === 'edit') {
+      if(source === 'preview')
+        {
+          setIsPreview(true);
+          return;
+        }
+      if (initialValue?.id) {
         await updateQuestion({ id: initialValue?.id ?? '0', data: requestData }).unwrap();
       } else {
         // Create is only applicable for "save"
-        if (source === 'save') {
           const response = await createQuestion(requestData).unwrap();
           setIsSavedOrSubmitted(true);
           console.log('Response', response);
-        } else {
-          toast.error("You can't mark a new question as InReview before saving it.");
-          return;
-        }
       }
       onSuccess && onSuccess();
     } catch (error) {
@@ -642,6 +639,8 @@ function QuestionForm({
       console.error(err);
     }
   };
+
+  console.log("Initial values : ", initialValue);
 
   return (
     <>
@@ -677,7 +676,7 @@ function QuestionForm({
           onSubmit={handleSubmit}
         />
       ) : (
-        <ManageQuestionPreviewpage type={initialValue?.type as string} formData={initialValue} mode="preview" />
+        <ManageQuestionPreviewpage type={formData?.type as string} formData={formData} mode="preview" />
       )}
     </>
   );

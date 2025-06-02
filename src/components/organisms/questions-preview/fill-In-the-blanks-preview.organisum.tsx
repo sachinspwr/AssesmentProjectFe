@@ -8,7 +8,7 @@ import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 
 type FillInTheBlanksPreviewProps = {
   formData: VFormFieldData;
-  mode?: 'preview' | 'review';
+  mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[];
   correctAnswers?: string[];
 };
@@ -29,22 +29,31 @@ function FillInTheBlanksPreview({
   const reviewSelectedValues = selectedAnswers ?? [];
 
   const options = formData.answerOptions
-    ? (formData.answerOptions as string).split(',').map((rawOption: string) => {
-        const option = rawOption.trim();
-        if (isReview) {
-          const isCorrect = correctAnswers?.includes(option);
-          const isSelectedWrong = selectedAnswers?.includes(option) && !isCorrect;
-          let colorClass = '';
-          if (isCorrect) colorClass = 'text-theme-positive';
-          else if (isSelectedWrong) colorClass = 'text-theme-negative';
-          return {
-            label: <span className={`${colorClass} ${isCorrect ? 'font-semibold' : ''}`}>{option}</span>,
-            value: option,
-          };
-        }
-        return { label: option, value: option };
-      })
-    : [];
+  ? (
+      Array.isArray(formData.answerOptions)
+        ? formData.answerOptions
+        : (formData.answerOptions as string).split(',')
+    ).map((rawOption: string) => {
+      const option = rawOption.trim();
+
+      if (isReview) {
+        const isCorrect = correctAnswers?.includes(option);
+        const isSelectedWrong = selectedAnswers?.includes(option) && !isCorrect;
+
+        let colorClass = '';
+        if (isCorrect) colorClass = 'text-theme-positive';
+        else if (isSelectedWrong) colorClass = 'text-theme-negative';
+
+        return {
+          label: <span className={`${colorClass} ${isCorrect ? 'font-semibold' : ''}`}>{option}</span>,
+          value: option,
+        };
+      }
+
+      return { label: option, value: option };
+    })
+  : [];
+
 
   const handleOptionChange = (values: string[]) => {
     if (isPreview) setSelectedValues(values);

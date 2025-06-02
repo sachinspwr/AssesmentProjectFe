@@ -1,59 +1,105 @@
 export interface UserTestSummaryResponseDTO {
-  summaryStats: SummaryStat[]
-  subjectStats: SubjectStat[]
-  recentTestResults: RecentTestResult[]
-}
-
-export interface SummaryStat {
-  averageScore: number
-  averageAccuracy: number
-  totalTests: number
-  passed: number
-  failed: number
-  passedStatus: number
-  failedStatus: number
-  incompleteStatus: number
-}
-
-export interface SubjectStat {
-  subject: string
-  totalQuestions: number
-  correctAnswers: number
-  passRate: number
-}
-
-export interface RecentTestResult {
-  id: string
-  testId: string
-  testTitle: string
-  userId: string
-  participantId: string
-  totalQuestions: number
-  correctAnswersCount: number
-  score: number
-  outOf: number
-  isPassed: boolean
-  correctionPercentage: number
-  feedback: string
-  status: string
-  completedAt: string
-  createdAt: string
-  updatedAt: string
-  userFirstName: string
-  userLastName: string
-  userEmail: string
-  test: Test
-  user: User
-}
-
-export interface Test {
   id: string
   title: string
+  description: string
+  maxPossibleScore: string
+  percentageScore: number
+  isPassed: boolean
+  completedAt: string
+  totalDurationSeconds: number
+  averageTimePerQuestion: number
+  sections: Section[]
+  participant: Participant
+  session: Session
+  security: Security
 }
 
-export interface User {
+export interface Section {
   id: string
+  title: string
+  description: string
+  totalQuestions: number
+  answeredCount: number
+  skippedCount: number
+  notAttemptedCount: number
+  score: number
+  maxScore: number
+  cutoffScore: number
+  isPassed: boolean
+  questions: Question[]
+}
+
+export interface Question {
+  id: string
+  text: string
+  type: string
+  topic: string
+  difficulty: string
+  answerOptions: string[]
+  userAnswer?: string
+  correctAnswer: string
+  status: string
+  isCorrect: boolean
+  score: number
+  maxScore: number
+  explanation: string
+  timeSpentSeconds?: number
+}
+
+export interface Participant {
+  id: string
+  type: string
+  email: string
+  profile: Profile
+}
+
+export interface Profile {
   firstName: string
   lastName: string
-  email: string
+  phone: string
+  gender: string
+  dob: Date
+  company: string
+}
+
+export interface Session {
+  id: string
+  startedAt: string
+  submittedAt: string
+  durationSeconds: number
+  ipAddress: string
+  device: Device
+  network: Network
+  securityFlags: any[]
+  securityEvents: SecurityEvents
+}
+
+export interface Device {
+  type: string
+  os: string
+  browser: string
+}
+
+export interface Network {
+  ipType: string
+  proxy: boolean
+  bandwidth: string
+}
+
+export interface SecurityEvents {
+  tabSwitches: number
+  fullscreenExits: number
+  faceDetectionAttempts: number
+  clipboardAccess: ClipboardAccess
+}
+
+export interface ClipboardAccess {
+  copyAttempts: number
+  pasteAttempts: number
+}
+
+export interface Security {
+  overallRiskScore: number
+  securityFlags: string[]
+  integrityHash: any
 }

@@ -1,123 +1,185 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-type TimerProps = {
-  timeValue: number; // Time in minutes
-  onTimeElapsed: () => void;
-  className?: string;
-  mode?: 'default' | 'plain';
+type TimerMode = 'default' | 'compact' | 'minimal';
+type TimerVariant = 'neutral' |'system' | 'warning' | 'critical';
+
+interface TimerProps {
+  duration: number; // Time in minutes
+  onComplete?: () => void;
   onTick?: (remainingTime: number) => void;
-};
+  mode?: TimerMode;
+  variant?: TimerVariant;
+  className?: string;
+  autoStart?: boolean;
+  showLabels?: boolean;
+  warningThreshold?: number; // in minutes
+  criticalThreshold?: number; // in minutes
+}
 
-function Timer({ timeValue, onTimeElapsed, mode = 'default', className, onTick }: TimerProps) {
-  const [timeLeft, setTimeLeft] = useState<number>(timeValue * 60); // Convert minutes to seconds initially
-  const [isActive, setIsActive] = useState<boolean>(false);
+// eslint-disable-next-line react/function-component-definition
+const Timer: React.FC<TimerProps> = ({
+  duration,
+  onComplete,
+  onTick,
+  mode = 'default',
+  variant: initialVariant = 'neutral',
+  className = '',
+  autoStart = true,
+  showLabels = true,
+  warningThreshold = 10, // default 10 minutes
+  criticalThreshold = 5, // default 5 minutes
+}) => {
+  const [remainingTime, setRemainingTime] = useState<number>(duration * 60);
+  const [isActive, setIsActive] = useState<boolean>(autoStart);
+  const [currentVariant, setCurrentVariant] = useState<TimerVariant>(initialVariant);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Start or restart the timer when timeValue changes
+  // Calculate time units
+  const hours = Math.floor(remainingTime / 3600);
+  const minutes = Math.floor((remainingTime % 3600) / 60);
+  const seconds = remainingTime % 60;
+
+  // Format time values to two digits
+  const formatTime = useCallback((time: number): string => {
+    return time.toString().padStart(2, '0');
+  }, []);
+
+  // Handle timer completion
+  const handleComplete = useCallback(() => {
+    setIsActive(false);
+    onComplete?.();
+  }, [onComplete]);
+
+  // Update variant based on remaining time
+  const updateVariant = useCallback(
+    (time: number) => {
+      const remainingMinutes = time / 60;
+
+      if (remainingMinutes <= criticalThreshold) {
+        setCurrentVariant('critical');
+      } else if (remainingMinutes <= warningThreshold) {
+        setCurrentVariant('warning');
+      } else {
+        setCurrentVariant(initialVariant);
+      }
+    },
+    [warningThreshold, criticalThreshold, initialVariant]
+  );
+
+  // Reset timer when duration changes
   useEffect(() => {
+    setRemainingTime(duration * 60);
+    setIsActive(autoStart);
+    updateVariant(duration * 60);
 
-    setTimeLeft(timeValue * 60); // Convert minutes to seconds
-    setIsActive(true);
-
-    // Clean up interval on component unmount or when restarting the timer
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [timeValue]);
+  }, [duration, autoStart, updateVariant]);
 
-  // Handle countdown logic
+  // Main timer logic
   useEffect(() => {
-
-    if (!isActive || timeLeft <= 0) return;
+    if (!isActive || remainingTime <= 0) return;
 
     intervalRef.current = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
+      setRemainingTime((prev) => {
+        const newTime = prev - 1;
+
+        if (newTime <= 0) {
           clearInterval(intervalRef.current!);
-          setIsActive(false);
-          onTimeElapsed();
+          handleComplete();
           return 0;
         }
-        return prevTime - 1;
+
+        updateVariant(newTime);
+        onTick?.(newTime);
+        return newTime;
       });
-      if (onTick) {
-        onTick(timeLeft); // Called the onTick function here
-      }
     }, 1000);
 
-
-
-    // Clean up interval on component unmount or when stopping the timer
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isActive, timeLeft, onTimeElapsed, onTick]);
+  }, [isActive, remainingTime, onTick, handleComplete, updateVariant]);
 
-  // Convert seconds to hours, minutes, and seconds
-  const hours = Math.floor(timeLeft / 3600);
-  const minutes = Math.floor((timeLeft % 3600) / 60);
-  const seconds = timeLeft % 60;
+  // Determine visual style based on current variant
+  const getVariantStyle = (): string => {
+    switch (currentVariant) {
+      case 'critical':
+        return 'text-red-600 bg-red-50';
+      case 'warning':
+        return 'text-amber-600 bg-amber-50';
+      case 'system':
+        return '!text-theme-brand !bg-theme-highlight';
+      default:
+        return 'text-theme-brand bg-indigo-50';
+    }
+  };
 
-  // Format numbers to be double digits
-  const formatTime = (time: number) => time.toString().padStart(2, '0');
+  // Timer controls
+  const toggleTimer = () => setIsActive(!isActive);
+  const resetTimer = () => {
+    setRemainingTime(duration * 60);
+    setIsActive(autoStart);
+    updateVariant(duration * 60);
+  };
 
-  return (
-    (mode === 'default' && (
-      <div
-        className={`w-full items-center justify-center bg-skin-theme-light
-        text-skin-theme px-6 py-2 rounded-xl ${className} ${timeLeft < 10 ? '!text-red-500' : ''}`}
-      >
-        <div className="flex items-center justify-center w-full gap-6 count-down-main">
-          <div className="timer">
-            <div className="pr-1.5 pl-2 relative bg-indigo-50 w-max before:contents-[''] before:absolute before:h-full before:w-0.5 before:top-0 before:left-1/2 before:-translate-x-1/2 before:bg-white before:z-10">
-              <h3 className="countdown-element hours font-manrope font-semibold text-2xl text-indigo-600 tracking-[15.36px] max-w-[44px] text-center relative z-20">
-                {formatTime(hours)}
-              </h3>
-            </div>
-            <p className="text-sm font-normal text-gray-900 mt-1 text-center w-full">hours</p>
-          </div>
-          <div className="timer">
-            <div className="pr-1.5 pl-2 relative bg-indigo-50 w-max before:contents-[''] before:absolute before:h-full before:w-0.5 before:top-0 before:left-1/2 before:-translate-x-1/2 before:bg-white before:z-10">
-              <h3 className="countdown-element minutes font-manrope font-semibold text-2xl text-indigo-600 tracking-[15.36px] max-w-[44px] text-center relative z-20">
-                {formatTime(minutes)}
-              </h3>
-            </div>
-            <p className="text-sm font-normal text-gray-900 mt-1 text-center w-full">minutes</p>
-          </div>
-          <div className="timer">
-            <div className="pr-1.5 pl-2 relative bg-indigo-50 w-max before:contents-[''] before:absolute before:h-full before:w-0.5 before:top-0 before:left-1/2 before:-translate-x-1/2 before:bg-white before:z-10">
-              <h3 className="countdown-element seconds font-manrope font-semibold text-2xl text-indigo-600 tracking-[15.36px] max-w-[44px] text-center relative z-20">
-                {formatTime(seconds)}
-              </h3>
-            </div>
-            <p className="text-sm font-normal text-gray-900 mt-1 text-center w-full">seconds</p>
-          </div>
-        </div>
+  // Render time segment
+  const renderTimeSegment = (value: number, label: string) => (
+    <div className="flex flex-col items-center">
+      <div className={`relative px-3 py-1 rounded-lg ${getVariantStyle()}`}>
+        <span className="font-mono font-bold text-2xl tracking-wider">{formatTime(value)}</span>
+        <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/50 transform -translate-x-1/2" />
       </div>
-    )) ||
-    (mode === 'plain' && (
-      <div className="flex gap-1">
-        <div className="timer">
-          <div className="pr-1.5  relative bg-indigo-50 w-max before:contents-[''] before:absolute before:h-full before:w-0.5 before:top-0 before:left-1/2 before:-translate-x-1/2 before:bg-white before:z-10">
-            <h3 className="pl-2 countdown-element minutes font-manrope font-semibold text-base text-theme-default tracking-[15.36px] max-w-[44px] text-center relative z-20">
-              {formatTime(minutes)}
-            </h3>
-          </div>
-        </div>
-        <div className="timer">
-          <div className="pr-1.5  relative bg-indigo-50 w-max before:contents-[''] before:absolute before:h-full before:w-0.5 before:top-0 before:left-1/2 before:-translate-x-1/2 before:bg-white before:z-10">
-            <h3 className="pl-2 countdown-element minutes font-manrope font-semibold text- text-theme-default tracking-[15.36px] max-w-[44px] text-center relative z-20">
-              {formatTime(seconds)}
-            </h3>
-          </div>
-        </div>
-      </div>
-    ))
+      {showLabels && <span className="text-xs text-gray-500 mt-1">{label}</span>}
+    </div>
   );
-}
+
+  // Render based on mode
+  switch (mode) {
+    case 'compact':
+      return (
+        <div className={`flex items-center gap-2 ${className}`}>
+          {hours > 0 && renderTimeSegment(hours, 'h')}
+          {renderTimeSegment(minutes, 'm')}
+          {renderTimeSegment(seconds, 's')}
+        </div>
+      );
+
+    case 'minimal':
+      return (
+        <div className={`font-mono font-medium ${getVariantStyle()} px-2 py-1 rounded ${className}`}>
+          {hours > 0 && `${formatTime(hours)}:`}
+          {formatTime(minutes)}:{formatTime(seconds)}
+        </div>
+      );
+
+    default:
+      return (
+        <div className={`flex flex-col items-center ${className}`}>
+          <div className="flex gap-4">
+            {hours > 0 && renderTimeSegment(hours, 'hours')}
+            {renderTimeSegment(minutes, 'minutes')}
+            {renderTimeSegment(seconds, 'seconds')}
+          </div>
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={toggleTimer}
+              className="px-3 py-1 text-sm rounded border border-gray-300 hover:bg-gray-100"
+            >
+              {isActive ? 'Pause' : 'Resume'}
+            </button>
+            <button onClick={resetTimer} className="px-3 py-1 text-sm rounded border border-gray-300 hover:bg-gray-100">
+              Reset
+            </button>
+          </div>
+        </div>
+      );
+  }
+};
 
 export { Timer };

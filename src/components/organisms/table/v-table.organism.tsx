@@ -4,7 +4,7 @@ import VPagination from '../pagination/v-pagination.organism';
 import { VButton, VICon } from '@components/atoms';
 import { VSearchBox } from '@components/molecules/search/v-search-box.mol';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
-import { VCheckbox, VLoader } from '@components/molecules/index';
+import { VCheckbox, VDropdown, VLoader } from '@components/molecules/index';
 import { FiEdit } from 'react-icons/fi';
 import { FaRegTrashCan } from 'react-icons/fa6';
 
@@ -31,7 +31,7 @@ interface VTableProps<T> {
   onSelect?: (selectedIds: string[]) => void; // Callback to return selected row IDs
   actionsConfig?: Array<{
     label?: ReactNode;
-    action: 'create' | 'edit' | 'delete' | 'upload';
+    action: 'create' | 'edit' | 'delete' | 'upload' | 'select';
     responder: (id?: string) => void;
   }>;
   // Class names exposed
@@ -166,10 +166,10 @@ function VTable<T>({
   const getActionConfig = (action: string) => actionsConfig.find((x) => x.action === action);
 
   return (
-    <div className={`overflow-x-auto pb-4 ${containerClassName}`}>
+    <div className={`overflow-x-auto ${containerClassName}`}>
       <div className={`flex flex-col gap-6 ${headerWrapperClassName}`}>
         <div
-          className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 py-3 px-4 ${searchSectionClassName}`}
+          className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3  px-4 ${searchSectionClassName}`}
         >
           {/* Title section - always visible */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 w-full sm:w-auto">
@@ -188,6 +188,16 @@ function VTable<T>({
                   placeholder={`Search by ${searchableLabels}`}
                   wrapperClasses="w-full"
                   className="text-base py-2"
+                />
+              </div>
+            )}
+              {getActionConfig('select') && (
+              <div className="w-full sm:w-1/2">
+                <VDropdown
+                  value={searchTerm}
+                  onChange={(val) => setSearchTerm(val)}
+                  placeholder={`Search by ${searchableLabels}`}
+                  wrapperClasses="w-full"
                 />
               </div>
             )}

@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
 
-type VPieGraphprops = DefaultProps & {
-  data:{name:string;value:number}[];
+type PieChartDataWithPercentage = {
+  name: string;
+  value: number;
+  percentage: number;
 };
-const dummyData = [
-  { name: 'Group A', value: 40 },
-  { name: 'Group B', value: 30 },
-  { name: 'Group C', value: 30 },
-  { name: 'Group D', value: 20 },
-];
+
+type VPieGraphProps = {
+  data: PieChartDataWithPercentage[];
+};
+
 const COLORS = ['#FCA9AB', '#FED8D7', '#7DBEFF', '#75A9DC'];
-function VPieGraph({data=dummyData}: VPieGraphprops) {
+
+function VPieGraph({ data }: VPieGraphProps) {
   const [width, setWidth] = useState<number>(0);
+
   useEffect(() => {
     const updateWidth = () => {
       setWidth(window.innerWidth * 0.36);
@@ -21,6 +24,10 @@ function VPieGraph({data=dummyData}: VPieGraphprops) {
     window.addEventListener('resize', updateWidth);
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
+
+  // Guard: return null if no data
+  if (!data || data.length === 0) return null;
+
   return (
     <PieChart width={width} height={300}>
       <Pie
@@ -30,10 +37,10 @@ function VPieGraph({data=dummyData}: VPieGraphprops) {
         innerRadius={60}
         outerRadius={80}
         fill="#8884d8"
-        paddingAngle={0}
+        paddingAngle={2}
         dataKey="value"
-        labelLine={true}
-        label={({ name, value }) => `${name}\n${value}%`}
+        labelLine={false}
+        label={({ name, percentage }) => `${name} (${percentage}%)`}
       >
         {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

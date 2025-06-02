@@ -2,7 +2,7 @@ import VTable, { VTableColumn } from '@components/organisms/table/v-table.organi
 import { VICon } from '@components/atoms';
 import { FiEye } from 'react-icons/fi';
 import { TestResultResponseDTO } from '@dto/response';
-import { UserDashboardTableDTO } from '@dto/response/inviter-assessment.response.dto';
+import { InviterAssessmentResponseDto } from '@dto/response/inviter-assessment.response.dto';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import React from 'react';
 
@@ -13,38 +13,35 @@ function AssessmentQuestionTable({
   detailedResultData: TestResultResponseDTO;
   onReviewQuestion: (args: { questionId: string; sectionId: string }) => void;
 }) {
-  const { testSections = [] } = detailedResultData?.test ?? {};
-  const { testQuestionAnswer = [] } = detailedResultData ?? {};
+  const { sections = [] } = detailedResultData ?? {};
 
   // Group questions by section
-  const sectionQuestionData = testSections.map((section) => {
-    const questions: UserDashboardTableDTO[] = section?.question?.map((q) => {
-      const answer = testQuestionAnswer.find((ans) => ans.questionId === q.id);
-
+  const sectionQuestionData = sections.map((section) => {
+    const questions: InviterAssessmentResponseDto[] = section?.questions?.map((q) => {
       return {
         id: q.id,
         sectionId: section.id,
-        question: q.questionText || 'Unknown Question',
+        question: q.text || 'Unknown Question',
         difficultyLevel: q.difficulty || 'Unknown',
         questionType: q.type || 'Unknown',
-        duration: q.timeLimit ?? 0,
-        score: answer?.finalMarks ? parseFloat(answer.finalMarks as string) : 0,
+        duration: q.timeSpentSeconds ?? 0,
+        score: q?.maxScore ? parseFloat(q?.maxScore as unknown as string) : 0,
       };
     });
 
     return {
       sectionId: section.id,
-      sectionName: section.name,
+      sectionName: section.title,
       questions,
     };
   });
 
-  const columnsConfig: VTableColumn<UserDashboardTableDTO>[] = [
+  const columnsConfig: VTableColumn<InviterAssessmentResponseDto>[] = [
     {
       key: 'question',
       label: 'Questions',
       className: 'w-2/5',
-      sortable: true
+      sortable: true,
     },
     {
       key: 'difficultyLevel',
@@ -57,12 +54,12 @@ function AssessmentQuestionTable({
     {
       key: 'duration',
       label: 'Duration',
-      sortable: true
+      sortable: true,
     },
     {
       key: 'score',
       label: 'Score',
-      sortable: true
+      sortable: true,
     },
     {
       key: 'actions',
@@ -81,14 +78,16 @@ function AssessmentQuestionTable({
     <div className="space-y-6">
       {sectionQuestionData.map((section) => (
         <div key={section.sectionId}>
-          <VTypography as="h5">
-            {section.sectionName}
-          </VTypography>
+          <VTypography as="h5">{section.sectionName}</VTypography>
           <VTable
-            title={<VTypography as='small'>Questions in {section.sectionName} (Total {section.questions.length})</VTypography>}
+            title={
+              <VTypography as="small">
+                Questions in {section.sectionName} (Total {section.questions.length})
+              </VTypography>
+            }
             data={section.questions}
             columns={columnsConfig}
-            itemsPerviewMode={5}
+            itemsPerPage={5}
             emptyState={<div>No questions found in this section!</div>}
             tableClassName="table-fixed w-full"
           />

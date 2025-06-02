@@ -1,52 +1,70 @@
+import React from 'react';
 import { VRadioButtonGroup } from '@components/molecules/index';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import QuestionSection from '../question-section.component';
 import { QuestionResponseDTO } from '@dto/response';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { setUserAnswer } from 'store/slices/test-runner.slice';
-import { RootState } from 'store/store';
+import { setAnswer } from 'test-runner/store/session';
+import { useTestRunnerDispatch } from 'test-runner/store';
 
-type singleChoiceQuestionProps = {
+type SingleChoiceQuestionProps = {
   question: QuestionResponseDTO;
+  defaultSelection: string;
   index: number;
 };
-const SingleChoiceQuestion = ({ question, index }: singleChoiceQuestionProps) => {
-  const dispatch = useDispatch();
-  const questionId = question.id;
-  const type = question.type;
-  const selectedSectionId = useSelector((state: RootState) => state.testRunner.selectedSectionId);
 
-  const section = useSelector((state: RootState) =>
-    state.testRunner.sections.find((sec) => sec.sectionId === selectedSectionId)
-  );
-  const userAnswer = section?.userAnswers[questionId]?.answer ?? [];
+const SingleChoiceQuestion = React.memo(
+  ({ index, question, defaultSelection }: SingleChoiceQuestionProps) => {
+    const dispatch = useTestRunnerDispatch();
+    const questionId = question.id;
 
-  const handleAnswerChange = (answer: string | string[]) => {
-    if (!selectedSectionId) return;
-    dispatch(setUserAnswer({ sectionId: selectedSectionId, questionId, type, answer }));
-  };
-  return (
-    <div className="">
-      <QuestionSection question={question} index={index} />
-      <VTypography as="h5" className="mb-3">
-        Select Option
-      </VTypography>
+    const handleAnswerChange = React.useCallback(
+      (answer: string | string[]) => {
+        const answerString = Array.isArray(answer) ? answer[0] : answer;
+        dispatch(
+          setAnswer({
+            questionId,
+            answer: answerString.trim(),
+          })
+        );
+      },
+      [dispatch, questionId]
+    );
 
-      {question?.answerOptions && (
-        <VRadioButtonGroup
-          name={`answerOptions-${questionId}`}
-          direction="vertical"
-          options={question?.answerOptions?.split(',').map((option: string) => ({
-            label: option,
-            value: option.toLowerCase(),
-          }))}
-          onChange={handleAnswerChange}
-          defaultValue={userAnswer}
-        />
-      )}
-    </div>
-  );
-};
+    const options = React.useMemo(() => {
+      return (
+        question?.answerOptions?.split(',').map((option: string) => ({
+          label: option.trim(),
+          value: option.trim().toLowerCase(),
+        })) || []
+      );
+    }, [question.answerOptions]);
 
-export default SingleChoiceQuestion;
+    console.log('Single choice def selection', defaultSelection);
+
+    return (
+      <div className="">
+        <QuestionSection question={question} index={index} />
+        <VTypography as="h5" className="mb-3">
+          Select Option
+        </VTypography>
+
+        {options.length > 0 && (
+          <VRadioButtonGroup
+            key={question.id}
+            name={`answerOptions-${questionId}`}
+            direction="vertical"
+            options={options}
+            onChange={handleAnswerChange}
+            defaultValue={defaultSelection}
+          />
+        )}
+      </div>
+    );
+  },
+  (prevProps, nextProps) =>
+    prevProps.question.id === nextProps.question.id &&
+    prevProps.defaultSelection === nextProps.defaultSelection &&
+    prevProps.index === nextProps.index
+);
+
+export { SingleChoiceQuestion };

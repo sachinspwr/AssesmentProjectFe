@@ -1,7 +1,7 @@
 import { VTypography } from '@components/molecules/typography/v-typography.mol'
 import React from 'react'
 
-const InterviewGuidelines = () => {
+function InterviewGuidelines() {
   return (
     <div>
         <div className="border border-theme-default mb-5 mt-5"></div>

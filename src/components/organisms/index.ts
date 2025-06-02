@@ -43,6 +43,7 @@ export * from './dynamic-form/v-dynamic-form.organism';
 export * from './modal/v-modal.organism';
 export * from './table/v-table.organism';
 export * from './tabs/v-tab.organism';
+export * from './feedback/v-feedback-card.organism';
 export * from './pagination/v-pagination.organism';
 
 export * from './layout/v-brand-title.organism';

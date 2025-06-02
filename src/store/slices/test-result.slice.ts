@@ -26,8 +26,8 @@ export const testResultApiSlice = createApi({
       },
     }),
 
-    getDetailedResult: builder.query<TestResultResponseDTO, { testId: string; resultId: string }>({
-      query: ({ testId, resultId }) => ({ url: `/tests/${testId}/results/${resultId}`, method: 'GET' }),
+    getDetailedResult: builder.query<TestResultResponseDTO, { resultId: string }>({
+      query: ({ resultId }) => ({ url: `/test-results/${resultId}`, method: 'GET' }),
       onQueryStarted: async (_, { queryFulfilled }) => {
         try {
           await queryFulfilled;

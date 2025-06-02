@@ -1,0 +1,1 @@
+export * from './section/test-section.component';

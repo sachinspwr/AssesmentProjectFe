@@ -19,9 +19,13 @@ class TokenService {
   }
 
   // ==================== Token Validation ====================
-  public isTokenValid(): boolean {
-    const token = this.getToken();
+  public isTokenValid(inputToken?:string): boolean {
+    const token = inputToken ?? this.getToken();
     return !!token && !isExpired(token);
+  }
+
+  public isThisTokenValid(inputToken?:string): boolean {
+    return !!inputToken && !isExpired(inputToken);
   }
 
   public isTokenAboutToExpire(thresholdMinutes = 5): boolean {

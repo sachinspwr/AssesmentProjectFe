@@ -6,7 +6,7 @@ import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 
 type ShortAnswerPreviewProps = {
   formData: VFormFieldData;
-  mode?: 'preview' | 'review';
+  mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string;
   correctAnswers?: string;
 };

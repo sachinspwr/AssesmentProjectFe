@@ -12,7 +12,7 @@ type QuestionSummary = DefaultProps & {
 
 function QuestionSummary({ question, className }: QuestionSummary) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { questionText, questionExplanation, subject, topic, timeLimit, marks, category } = question;
+  const { questionText, questionExplanation, subject,  timeLimit, marks} = question;
   return (
     <div className={`w-full p-4 flex flex-col gap-2 ${className}`}>
       <Label className="text-xl text-skin-theme-dark">{questionText}</Label>
@@ -28,7 +28,7 @@ function QuestionSummary({ question, className }: QuestionSummary) {
         <Label className="flex justify-center items-center gap-1 min-w-[120px]">
           <Icon icon={MdLockClock} />
           <div className="flex items-center mt-1">
-            <Timer mode="plain" timeValue={timeLimit} onTimeElapsed={() => {}} />
+            <Timer mode="default" duration={timeLimit}  />
           </div>
           <span className="mt-1 font-semibold">Min</span>
         </Label>

@@ -6,7 +6,7 @@ import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 
 type EssayPreviewProps = {
   formData: VFormFieldData;
-  mode?: 'preview' | 'review';
+  mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[] | string;
   correctAnswers?: string[] | string;
 };

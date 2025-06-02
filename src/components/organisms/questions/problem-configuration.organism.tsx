@@ -52,7 +52,7 @@ export function ProblemStatementList({
         { value: CodingQuestionGradingStrategy.OutputMatch, label: 'Output Match' },
         { value: CodingQuestionGradingStrategy.Custom, label: 'Custom Evaluator' },
     ];
-
+    
     const timeLimitOptions = [
         { value: '1000', label: '1 second' },
         { value: '2000', label: '2 seconds' },

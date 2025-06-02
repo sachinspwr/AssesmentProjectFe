@@ -1,48 +1,107 @@
-import { TestLinkAnonymousUserResponseDTO, TestLinkResponseDTO } from './test-link-response.dto';
-import { TestQuestionAnswerResponseDTO } from './test-question-answer.response.dto';
-import { TestResponseDTO } from './test-response.dto';
-import { TestResponseObjDTO } from './test-result-obj-response.dto';
-import { UserResponseDTO } from './user-response.dto';
+import { Gender } from '@utils/enums';
 
-class TestResultResponseDTO {
-
-  user!:UserResponseDTO;
-
-  test!:TestResponseDTO;
-
-  testQuestionAnswer!:TestQuestionAnswerResponseDTO[];
-
-  testResults!:TestResponseObjDTO[];
-
-  testId!: string;
-
-  userId!: string;
-
-  testLinkId!: string;
-
-  totalQuestions!: number;
-
-  correctAnswersCount!: number;
-
-  score!: number;
-
-  outOf!: number;
-
-  isPassed!: boolean;
-
-  correctionPercentage!: number;
-
-  feedback!: string;
-
-  completedAt!: Date;
-
-  createdAt!: Date;
-
-  updatedOn!: Date;
-
-  testLink!: TestLinkResponseDTO;
-
-  testLinkAnonymousUser!: TestLinkAnonymousUserResponseDTO;
-
+export interface TestResultResponseDTO {
+  id: string;
+  title: string;
+  description: string;
+  maxPossibleScore: string;
+  percentageScore: number;
+  isPassed: boolean;
+  completedAt: string;
+  totalDurationSeconds: number;
+  averageTimePerQuestion: number;
+  sections: Section[];
+  participant: Participant;
+  session: Session;
+  security: Security;
 }
-export { TestResultResponseDTO };
+
+export interface Section {
+  id: string;
+  title: string;
+  description: string;
+  totalQuestions: number;
+  answeredCount: number;
+  skippedCount: number;
+  notAttemptedCount: number;
+  score: number;
+  maxScore: number;
+  cutoffScore: number;
+  isPassed: boolean;
+  questions: Question[];
+}
+
+export interface Question {
+  id: string;
+  text: string;
+  type: string;
+  topic: string;
+  difficulty: string;
+  answerOptions: string[];
+  userAnswer?: string;
+  correctAnswer: string;
+  status: string;
+  isCorrect: boolean;
+  score: number;
+  maxScore: number;
+  explanation: string;
+  timeSpentSeconds?: number;
+}
+
+export interface Participant {
+  id: string;
+  type: string;
+  email: string;
+  profile: Profile;
+}
+
+export interface Profile {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  gender: Gender;
+  dob: Date;
+  company: string;
+}
+
+export interface Session {
+  id: string;
+  startedAt: string;
+  submittedAt: string;
+  durationSeconds: number;
+  ipAddress: string;
+  device: Device;
+  network: Network;
+  securityFlags: any[];
+  securityEvents: SecurityEvents;
+}
+
+export interface Device {
+  type: string;
+  os: string;
+  browser: string;
+}
+
+export interface Network {
+  ipType: string;
+  proxy: boolean;
+  bandwidth: string;
+}
+
+export interface SecurityEvents {
+  tabSwitches: number;
+  fullscreenExits: number;
+  faceDetectionAttempts: number;
+  clipboardAccess: ClipboardAccess;
+}
+
+export interface ClipboardAccess {
+  copyAttempts: number;
+  pasteAttempts: number;
+}
+
+export interface Security {
+  overallRiskScore: number;
+  securityFlags: string[];
+  integrityHash: any;
+}

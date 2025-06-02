@@ -7,7 +7,10 @@ type VBarChartprops = {
   data:{name:string;value:number}[];
 };
 
-const VBarChartGraph = ({data}:VBarChartprops) => {
+function VBarChartGraph  ({data}:VBarChartprops)  {
+
+  if (!data || data.length === 0) return null;
+  
   return (
     <BarChart
       width={550}

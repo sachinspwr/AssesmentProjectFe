@@ -97,7 +97,7 @@ const mockQuestionData: QuestionResponseDTO = {
     }
 };
 
-export function CodingTestEditor({ question, currentQuestionId }: QuestionProps) {
+export function CodingTestEditor({ question, currentQuestionId }: any) {
     // Redux hooks
     const dispatch = useAppDispatch();
     const [evaluateCode, { isLoading }] = useEvaluateCodeMutation();
@@ -309,7 +309,7 @@ export function CodingTestEditor({ question, currentQuestionId }: QuestionProps)
         throw new Error('Function not implemented.');
     }
 
-    function handleAnswer(questionId: string, answer: Answer): void {
+    function handleAnswer(questionId: string, answer: any): void {
         throw new Error('Function not implemented.');
     }
 

@@ -8,6 +8,7 @@ interface ConfirmActionProps {
   okButtonLabel?: string;
   cancelButtonLabel?: string;
   isOpen: boolean;
+  className: string;
   showFooter?: boolean;
   width?: number;
   hideCloseButton?: boolean;
@@ -21,6 +22,7 @@ function ConfirmAction({
   okButtonLabel = 'Yes',
   cancelButtonLabel = 'No',
   isOpen,
+  className = '',
   width = 50,
   showFooter = true,
   hideCloseButton
@@ -44,6 +46,7 @@ function ConfirmAction({
         okButtonLabel={okButtonLabel}
         cancelButtonLabel={cancelButtonLabel}
         onSubmit={handleModalSubmit}
+        className={className}
         showFooter={showFooter}
         hideCloseButton={hideCloseButton}
       >

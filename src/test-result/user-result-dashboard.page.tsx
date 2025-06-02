@@ -2,6 +2,7 @@ import { VICon, VStatus } from '@components/atoms';
 import { VLoader, VSummaryCard } from '@components/molecules/index';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VTableColumn } from '@components/organisms';
+import { ChartWrapper } from '@components/organisms/graph/char-wrapper.organisms';
 import VBarChartGraph from '@components/organisms/graph/v-bar-graph.organism';
 import { VPieGraph } from '@components/organisms/graph/v-pie-graph.organisms';
 import { VOverview } from '@components/organisms/overview/v-overview.organism';
@@ -20,7 +21,7 @@ import { useGetAllTestsSummaryByUserQuery } from 'store/slices/test-result.slice
 const mapToAssessmentData = (
   apiData: UserTestResults[]
 ): (InviterAssessmentResponseDto & {
-  user: UserResponseDTO
+  user: UserResponseDTO;
 })[] => {
   return apiData.map((item) => ({
     id: item.test.id,
@@ -42,14 +43,16 @@ function UserResultDashboard() {
   const navigate = useNavigate();
 
   const columnsConfig: VTableColumn<
-  InviterAssessmentResponseDto & {
-      user: UserResponseDTO
+    InviterAssessmentResponseDto & {
+      user: UserResponseDTO;
     }
   >[] = [
     {
       key: 'testName',
       label: 'Assessment Name',
-      customRender: (row: InviterAssessmentResponseDto) => <p className="font-[500]  text-theme-primary">{row.testName}</p>,
+      customRender: (row: InviterAssessmentResponseDto) => (
+        <p className="font-[500]  text-theme-primary">{row.testName}</p>
+      ),
       sortable: true,
       searchable: true,
     },
@@ -66,7 +69,13 @@ function UserResultDashboard() {
         row.status ? (
           <VStatus
             label={row.status}
-            type={row.status === ResultStatus.Passed ? 'positive' : row?.status === ResultStatus.Under_Review ? 'warning' : 'negative'}
+            type={
+              row.status === ResultStatus.Passed
+                ? 'positive'
+                : row?.status === ResultStatus.Under_Review
+                  ? 'warning'
+                  : 'negative'
+            }
           ></VStatus>
         ) : (
           '-'
@@ -76,7 +85,10 @@ function UserResultDashboard() {
       key: 'isPassed',
       label: 'Pass/Fail',
       customRender: (row: InviterAssessmentResponseDto) => (
-        <VStatus label={row.isPassed ? ResultStatus.Passed : ResultStatus.Failed} type={row.isPassed ? 'positive' : 'negative'}></VStatus>
+        <VStatus
+          label={row.isPassed ? ResultStatus.Passed : ResultStatus.Failed}
+          type={row.isPassed ? 'positive' : 'negative'}
+        ></VStatus>
       ),
     },
     {
@@ -91,7 +103,7 @@ function UserResultDashboard() {
         <VICon
           className="text-theme-muted"
           icon={FiEye}
-          onClick={() => navigate(`/result/${row?.testId}/participants/${row?.participantId}`)}
+          onClick={() => navigate(`/test-results/c187bf11-353d-4843-9e21-50e7cc578aa1`)}
         ></VICon>
       ),
     },
@@ -101,23 +113,21 @@ function UserResultDashboard() {
 
   const assessmentList: InviterAssessmentResponseDto[] = mapToAssessmentData(summaryData?.recentTestResults || []);
 
+  const barChartData = summaryData?.subjectStats?.map((stat) => ({
+    name: stat.subject,
+    value: stat.passRate,
+  }));
+
   const pieChartData = summaryData?.subjectStats?.map((stat) => ({
     name: stat.subject,
     value: stat.passRate,
+    percentage: stat.passRate * 100,
   }));
 
   console.log(pieChartData);
 
   if (summaryLoading) {
     return <VLoader position="global" />;
-  }
-
-  if (!summaryData) {
-    return (
-      <div className="flex justify-center items-center">
-        <VTypography as="h4">No Data Found...Submit your first test</VTypography>
-      </div>
-    );
   }
 
   return (
@@ -130,28 +140,28 @@ function UserResultDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <VSummaryCard
           title="Tests Taken"
-          value={summaryData?.summaryStats?.[0]?.totalTests as number}
+          value={summaryData?.summaryStats?.[0]?.totalTests ?? '0'}
           icon={MdAssignment}
           variant="primary"
           helperText="Total tests attempted"
         />
         <VSummaryCard
           title="Total Passed"
-          value={summaryData?.summaryStats?.[0]?.passed as number}
+          value={summaryData?.summaryStats?.[0]?.passed ?? '0'}
           icon={MdOutlineQuiz}
           variant="warning"
-          helperText="Passes test"
+          helperText="Passed tests"
         />
         <VSummaryCard
           title="Average Accuracy"
-          value={summaryData?.summaryStats?.[0]?.averageAccuracy as number}
+          value={summaryData?.summaryStats?.[0]?.averageAccuracy ?? '0'}
           icon={AiOutlineClockCircle}
           variant="default"
           helperText="Average accuracy on all tests"
         />
         <VSummaryCard
           title="Avg. Score"
-          value={summaryData?.summaryStats?.[0]?.averageScore as number}
+          value={summaryData?.summaryStats?.[0]?.averageScore ?? '0'}
           icon={AiOutlineBarChart}
           variant="default"
           helperText="Across all completed tests"
@@ -167,11 +177,21 @@ function UserResultDashboard() {
             </VTypography>
           }
         >
-          <div className="p-2 w-full">{pieChartData && <VBarChartGraph data={pieChartData} />}</div>
+          <div className="p-2 w-full">
+            {barChartData && (
+              <ChartWrapper title="" data={barChartData ?? []}>
+                {barChartData && barChartData.length > 0 ? <VBarChartGraph data={barChartData} /> : null}
+              </ChartWrapper>
+            )}
+          </div>
         </VOverview>
 
         <VOverview title="Assessment Type Distribution">
-          <div className="p-2 w-full h-80">{pieChartData && <VPieGraph data={pieChartData} />}</div>
+          <div className="p-2 w-full h-80">
+            <ChartWrapper title="" data={pieChartData ?? []}>
+              {pieChartData && pieChartData.length > 0 ? <VPieGraph data={pieChartData} /> : null}
+            </ChartWrapper>
+          </div>
         </VOverview>
       </div>
 
