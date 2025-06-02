@@ -81,7 +81,7 @@ const VPagination: React.FC<VPaginationProps> = ({
   const pageList = generatepageRange();
 
   return (
-    <div className={`flex flex-wrap items-center gap-2 mt-4 ${containerClassName}`}>
+    <div className={`flex flex-wrap items-center gap-2 mt-4`}>
       {/* Previous Button */}
       <VButton
         variant="link"

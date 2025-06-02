@@ -67,6 +67,8 @@ import Dashboard from '@components/pages/dashboard.page';
 import MaintenanceCheckProvider from '@context/maintenance-check-provider';
 import ResultPage from '@components/pages/result/page/result.page';
 import { TestRunnerRoutes } from 'test-runner';
+import { CodingTestEditor } from 'test-runner/pages/test-editor-page';
+import { QuestionResponseDTO } from '@dto/response';
 
 function AppRouter() {
   return (
@@ -138,6 +140,16 @@ function AppRouter() {
                 </Route>
               </Route>
             </Route>
+
+            <Route path="/test-runner/code-editor" element={<CodingTestEditor question={new QuestionResponseDTO} currentQuestionId={''} questionAnswer={''} isLastQuestion={false} onAnswer={function (questionId: string, answer: Answer): void {
+              throw new Error('Function not implemented.');
+            } } onSubmit={function (): void {
+              throw new Error('Function not implemented.');
+            } } onNext={function (): void {
+              throw new Error('Function not implemented.');
+            } } onBack={function (): void {
+              throw new Error('Function not implemented.');
+            } } />} />
 
             {/* Support Doc Routes */}
             {HelpCenterRoutes}
