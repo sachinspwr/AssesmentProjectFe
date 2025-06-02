@@ -208,7 +208,7 @@ export const testAssessmentApiSlice = createApi({
     fetchTestsByStatus: builder.query<PaginatedResponse<TestResponseDTO>, { status: string }>({
       query: ({ status }) => {
         return {
-          url: `/tests/:id/status?status=${status}`,
+          url: `/tests/status?status=${status}`,
           method: 'GET',
         };
       },

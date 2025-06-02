@@ -125,7 +125,7 @@ export const questionsApiSlice = createApi({
     fetchQuestionsByStatus: builder.query<PaginatedResponse<QuestionResponseDTO>, { status: string }>({
       query: ({ status }) => {
         return {
-          url: `/questions/:id/status?status=${status}`,
+          url: `/questions/status?status=${status}`,
           method: 'GET',
         };
       },
