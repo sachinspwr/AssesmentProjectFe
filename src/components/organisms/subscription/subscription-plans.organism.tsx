@@ -11,6 +11,7 @@ type SubscriptionPlansProps = {
   heading?: string;
   showIncludedInPlanDetail?: boolean;
   onPlanSelected?: (subscription: Subscription) => void;
+  isEnterpriseMode?: boolean;
 };
 
 // Compare prices and return the action label
@@ -27,6 +28,7 @@ function SubscriptionPlans({
   userSubscriptions = [],
   showIncludedInPlanDetail = true,
   onPlanSelected,
+  isEnterpriseMode = false
 }: SubscriptionPlansProps) {
   const { data: subscriptions, isLoading } = useFetchAvailableSubscriptionsQuery();
 
@@ -34,17 +36,31 @@ function SubscriptionPlans({
     return <VLoader size="md" />;
   }
 
-  if (!subscriptions?.length) {
+  const filteredSubscription = isEnterpriseMode
+    ? subscriptions?.filter(
+      subscription =>
+        subscription.subscriptionCategory === "Enterprise"
+    )
+    : subscriptions?.filter(
+      subscription =>
+        subscription.subscriptionCategory === "Individual"
+    );
+
+  const filteredSubscriptions = filteredSubscription?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+  if (!filteredSubscriptions?.length) {
     return (
       <VTypography as="p" color="muted" className="text-center py-8">
-        No subscription plans available
+        {isEnterpriseMode
+          ? "No enterprise plans available"
+          : "No subscription plans available"}
       </VTypography>
     );
   }
 
   const hasAnySubscription = userSubscriptions.length > 0;
   const currentSubscription = hasAnySubscription
-    ? subscriptions.find((s) => s.id === userSubscriptions[0]?.subscriptionId)
+    ? filteredSubscriptions.find((s) => s.id === userSubscriptions[0]?.subscriptionId)
     : undefined;
 
   return (
@@ -102,7 +118,7 @@ function SubscriptionPlans({
       <div className="flex justify-center px-4 sm:px-6">
         <div className="w-full max-w-7xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {subscriptions.map((subscription) => {
+            {filteredSubscriptions.map((subscription) => {
               const isUserSubscribed = userSubscriptions.some((us) => us.subscriptionId === subscription.id);
               const actionLabel = getActionLabel(currentSubscription, subscription);
 

@@ -104,23 +104,27 @@ export const subscriptionProfile = (mapper: Mapper) => {
       mapFrom((src) => src.isActive)
     ),
     forMember(
-      (dest) => dest.createdAt,
-      mapFrom((src) => src.createdAt)
+      (dest) => dest.isDefault,
+      mapFrom((src) => src.isDefault)
     ),
     forMember(
-      (dest) => dest.updatedAt,
-      mapFrom((src) => src.updatedAt)
+      (dest) => dest.subscriptionCategory,
+      mapFrom((src) => src.subscriptionCategory)
+    ),
+    forMember(
+      (dest) => dest.type,
+      mapFrom((src) => src.type)
     ),
     // Mapping subscription features (nested array of SubscriptionFeatureResponseDTO)
-    forMember(
-      (dest) => dest.features,
-      mapFrom((src) =>
-        src.subscriptionFeature
-          ? src.subscriptionFeature.map((feature: SubscriptionFeatureResponseDTO) =>
-              mapper.map(feature, SubscriptionFeatureResponseDTO, SubscriptionFeature)
-            )
-          : []
-      )
-    )
+    // forMember(
+    //   (dest) => dest.features,
+    //   mapFrom((src) =>
+    //     src.subscriptionFeature
+    //       ? src.subscriptionFeature.map((feature: SubscriptionFeatureResponseDTO) =>
+    //           mapper.map(feature, SubscriptionFeatureResponseDTO, SubscriptionFeature)
+    //         )
+    //       : []
+    //   )
+    // )
   );
 };

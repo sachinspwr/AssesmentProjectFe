@@ -13,6 +13,8 @@ interface InvoiceOrganismProps {
 export function DownloadInvoice({ subscription }: InvoiceOrganismProps) {
   const invoiceRef = useRef<HTMLDivElement>(null);
 
+  console.log("SubScription", subscription);
+
   const { data: invoiceDetails, isFetching } = useFetchAccountSubscriptionInvoiceQuery(
     {
       accountId: subscription.accountId,

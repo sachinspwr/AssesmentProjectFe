@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { VHeader } from '@components/organisms/layout/v-header.organism';
-import { FaBuilding, FaUserShield } from 'react-icons/fa6';
+import { FaBuilding, FaUserShield, FaUsers } from 'react-icons/fa6';
 import { VSidebar } from '@components/organisms';
-import { FaSlidersH, FaUserAlt } from 'react-icons/fa';
+import { FaSlidersH, FaTools, FaUserAlt } from 'react-icons/fa';
 import { BsQuestionSquare } from 'react-icons/bs';
+import { MdSettings, MdSubscriptions } from 'react-icons/md';
 
-function AdminConsoleLayout() {
+interface AdminConsoleLayoutProps {
+  userRole: 'super_admin' | 'tenant_admin';
+}
+
+function AdminConsoleLayout({ userRole }: AdminConsoleLayoutProps) {
   const [isSidebarExpanded, setSidebarExpanded] = useState(true);
-  
-  const sidebarItems = [
+
+  // Super Admin items
+  const superAdminItems = [
     {
       label: 'Dashboard',
       path: '/admin-console',
@@ -20,7 +26,6 @@ function AdminConsoleLayout() {
       path: '/admin-console/users',
       icon: FaUserAlt,
     },
-    
     {
       label: 'Tenant Management',
       path: '/admin-console/tenants',
@@ -39,14 +44,46 @@ function AdminConsoleLayout() {
     {
       label: 'Test Configurations',
       path: '/admin-console/test-configurations',
-      icon: FaSlidersH,
+      icon: FaTools,
     },
     {
       label: 'System Settings',
       path: '/admin-console/system-settings',
-      icon: FaSlidersH,
+      icon: MdSettings,
+    },
+    {
+      label: 'subscription',
+      path: '/admin-console/subscription',
+      icon: MdSubscriptions,
     },
   ];
+
+  // Tenant Admin items
+  const tenantAdminItems = [
+    // {
+    //   label: 'Home',
+    //   path: '/admin-console/home',
+    //   icon: FaHome,
+    // },
+    {
+      label: 'Tenant Configuration',
+      path: '/admin-console/tenant-admin',
+      icon: FaBuilding,
+    },
+    {
+      label: 'User Management',
+      path: '/admin-console/tenant-users',
+      icon: FaUserAlt,
+    },
+    {
+      label: 'Team Management',
+      path: '/admin-console/team',
+      icon: FaUsers,
+    },
+  ];
+
+  // Determine which items to show based on user role
+  const sidebarItems = userRole === 'super_admin' ? superAdminItems : tenantAdminItems;
 
   const handleSidebarToggle = (isExpanded: boolean) => {
     setSidebarExpanded(isExpanded);
@@ -59,9 +96,8 @@ function AdminConsoleLayout() {
 
       {/* Sidebar below header */}
       <div
-        className={`fixed top-0 left-0 h-full transition-all duration-300 ${
-          isSidebarExpanded ? 'w-64' : 'w-14'
-        } bg-theme-default-alt`}
+        className={`fixed top-0 left-0 h-full transition-all duration-300 ${isSidebarExpanded ? 'w-64' : 'w-14'
+          } bg-theme-default-alt`}
       >
         <VSidebar
           items={sidebarItems}

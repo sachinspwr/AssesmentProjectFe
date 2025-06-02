@@ -28,8 +28,7 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
   const basicDetailConfig: VFormFields[] = [
     {
       type: 'group',
-      label: 'User Details',
-      position: '',
+      position: '1 1 6',
       fields: [
         {
           name: "name",
@@ -48,7 +47,7 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
           position: "1 7 6",
         },
         {
-          name: "email",
+          name: "domain",
           label: "Email Address",
           type: "email",
           required: true,
@@ -147,7 +146,7 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
     return {
       name: tenant.name,
       slug: tenant.slug,
-      email: tenant.email,
+      domain: tenant.domain,
       status: tenant.status,
       firstName: tenant.owner?.firstName,
       lastName: tenant.owner?.lastName,
@@ -159,6 +158,7 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
 
   const handleFormSubmit = async (formData: VFormFieldData) => {
     try {
+      console.log(formData)
       const requestData = {
         ...formData,
         owner: {
@@ -171,6 +171,7 @@ function TenantBasicDetails({ tenant, renderMode, onComplete }: TenantBasicDetai
       } as Tenant;
 
       const basicReqData = mapper.map(requestData, Tenant, BasicTenantDetailsRequestDTO);
+      console.log(basicReqData);
       if (tenant) {
         await patchTenant({ tenantId: tenant.id, tenantData: basicReqData }).unwrap();
         toast.success('Tenant Updated');

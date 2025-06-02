@@ -15,7 +15,7 @@ export const accountSubscriptionApiSlice = createApi({
   reducerPath: 'account-subscriptions-api',
   tagTypes: [USER_SUBSCRIPTION_TAG],
   baseQuery: axiosBaseQuery,
-  endpoints: (builder) => ({ 
+  endpoints: (builder) => ({
     fetchAccountSubscriptions: builder.query<AccountSubscriptionResponseDTO[], string>({
       query: (accountId) => ({
         url: `/accounts/${accountId}/subscriptions`,
@@ -54,11 +54,25 @@ export const accountSubscriptionApiSlice = createApi({
       }),
       onQueryStarted: handleQueryResponse,
     }),
+
+    setPrimarySubscription: builder.mutation<void, { accountId: string; subscriptionId: string }>({
+      query: ({ accountId, subscriptionId }) => ({
+        url: `/accounts/${accountId}/subscriptions/${subscriptionId}`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: (_result, _error, { subscriptionId }) => [
+        createSubscriptionTag(subscriptionId),
+        createSubscriptionTag('LIST'),
+      ],
+      onQueryStarted: handleQueryResponse,
+    }),
+
   }),
 });
 
 export const {
   useFetchAccountSubscriptionInvoiceQuery,
   useFetchAccountSubscriptionsQuery,
-  useFetchAccountSubscriptionOrdersQuery
+  useFetchAccountSubscriptionOrdersQuery,
+  useSetPrimarySubscriptionMutation,
 } = accountSubscriptionApiSlice;

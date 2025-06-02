@@ -8,7 +8,7 @@ function UpgradeSubscriptionpage() {
 
   return (
     <div className="flex flex-col  gap-6 p-4">
-      <ManageUserSubscription onSubscriptionActivated={handleSubscriptionComplete} />
+      <ManageUserSubscription onSubscriptionActivated={handleSubscriptionComplete} isEnterpriseMode />
     </div>
   );
 }

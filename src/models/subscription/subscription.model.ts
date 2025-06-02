@@ -3,12 +3,16 @@
 export class Subscription {
   id!: string;
   name!: string;
+  isDefault!: boolean;
   priceUsd!: number;
+  type!: string;
+  subscriptionCategory!: string;
   description?: string[];
-  features?: SubscriptionFeature[];
   isActive!: boolean;
-  createdAt!: Date;
-  updatedAt!: Date;
+  order!: number;
+  // features?: SubscriptionFeature[];
+  // createdAt!: Date;
+  // updatedAt!: Date;
 }
 
 export class SubscriptionFeature {

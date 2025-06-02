@@ -1,6 +1,7 @@
 import { TestResponseObjDTO, TestResultResponseDTO } from '@dto/response';
 import { PaginatedResponse } from '@dto/response/pagination-response.dto';
 import { UserDashbaordSummaryDTO } from '@dto/response/user-dashboard-summary.dto';
+import { UserTestResultResponseDTO } from '@dto/response/user-test-result.response.dto';
 import { UserTestResults } from '@dto/response/user-test-results-response.dto';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { handleApiError } from 'api/api.error';
@@ -38,8 +39,8 @@ export const testResultApiSlice = createApi({
       },
     }),
 
-    getAllTestsGivenByUser: builder.query<PaginatedResponse<UserTestResults>, { userId: string }>({
-      query: ({ userId }) => ({ url: `/tests/:testId/results/users/${userId}`, method: 'GET' }),
+    getAllTestsGivenByUser: builder.query<PaginatedResponse<UserTestResultResponseDTO>, void>({
+      query: () => ({ url: `/test-results/users`, method: 'GET' }),
       onQueryStarted: async (_, { queryFulfilled }) => {
         try {
           await queryFulfilled;

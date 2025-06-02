@@ -21,7 +21,6 @@ import { useEffect } from "react"; // ADD
 
 type TenantBasicDetailsProps = {
     tenant?: Tenant;
-    renderMode: "add" | "edit";
 };
 
 function UserSection({ tenant }: TenantBasicDetailsProps) {

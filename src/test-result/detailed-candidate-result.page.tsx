@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { VStatus } from '@components/atoms';
 import { VLoader } from '@components/molecules';
 import { VProgressBar } from '@components/molecules/progress-bar/v-progress-bar.mol';
@@ -24,13 +24,11 @@ export default function DetailedCandidateTestResultPage({ className }: DetailedC
   const location = useLocation();
   const useDummyData = location.state?.useDummyData ?? false;
 
-  const resultId = 'c187bf11-353d-4843-9e21-50e7cc578aa1';
+  const { id: resultId } = useParams<{ id: string }>();
 
   const { data: detailedResultDataFromApi, isLoading: detailedLoading } = useGetDetailedResultQuery({ resultId });
 
   const finalResultData = detailedResultDataFromApi;
-
-  console.log('Data from Api : ', finalResultData);
 
   const handleReviewQuestion = ({ questionId, sectionId }: { questionId: string; sectionId: string }) => {
     setQuestionInfo({ questionId, sectionId });

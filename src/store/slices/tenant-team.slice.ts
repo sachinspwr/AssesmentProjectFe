@@ -132,7 +132,7 @@ export const tenantTeamApi = createApi({
         // Team Users endpoints
         fetchTeamUsers: builder.query<UserResponseDTO[], { tenantId: string; teamId: string }>({
             query: ({ tenantId, teamId }) => ({
-                url: `/tenants/${tenantId}/teams/${teamId}/users`,
+                url: `/tenants/${tenantId}/teams/${teamId}/users/`,
                 method: 'GET',
             }),
             onQueryStarted: async (_, { dispatch, queryFulfilled }) => {

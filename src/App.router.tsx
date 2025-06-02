@@ -65,7 +65,9 @@ import { CompliancePage } from '@components/pages/compliance.page';
 import PrivacyPolicy from '@components/organisms/compliance/privacy-policy.organism';
 import Dashboard from '@components/pages/dashboard.page';
 import MaintenanceCheckProvider from '@context/maintenance-check-provider';
+import ResultPage from '@components/pages/result/page/result.page';
 import { TestRunnerRoutes } from 'test-runner';
+
 function AppRouter() {
   return (
     <div className="w-full h-screen">
@@ -115,7 +117,13 @@ function AppRouter() {
                     <Route path="questions/:id" element={<ManageQuestionpage />} />
                     <Route path="settings" element={<AccountSettings />} />
                     <Route path="user-dashboard" element={<UserResultDashboard />} />
-                    <Route path="test-results/:resultId" element={<DetailedCandidateTestResultPage />} />
+
+                    <Route path="result" element={<ResultPage />} />
+                    <Route
+                      path="test-results/:id"
+                      element={<DetailedCandidateTestResultPage />}
+                    />
+
                     <Route path="invite" element={<InvitationPage />} />
                     {/* <Route path="invite" element={<InvitationPage />} /> */}
                     <Route path="link/:id" element={<InviteTestPage />} />

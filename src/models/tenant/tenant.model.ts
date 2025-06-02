@@ -6,7 +6,7 @@ export class Tenant extends Audit {
   // **Basic Details**
   public name!: string;
   public slug?: string;
-  public email!: string;
+  public domain!: string;
   public subscriptionId?: string;
   public status?: TenantsStatus;
   public ownerUserId?: string;

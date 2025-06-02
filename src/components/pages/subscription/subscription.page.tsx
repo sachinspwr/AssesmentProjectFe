@@ -13,13 +13,13 @@ const SUBSCRIPTION_TAB_OPTIONS = [
   { label: 'Billing History', value: 'billing' },
 ];
 
-function Subscriptionpage({ className = '' }: { className?: string }) {
+export function Subscriptionpage({ className = '', isEnterpriseMode = false }: { className?: string, isEnterpriseMode?: boolean }) {
   const { scrollToTop } = useScroll();
-  const [currentView, setCurrentView] = useState<Subscriptionpage>('my-subscriptions');
+  const [currentView, setCurrentView] = useState<SubscriptionviewMode>('my-subscriptions');
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
 
   const handleViewChange = (value: string) => {
-    setCurrentView(value as Subscriptionpage);
+    setCurrentView(value as SubscriptionviewMode);
     setIsManagingSubscription(false);
   };
 
@@ -59,6 +59,7 @@ function Subscriptionpage({ className = '' }: { className?: string }) {
         <AccountSubscriptions
           isManagingSubscription={isManagingSubscription}
           onManageModeToggle={handleManageModeChange}
+          isEnterpriseMode={isEnterpriseMode}
         />
       ) : (
         <AccountSubscriptionOrders />
@@ -67,4 +68,3 @@ function Subscriptionpage({ className = '' }: { className?: string }) {
   );
 }
 
-export { Subscriptionpage };

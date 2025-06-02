@@ -7,7 +7,7 @@ function Dashboard() {
 
   if (!user) return null;
 
-  return user?.tenantId ? <UserResultDashboard /> : <RecruiterDashboard />;
+  return user?.tenantId ? <RecruiterDashboard /> : <UserResultDashboard />;
 }
 
 export default Dashboard;

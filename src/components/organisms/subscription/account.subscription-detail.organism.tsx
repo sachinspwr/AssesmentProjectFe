@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { format } from 'date-fns';
 import { VButton, VCard, VICon, VSwitch } from '@components/atoms';
 import { VBadge } from '@components/molecules';
+import { VTypography } from '@components/molecules/typography/v-typography.mol';
+import { PaymentStatus } from '@utils/enums/payment-status.enum';
+import { getVarientFromPaymentStatus, getVarientFromSubscriptionStatus } from '@utils/functions';
+import { format } from 'date-fns';
+import { AccountSubscription } from 'models/account/account-subscription.model';
+import { useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { DownloadInvoice } from './download-invoice.organism';
-import { getVarientFromPaymentStatus, getVarientFromSubscriptionStatus } from '@utils/functions';
-import { VTypography } from '@components/molecules/typography/v-typography.mol';
-import { useLoggedInUser } from '@hooks';
-import { AccountSubscription } from 'models/account/account-subscription.model';
-import { PaymentStatus } from '@utils/enums/payment-status.enum';
+import { useSetPrimarySubscriptionMutation } from 'store/slices/account-subscription.slice';
+import { useAppSelector } from 'store/store';
 
 interface SubscriptionDetailsSectionProps {
   subscription: AccountSubscription;
@@ -22,7 +23,8 @@ export function AccountSubscriptionDetails({
   onToggleAutoRenewal,
 }: SubscriptionDetailsSectionProps) {
   const [isExpanded, setIsExpanded] = useState(isExpandedonLoad);
-
+  const [setPrimarySubscription, { isLoading: isSettingPrimary }] = useSetPrimarySubscriptionMutation();
+  const tenantId = useAppSelector((state) => state.account.user?.tenantId);
   const {
     subscription: plan,
     status,
@@ -38,9 +40,9 @@ export function AccountSubscriptionDetails({
   const formattedLimits = accountSubscriptionLimit.map((limit) => ({
     key: limit.subscriptionLimit?.key
       ? limit.subscriptionLimit.key
-          .split('_')
-          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ')
+        .split('_')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
       : 'Unknown',
     value: limit.value,
     total: limit.subscriptionLimit?.value || 0,
@@ -53,9 +55,6 @@ export function AccountSubscriptionDetails({
   const subscriptionStatusVariant = getVarientFromSubscriptionStatus(status).type;
   const paymentStatus = accountSubscriptionPayment?.status;
   const paymentStatusVariant = getVarientFromPaymentStatus(paymentStatus ?? PaymentStatus.PENDING).type;
-  const loggedUser = useLoggedInUser();
-  console.log('subscription', subscription);
-  console.log('userSubscriptionLimit', accountSubscriptionLimit);
   const renderToggleButton = (
     <div className="py-3">
       <VButton
@@ -69,20 +68,36 @@ export function AccountSubscriptionDetails({
     </div>
   );
 
+  const handlePrimarySwitchChange = async () => {
+    try {
+      await setPrimarySubscription({
+        accountId: account.id,
+        subscriptionId: subscription.id,
+      }).unwrap();
+    } catch (error) {
+      console.error('Failed to set primary subscription:', error);
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 border-b-4 border-theme-default">
       <VCard className="!p-0 shadow-none border-none">
         {/* Header */}
         <div className="flex items-center justify-between py-1 border-b">
           <div>
             <VTypography as="h4">Subscription Details</VTypography>
             <p className="mt-1 text-sm text-theme-muted">
-              {firstName || loggedUser?.firstName}'s {plan.name}
+              {firstName}'s {plan.name}
             </p>
           </div>
           {accountSubscriptionPayment && (
             <div className="flex ">
-              <VSwitch label="Primary" checked={status === 'active'} />
+              <VSwitch
+                label="Primary"
+                checked={subscription.isPrimary}
+                disabled={!!tenantId || isSettingPrimary || status === 'active'} 
+                onChange={handlePrimarySwitchChange}
+              />
               <DownloadInvoice subscription={subscription} />
             </div>
           )}
@@ -182,9 +197,8 @@ export function AccountSubscriptionDetails({
                       {limit.total > 0 && (
                         <div className="w-full bg-theme-border rounded-full h-2 border border-theme-border-dark">
                           <div
-                            className={`h-full rounded-full ${
-                              limit.usedPercentage >= 90 ? 'bg-theme-negative' : 'bg-theme-primary'
-                            } border-r border-white/50`}
+                            className={`h-full rounded-full ${limit.usedPercentage >= 90 ? 'bg-theme-negative' : 'bg-theme-primary'
+                              } border-r border-white/50`}
                             style={{ width: `${limit.usedPercentage}%` }}
                           />
                         </div>

@@ -33,7 +33,7 @@ export const tenantProfile = (mapper: Mapper) => {
       mapFrom((src) => src.slug)
     ),
     forMember(
-      (dest) => dest.email,
+      (dest) => dest.domain,
       mapFrom((src) => src.email)
     ),
     forMember(
@@ -56,8 +56,8 @@ export const tenantProfile = (mapper: Mapper) => {
       mapFrom((src) => src.slug)
     ),
     forMember(
-      (dest) => dest.email,
-      mapFrom((src) => src.email)
+      (dest) => dest.domain,
+      mapFrom((src) => src.domain)
     ),
     forMember(
       (dest) => dest.subscriptionId,
@@ -66,6 +66,10 @@ export const tenantProfile = (mapper: Mapper) => {
     forMember(
       (dest) => dest.status,
       mapFrom((src) => src.status)
+    ),
+    forMember(
+      (dest) => dest.owner,
+      mapFrom((src) => src.owner)
     )
   );
 
@@ -86,8 +90,8 @@ export const tenantProfile = (mapper: Mapper) => {
       mapFrom((src) => src.slug)
     ),
     forMember(
-      (dest) => dest.email,
-      mapFrom((src) => src.email)
+      (dest) => dest.domain,
+      mapFrom((src) => src.domain)
     ),
     forMember(
       (dest) => dest.status,
@@ -100,6 +104,10 @@ export const tenantProfile = (mapper: Mapper) => {
     forMember(
       (dest) => dest.ownerUserId,
       mapFrom((src) => src.ownerUserId)
+    ),
+    forMember(
+      (dest) => dest.owner,
+      mapFrom((src) => src.owner)
     )
   );
 

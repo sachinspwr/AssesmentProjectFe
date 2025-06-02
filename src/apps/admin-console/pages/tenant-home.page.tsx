@@ -25,7 +25,7 @@ const ManageTenantpage: React.FC = () => {
       searchable: true,
     },
     {
-      key: 'email',
+      key: 'domain',
       label: 'Email',
       sortable: true,
     },
@@ -56,11 +56,11 @@ const ManageTenantpage: React.FC = () => {
       label: 'Actions',
       customRender: (row) => (
         <div className="flex gap-2">
-          <VButton variant="link" type="button" className="!text-theme-primary-hover !w-8" onClick={() => handleEdit(row.id)}>
+          <VButton variant="link" type="button" className="!w-8" onClick={() => handleEdit(row.id)}>
             <VICon icon={FaEdit} size={20} />
           </VButton>
           <VButton variant="link" className="!text-theme-negative !w-8" onClick={() => handleDelete(row.id)}>
-            <VICon icon={FaTrashAlt} size={18} />
+            <VICon icon={FaTrashAlt} size={20} />
           </VButton>
         </div>
       ),

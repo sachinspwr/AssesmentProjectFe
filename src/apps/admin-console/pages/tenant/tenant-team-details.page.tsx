@@ -18,7 +18,6 @@ import { useFetchTenantUsersQuery } from "store/slices/tenants.slice";
 
 type TenantTeamDetailsProps = {
   tenant?: Tenant;
-  renderMode: "add" | "edit";
 };
 
 function TenantTeamDetails({ tenant }: TenantTeamDetailsProps) {

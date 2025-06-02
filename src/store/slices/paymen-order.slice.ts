@@ -20,7 +20,7 @@ export const paymentsApiSlice = createApi({
       SubscriptionPaymentOrdersRequestDTO
     >({
       query: (paymentData) => ({
-        url: '/subscription-orders/',
+        url: '/subscription-orders',
         method: 'POST',
         body: paymentData,
       }),

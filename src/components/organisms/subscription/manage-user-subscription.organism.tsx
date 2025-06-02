@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
-import { SubscriptionPlans } from './subscription-plans.organism';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
-import { SubscriptionResponseDTO } from '@dto/response/subscription-option-response.dto';
-import { SubscriptionPaymentProcessor } from './payment-processor.organism';
 import { useSubscription } from '@hooks';
+import { AccountSubscription } from 'models/account/account-subscription.model';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { SubscriptionPaymentProcessor } from './payment-processor.organism';
+import { SubscriptionPlans } from './subscription-plans.organism';
 
 type ManageUserSubscriptionProps = {
   onSubscriptionActivated: () => void;
+  isEnterpriseMode?: boolean; // Add this prop
 };
 
-function ManageUserSubscription({ onSubscriptionActivated }: ManageUserSubscriptionProps) {
+function ManageUserSubscription({
+  onSubscriptionActivated,
+  isEnterpriseMode = false
+}: ManageUserSubscriptionProps) {
   const { allSubscriptions, syncSubscriptions } = useSubscription();
-  const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionResponseDTO | null>(null);
+  const [selectedSubscription, setSelectedSubscription] = useState<AccountSubscription | null>(null);
 
-  const handleGetStarted = (subscription: SubscriptionResponseDTO) => {
+  // Filter subscriptions based on enterprise mode
+  const filteredSubscriptions = isEnterpriseMode
+    ? allSubscriptions.filter(
+      subscription =>
+        subscription.subscription.type === "Custom"
+    )
+    : allSubscriptions.filter(
+      subscription =>
+        subscription.subscription.type === "Standard"
+    );
+
+  const handleGetStarted = (subscription: AccountSubscription) => {
     if (selectedSubscription?.id === subscription.id) {
       // Reset then re-set to force re-render
       setSelectedSubscription(null);
@@ -26,12 +41,12 @@ function ManageUserSubscription({ onSubscriptionActivated }: ManageUserSubscript
 
   const handlePaymentComplete = async () => {
     try {
-    // Then sync the latest subscriptions
-    await syncSubscriptions();
-    
-    // Reset selection and notify parent
-    setSelectedSubscription(null);
-    onSubscriptionActivated();
+      // Then sync the latest subscriptions
+      await syncSubscriptions();
+
+      // Reset selection and notify parent
+      setSelectedSubscription(null);
+      onSubscriptionActivated();
     } catch (e) {
       toast.error('Refresh Subscription Failed');
     }
@@ -39,7 +54,11 @@ function ManageUserSubscription({ onSubscriptionActivated }: ManageUserSubscript
 
   return (
     <div className="space-y-8">
-      <SubscriptionPlans userSubscriptions={allSubscriptions} onPlanSelected={handleGetStarted} />
+      <SubscriptionPlans
+        userSubscriptions={filteredSubscriptions}
+        onPlanSelected={handleGetStarted}
+        isEnterpriseMode={isEnterpriseMode}
+      />
 
       {/* Payment Processor */}
       {selectedSubscription && (
@@ -47,6 +66,8 @@ function ManageUserSubscription({ onSubscriptionActivated }: ManageUserSubscript
           key={selectedSubscription.id}
           subscriptionId={selectedSubscription.id}
           onPaymentComplete={handlePaymentComplete}
+          subscriptions={selectedSubscription}
+          isEnterprise={isEnterpriseMode}
         />
       )}
 

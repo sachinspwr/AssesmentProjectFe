@@ -3,17 +3,25 @@ class SubscriptionResponseDTO {
 
   public name!: string;
 
+  public isDefault!: boolean;
+
   public priceUsd!: number;
+
+  public type!: string;
+
+  public subscriptionCategory!: string;
 
   public description?: string[];
 
-  subscriptionFeature?: SubscriptionFeatureResponseDTO[];
-
   public isActive!: boolean;
 
-  public createdAt!: Date;
+  public order!: number;
 
-  public updatedAt!: Date;
+  // subscriptionFeature?: SubscriptionFeatureResponseDTO[];
+
+  // public createdAt!: Date;
+
+  // public updatedAt!: Date;
 }
 
 export { SubscriptionResponseDTO };

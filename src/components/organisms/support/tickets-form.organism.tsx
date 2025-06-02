@@ -94,11 +94,8 @@ export function TicketForm({ onCancel }: TicketFormProps) {
       userId: user.id,
       status: TicketStatus.Open,
       isPublic: true,
-      subject: '',
-      description: '',
       priority: TicketPriority.Low,
       category: TicketCategory.Technical,
-      id: '',
     };
     try {
       await createTicket(newTicket).unwrap();
