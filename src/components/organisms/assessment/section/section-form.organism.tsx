@@ -31,6 +31,7 @@ function SectionForm({ testId, testSection, onCancel, onComplete, testQuestionFo
   const [updateTestSection, { isLoading: isUpdatingSection }] = useUpdateTestSectionMutation();
   const [searchQuestion, { data: paginationResponse, isLoading: isSearching }] = useSearchQuestionMutation();
   const [hasSearched, setHasSearched] = useState(false);
+
   const filterRef = useRef<VFilterRef>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -99,7 +100,7 @@ function SectionForm({ testId, testSection, onCancel, onComplete, testQuestionFo
             selectedTestFormat={testQuestionFormat}
             filterRef={filterRef}
             filterButtonRef={filterButtonRef}
-            scope={''}
+            scope={'all'}
           />
           {isSearching ? (
             <VLoader size="md" />
