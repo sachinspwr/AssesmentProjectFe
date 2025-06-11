@@ -50,7 +50,6 @@ function Questionspage() {
   const [currentServerpage, setCurrentServerpage] = useState(1);
   const [hasSearched, setHasSearched] = useState(false);
 
-
   const [showImportQuestions, setShowImportQuestions] = useState(false);
 
   const handleImportClick = () => {
@@ -62,10 +61,10 @@ function Questionspage() {
     isFetching: isFetchingQuestions,
     refetch,
   } = useFetchQuestionsQuery(
-    { scope, page: currentServerpage, limit: SERVER_page_SIZE },
+    { scope: scope, page: currentServerpage, limit: SERVER_page_SIZE },
     { skip: !hasSearched || isSearchActive } // Skip unless explicitly fetching
   );
-  
+
   const [searchQuestion, { data: searchedQuestions, isLoading: isSearching, reset: resetSearch }] =
     useSearchQuestionMutation();
 
@@ -105,15 +104,14 @@ function Questionspage() {
     setHasSearched(true);
     setIsSearchActive(true);
     searchQuestion(searchRequest);
-  };  
-  
+  };
+
   const handleFilterReset = () => {
-    setHasSearched(false); 
+    setHasSearched(false);
     setIsSearchActive(false);
     searchQuestion(SearchRequestDTO.default([]));
   };
-  
-  
+
   return (
     <div>
       <div>
@@ -140,8 +138,11 @@ function Questionspage() {
           <AdvancedQuestionFilter
             onFilterApply={handleFilterApply}
             scope={scope}
-            onReset={handleFilterReset} selectedTestFormat={null}    
-            filterRef={filterRef} filterButtonRef={filterButtonRef}/>
+            onReset={handleFilterReset}
+            selectedTestFormat={null}
+            filterRef={filterRef}
+            filterButtonRef={filterButtonRef}
+          />
         </div>
       </div>
 
@@ -153,20 +154,16 @@ function Questionspage() {
           loading={isLoading}
           onImportClick={handleImportClick}
           noDataMessage={
-            hasSearched
-              ? 'No data available for the selected filters.'
-              : 'Apply a filter to see questions.'
+            hasSearched ? 'No data available for the selected filters.' : 'Apply a filter to see questions.'
           }
           onDeleteSuccess={() => {
             refetch();
             resetSearch();
             setCurrentServerpage(1);
           }}
-          
           fetchMore={handleFetchMore}
         />
       )}
-
 
       {showImportQuestions && (
         <ImportQuestions
