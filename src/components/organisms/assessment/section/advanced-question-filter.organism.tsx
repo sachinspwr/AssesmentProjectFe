@@ -134,7 +134,13 @@ interface AdvancedQuestionFilterProps {
   filterRef: React.RefObject<VFilterRef>;
   filterButtonRef: React.RefObject<HTMLButtonElement>;
 }
-export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFormat, filterRef, filterButtonRef }: AdvancedQuestionFilterProps) {
+export function AdvancedQuestionFilter({
+  onFilterApply,
+  onReset,
+  selectedTestFormat,
+  filterRef,
+  filterButtonRef,
+}: AdvancedQuestionFilterProps) {
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
   const [industryDomains, setIndustryDomains] = useState<DomainResponseDTO[]>([]);
@@ -143,16 +149,16 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
   const { data: experience_level = [] } = useFetchExperienceLevelQuery();
   const { data: industries = [] } = useFetchIndustriesQuery();
   const { data: domains = [] } = useFetchDomainsQuery();
-  const { data: industryRoles = [] } = useFetchIndustryRolesQuery();
-  
+  const { data: industryRoles = [] } = useFetchIndustryRolesQuery('all');
+
   useEffect(() => {
-      const filteredDomains = domains.filter((domain) => domain.industryId === selectedIndustry) ?? [];
-      setIndustryDomains(filteredDomains);
-  
-      const filteredRoles = industryRoles.filter((role) => role.domainId === selectedDomain) ?? [];
-      setDomainRoles(filteredRoles);
-    }, [selectedIndustry, selectedDomain, domains, industryRoles]);
-    
+    const filteredDomains = domains.filter((domain) => domain.industryId === selectedIndustry) ?? [];
+    setIndustryDomains(filteredDomains);
+
+    const filteredRoles = industryRoles.filter((role) => role.domainId === selectedDomain) ?? [];
+    setDomainRoles(filteredRoles);
+  }, [selectedIndustry, selectedDomain, domains, industryRoles]);
+
   // Open the filter by default when component mounts
   useEffect(() => {
     if (filterRef.current) {
@@ -160,24 +166,24 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
     }
   }, []);
 
-  const questionTypeOptions = Object.values(QuestionType).map(type => ({
+  const questionTypeOptions = Object.values(QuestionType).map((type) => ({
     label: type,
     value: type,
-  }));    
+  }));
 
   console.log(questionTypeOptions);
 
   console.log(selectedTestFormat);
-  
-  const filteredOptions = selectedTestFormat === 'Hybrid'
-  ? questionTypeOptions // Show all types
-  : selectedTestFormat
-    ? questionTypeOptions.filter(option => option.value === selectedTestFormat)
-    : questionTypeOptions;
 
-  
-    console.log(filteredOptions);
-    const filterConfig: VFormFields[] = [
+  const filteredOptions =
+    selectedTestFormat === 'Hybrid'
+      ? questionTypeOptions // Show all types
+      : selectedTestFormat
+        ? questionTypeOptions.filter((option) => option.value === selectedTestFormat)
+        : questionTypeOptions;
+
+  console.log(filteredOptions);
+  const filterConfig: VFormFields[] = [
     {
       type: 'group',
       label: '',
@@ -290,13 +296,15 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
               max={300}
               initialMin={null}
               initialMax={null}
-              onChange={(min, max) => onChange('', { 
-                maxScoreMin: String(min ?? 0), 
-                maxScoreMax: String(max ?? 300) 
-              })}
+              onChange={(min, max) =>
+                onChange('', {
+                  maxScoreMin: String(min ?? 0),
+                  maxScoreMax: String(max ?? 300),
+                })
+              }
             />
           ),
-          position: '3 1 3'
+          position: '3 1 3',
         },
         {
           name: 'durationRange',
@@ -308,13 +316,15 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
               max={300}
               initialMin={null}
               initialMax={null}
-              onChange={(min, max) => onChange('', { 
-                durationMin: String(min ?? 0), 
-                durationMax: String(max ?? 180) 
-              })}
+              onChange={(min, max) =>
+                onChange('', {
+                  durationMin: String(min ?? 0),
+                  durationMax: String(max ?? 180),
+                })
+              }
             />
           ),
-          position: '3 4 3'
+          position: '3 4 3',
         },
         {
           name: 'tags',
@@ -337,7 +347,7 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
           position: '3 12 2',
           classNames: '!mt-8',
           onClick() {
-            onReset?.(); 
+            onReset?.();
           },
         },
       ],
@@ -353,12 +363,12 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
         filterConfig={filterConfig}
         onApplyFilter={(formData) => {
           const searchCriteria: SearchCriteria<QuestionRequestDTO>[] = [];
-        
+
           Object.entries(formData).forEach(([key, value]) => {
             if (!value || value === '') return;
-    
+
             const trimmedKey = key.trim();
-      
+
             if (trimmedKey === 'durationMin') {
               searchCriteria.push({
                 operator: Operator.AND,
@@ -396,10 +406,9 @@ export function AdvancedQuestionFilter({ onFilterApply, onReset, selectedTestFor
               });
             }
           });
-    
-         onFilterApply(SearchRequestDTO.default(searchCriteria));
-        }}
 
+          onFilterApply(SearchRequestDTO.default(searchCriteria));
+        }}
         notchPositionFromLeft={10}
       />
     </div>
