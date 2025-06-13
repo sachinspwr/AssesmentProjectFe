@@ -6,10 +6,16 @@ import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VFormFieldData } from '@types';
 import { VModal } from '../modal/v-modal.organism';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
-import { VLabelledInput } from '@components/molecules/index';
+import ReviewForm from 'apps/evalytics/components/review-result/review-form.component';
+
+type MCQFormData = VFormFieldData & {
+  testQuestionResponses?: { gradingStatus?: string }[];
+};
+
 
 type MCQPreviewProps = {
   formData: VFormFieldData;
+  onClose?: () => void;
   mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[];
   correctAnswers?: string[];
@@ -22,9 +28,11 @@ function MCQPreview({
   selectedAnswers = [],
   correctAnswers = [],
   selectionType = 'multiple', // default to checkbox
+  onClose
 }: MCQPreviewProps) {
 
-  console.log("FormData in MCQ Preview : ", formData);
+  console.log("formData : ", formData);
+
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showGuidelines, setShowGuidelines] = useState(false);
@@ -78,6 +86,8 @@ function MCQPreview({
     mode === 'preview'
       ? formData.answerExplanation && formData.answerExplanation !== 'NA'
       : formData.explanation && formData.explanation !== 'NA';
+
+  const gradingStatus = (formData as MCQFormData)?.testQuestionResponses?.[0]?.gradingStatus;
 
   return (
     <>
@@ -169,30 +179,19 @@ function MCQPreview({
           </>
         )}
 
-        {mode === 'review' ? (
+        <div className="border-b theme-border-default mt-4"></div>
+
+
+        {mode === 'review' && gradingStatus === 'NEEDS_REVIEW' ? (
           <>
-            <div className="border-b theme-border-default mt-4"></div>
-            <div className="flex flex-col gap-2">
-              <VTypography as="h6" color="primary" className="mt-2">
-                Add score for this question
-              </VTypography>
-              <VLabelledInput name="score" label="Score" placeholder="Enter Score" required className="w-96" />
-              <div className="flex flex-row gap-4 mt-2">
-                <VButton variant="secondary" className="!w-[100px]" onClick={onClose}>
-                  Cancel
-                </VButton>
-                <VButton variant="primary" className="!w-[170px]">
-                  Review & Submit
-                </VButton>
-              </div>
-            </div>
+            <ReviewForm onClose={()=> onClose} data={formData}/>
           </>
         ) : (
           <></>
         )}
       </div>
 
-      {mode === 'preview' && (
+      {mode === 'preview' &&(
         <VModal title="Hi User" isOpen={isModalOpen} showFooter={false} onClose={() => setIsModalOpen(false)}>
           <div className="flex flex-col gap-2.5">
             {selectedValues.length > 0 ? (

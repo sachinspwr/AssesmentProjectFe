@@ -26,7 +26,7 @@ export function useAuthTokenFromUrl(): UseAuthTokenFromUrlResult {
   const [loading, setLoading] = useState(true);
 
   const cleanSensitiveParams = useCallback(() => {
-    const sensitiveParams = ['token', 'testId', 'auth'];
+    const sensitiveParams = ['link_token', 'testId', 'auth'];
     const newParams = new URLSearchParams(searchParams);
     let hasChanges = false;
 
@@ -43,7 +43,7 @@ export function useAuthTokenFromUrl(): UseAuthTokenFromUrlResult {
   }, [searchParams, setSearchParams]);
 
   const validateAndExtractToken = useCallback((): AuthData => {
-    const token = searchParams.get('token');
+    const token = searchParams.get('link_token');
     if (!token) {
       cleanSensitiveParams();
       return null;
@@ -54,7 +54,7 @@ export function useAuthTokenFromUrl(): UseAuthTokenFromUrlResult {
     const params: Record<string, string> = {};
 
     searchParams.forEach((value, key) => {
-      if (!['token', 'testId', 'auth'].includes(key)) {
+      if (!['link_token', 'testId', 'auth'].includes(key)) {
         params[key] = value;
       }
     });

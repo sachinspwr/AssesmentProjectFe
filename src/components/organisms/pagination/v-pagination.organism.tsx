@@ -8,6 +8,7 @@ interface VPaginationProps {
   onpageChange: (page: number) => void;
   onLoadMore?: () => void; // Fetch more data if needed
   maxVisiblepages?: number; // E.g., 5
+  containerClassName?: string;
 }
 
 // eslint-disable-next-line react/function-component-definition
@@ -17,6 +18,7 @@ const VPagination: React.FC<VPaginationProps> = ({
   onpageChange,
   onLoadMore,
   maxVisiblepages = 5,
+  containerClassName = ''
 }) => {
   const [inputpage, setInputpage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);

@@ -10,6 +10,7 @@ interface ResultFilterProps {
 }
 
 export function ResultFilter({ onApplyFilter, onReset, filterRef, filterButtonRef }: ResultFilterProps) {
+  
   const filterConfig: VFormFields[] = [
     {
       name: 'participantId',

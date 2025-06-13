@@ -1,6 +1,6 @@
 import { testSessionApi } from '../store/session/session-api.slice';
 import * as participantSlice from 'test-runner/store/participant/participant.slice';
-import { incrementSequence, setActivityStatus } from 'test-runner/store/session';
+import { incrementSequence, setActivityStatus, setAnswer } from 'test-runner/store/session';
 import { selectSyncData } from 'test-runner/store/selector';
 import { RegistrationField, TestSession } from 'test-runner/types';
 import { TestRunnerApiError } from 'test-runner/core';
@@ -110,7 +110,7 @@ export const fetchTestDetails =
   };
 
 export const saveAnswer =
-  (sessionToken: string, sectionId: string, questionId: string, answer: unknown): AppThunk =>
+  (sessionToken: string, sectionId: string, questionId: string, answer: string): AppThunk =>
   async (dispatch, getState) => {
     const {
       security: securityEvents,
@@ -118,6 +118,9 @@ export const saveAnswer =
     } = getState();
 
     try {
+      // 1. Update answer value (existing behavior)
+      dispatch(setAnswer({ questionId, answer }));
+
       const result = await dispatch(
         testSessionApi.endpoints.saveAnswer.initiate({
           sessionToken,
@@ -199,8 +202,8 @@ export const submitTestFeedback =
     try {
       const result = await dispatch(
         participantApi.endpoints.submitFeedback.initiate({
-          sessionToken, 
-          feedbackData, 
+          sessionToken,
+          feedbackData,
         })
       ).unwrap();
 

@@ -1,13 +1,15 @@
-import { QuestionProps } from 'test-runner/types';
+// import { QuestionProps } from 'test-runner/types';
 import { DifficultyLevel } from '@utils/enums/difficult-level.enum';
 import { QuestionType } from '@utils/enums/question-type.enum';
 import { ProblemStatementComponent } from './problem-statement.component';
+import { QuestionResponseDTO } from '@dto/response';
 
-interface ProblemPanelProps extends QuestionProps {
+interface ProblemPanelProps {
     width: string;
     onResizeStart: (e: React.MouseEvent) => void;
     isCollapsed: boolean;
     onToggle: () => void;
+    question: QuestionResponseDTO;
 }
 
 export function ProblemPanel({
@@ -15,7 +17,7 @@ export function ProblemPanel({
     onResizeStart,
     isCollapsed,
     question,
-    ...questionProps
+    // ...questionProps
 }: ProblemPanelProps) {
     if (isCollapsed) return null;
 
@@ -38,7 +40,8 @@ export function ProblemPanel({
                 // id={question.id}
                 questionExplanation={question.questionExplanation}
                 codingQuestion={question.codingQuestion}
-                {...questionProps} />
+                // {...questionProps}
+            />
         </div>
     );
 }

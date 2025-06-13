@@ -5,6 +5,7 @@ import ReviewQuestionpage from './pages/review-question/review-questions.page';
 import ManageQuestionReviewpage from './pages/manage-question-review.page';
 import ReviewTestpage from './pages/review-test/review-test.page';
 import ManageTestReviewpage from './pages/manage-test-review.page';
+import DetailedCandidateTestResultPage from 'test-result/detailed-candidate-result.page';
 const ReviewResultpage = lazy(() => import('./pages/review-result/review-result.page'));
 
 export const EvalyticsRoutes = (
@@ -17,7 +18,7 @@ export const EvalyticsRoutes = (
     }
   >
     <Route path="result" element={<ReviewResultpage />} />
-    {/* <Route path='result/detailed-result' element={<ReviewDetailedResultpage/>} /> */}
+    <Route path='result/test-results/:id' element={<DetailedCandidateTestResultPage mode='review'/>} />
 
     <Route path="question" element={<ReviewQuestionpage />} />
     <Route path="question/:id" element={<ManageQuestionReviewpage />} />

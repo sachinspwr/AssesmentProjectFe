@@ -30,9 +30,9 @@ export function TestSectionPagination() {
   return (
     <VPagination
       totalPages={totalPages}
-      onPageChange={onChange}
+      onpageChange={onChange}
       currentPage={currentPage}
-      maxVisiblePages={5}
+      maxVisiblepages={5}
       containerClassName="sm:!mt-0"
     />
   );

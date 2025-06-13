@@ -3,20 +3,28 @@ import { VButton, VICon, VTextArea } from '@components/atoms';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VFormFieldData } from '@types';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import ReviewForm from 'apps/evalytics/components/review-result/review-form.component';
+
+type EssayFormData = VFormFieldData & {
+  testQuestionResponses?: { gradingStatus?: string }[];
+};
 
 type EssayPreviewProps = {
+  onClose?: () => void;
   formData: VFormFieldData;
   mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[] | string;
   correctAnswers?: string[] | string;
 };
 
-function EssayPreview({ formData, mode = 'preview', selectedAnswers = [] }: EssayPreviewProps) {
+function EssayPreview({ formData, mode = 'preview', selectedAnswers = [], onClose }: EssayPreviewProps) {
   const [showGuidelines, setShowGuidelines] = useState(false);
 
   const reviewAnswer = selectedAnswers ?? '';
 
   const hasGuidelines = formData.answerExplanation && formData.answerExplanation !== 'NA';
+
+  const gradingStatus = (formData as EssayFormData)?.testQuestionResponses?.[0]?.gradingStatus;
 
   return (
     <div className="flex flex-col gap-5">
@@ -90,6 +98,14 @@ function EssayPreview({ formData, mode = 'preview', selectedAnswers = [] }: Essa
             )}
           </div>
         </>
+      )}
+
+      {mode === 'review' && gradingStatus === 'NEEDS_REVIEW' ? (
+        <>
+          <ReviewForm onClose={() => onClose} data={formData} />
+        </>
+      ) : (
+        <></>
       )}
     </div>
   );

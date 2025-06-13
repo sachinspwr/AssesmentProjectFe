@@ -5,6 +5,7 @@ import ShortAnswerPreview from '@components/organisms/questions-preview/short-an
 import TrueFalsePreview from '@components/organisms/questions-preview/true-false-preview.organisum';
 
 type ManageQuestionPreviewpageProps = {
+  onClose?: () => void;
   type: string;
   formData: any; // Prefer VFormFieldData if available
   mode?: 'preview' | 'review' | 'view';
@@ -18,6 +19,7 @@ function ManageQuestionPreviewpage({
   mode = 'preview',
   selectedAnswers = [],
   correctAnswers = [],
+  onClose
 }: ManageQuestionPreviewpageProps) {
   // Normalize to ensure both are arrays
   const normalizedSelectedAnswers = Array.isArray(selectedAnswers)
@@ -36,6 +38,7 @@ function ManageQuestionPreviewpage({
     if (type === 'Single Choice' || type === 'Multiple Choice') {
       return (
         <MCQPreview
+          onClose={onClose}
           formData={formData}
           mode={mode}
           selectedAnswers={normalizedSelectedAnswers}
@@ -49,6 +52,7 @@ function ManageQuestionPreviewpage({
       case 'True/False':
         return (
           <TrueFalsePreview
+            onClose={onClose}
             formData={formData}
             mode={mode}
             selectedAnswers={normalizedSelectedAnswers}
@@ -58,6 +62,7 @@ function ManageQuestionPreviewpage({
       case 'Fill in the Blanks':
         return (
           <FillInTheBlanksPreview
+            onClose={onClose}
             formData={formData}
             mode={mode}
             selectedAnswers={normalizedSelectedAnswers}
@@ -67,6 +72,7 @@ function ManageQuestionPreviewpage({
       case 'Short Answer':
         return (
           <ShortAnswerPreview
+            onClose={onClose}
             formData={formData}
             mode={mode}
             selectedAnswers={normalizedSelectedAnswers}
@@ -76,6 +82,7 @@ function ManageQuestionPreviewpage({
       case 'Essay':
         return (
           <EssayPreview
+            onClose={onClose}
             formData={formData}
             mode={mode}
             selectedAnswers={normalizedSelectedAnswers}

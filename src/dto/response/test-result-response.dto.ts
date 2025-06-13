@@ -1,5 +1,3 @@
-import { Gender } from '@utils/enums';
-
 export interface TestResultResponseDTO {
   id: string;
   title: string;
@@ -45,23 +43,49 @@ export interface Question {
   score: number;
   maxScore: number;
   explanation: string;
+  timeLimit: number;
+  testQuestionResponses: TestQuestionResponse[];
   timeSpentSeconds?: number;
+  actions?: string;
+}
+
+export interface TestQuestionResponse {
+  id: string;
+  testSessionId: string;
+  questionId: string;
+  sectionId: string;
+  answer: string;
+  answerHash: string;
+  status: string;
+  answeredAt: Date;
+  timeSpentSeconds: number;
+  score: string;
+  maxScore: string;
+  gradingStatus: string;
+  gradingMethod: string;
+  requiresManualReview: string;
+  graderFeedback: string;
+  gradedBy: string;
+  gradedAt: Date;
+  riskScore: number;
+  lastSecurityReview: string;
+  integrityHash: string;
+  securityFlags: SecurityFlag[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SecurityFlag {
+  code: string;
+  level: string;
+  message: string;
+  timestamp: string;
 }
 
 export interface Participant {
   id: string;
   type: string;
   email: string;
-  profile: Profile;
-}
-
-export interface Profile {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  gender: Gender;
-  dob: Date;
-  company: string;
 }
 
 export interface Session {
@@ -72,7 +96,7 @@ export interface Session {
   ipAddress: string;
   device: Device;
   network: Network;
-  securityFlags: any[];
+  securityFlags: string[];
   securityEvents: SecurityEvents;
 }
 
@@ -103,5 +127,5 @@ export interface ClipboardAccess {
 export interface Security {
   overallRiskScore: number;
   securityFlags: string[];
-  integrityHash: any;
+  integrityHash: string;
 }

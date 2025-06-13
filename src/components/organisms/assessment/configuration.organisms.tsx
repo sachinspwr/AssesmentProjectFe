@@ -102,12 +102,10 @@ function AssessmentConfiguration({ tabRef, test, onComplete, viewMode }: Assessm
       {viewMode === 'content' ? (
         <AssessmentNavigation
           isLoading={isUpdatingConfig}
-          onPrevious={() => tabRef.current?.prevTab()}
+          onPrevious={() => tabRef?.current?.prevTab()}
           onSaveExit={() => handleSave(true)}
-          {...(test?.status === 'Draft' && {
-            saveProceedLabel: 'Save & Publish',
-            onSaveProceed: () => handleSave(true, true),
-          })}
+          onSaveProceed={() => handleSave(true, true)}
+          saveProceedLabel={test?.isPublic ? 'Save & Mark for Review' : 'Save & Publish'}
         />
       ) : (
         <VButton variant="link" size="md" className="!w-48 mt-5" onClick={() => handleSave()}>

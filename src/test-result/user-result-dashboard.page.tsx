@@ -5,13 +5,11 @@ import VBarChartGraph from '@components/organisms/graph/v-bar-graph.organism';
 import { VPieGraph } from '@components/organisms/graph/v-pie-graph.organisms';
 import { VOverview } from '@components/organisms/overview/v-overview.organism';
 import { AiOutlineBarChart, AiOutlineClockCircle } from 'react-icons/ai';
-import { FiEye } from 'react-icons/fi';
 import { MdAssignment, MdOutlineQuiz } from 'react-icons/md';
 import { useGetAllTestsGivenByUserQuery, useGetAllTestsSummaryByUserQuery } from 'store/slices/test-result.slice';
 import UserTestResultList from './components/user-test-result-list.component';
 
 function UserResultDashboard() {
-
   const { data: summaryData, isLoading: summaryLoading } = useGetAllTestsSummaryByUserQuery();
   const { data: testsByUser, isLoading: testsByUserLoading } = useGetAllTestsGivenByUserQuery();
 
@@ -20,11 +18,17 @@ function UserResultDashboard() {
     value: stat.passRate,
   }));
 
-  const pieChartData = summaryData?.subjectStats?.map((stat) => ({
-    name: stat.subject,
-    value: stat.passRate,
-    percentage: stat.passRate * 100,
-  }));
+  const pieChartData = (summaryData?.subjectStats ?? [])
+  .reduce((acc, { subject, passRate }) => {
+    const existing = acc.find((item) => item.name === subject);
+    if (existing) existing.value += passRate;
+    else acc.push({ name: subject, value: passRate });
+    return acc;
+  }, [] as { name: string; value: number }[])
+  .map(({ name, value }, _, arr) => {
+    const total = arr.reduce((sum, item) => sum + item.value, 0);
+    return { name, value, percentage: parseFloat(((value / total) * 100).toFixed(2)) };
+  });
 
   console.log(pieChartData);
 
@@ -98,7 +102,7 @@ function UserResultDashboard() {
       </div>
 
       <div className="mt-5">
-        <UserTestResultList data={testsByUser?.data ?? []} loading={testsByUserLoading}/>
+        <UserTestResultList data={testsByUser?.data ?? []} loading={testsByUserLoading} />
       </div>
     </div>
   );

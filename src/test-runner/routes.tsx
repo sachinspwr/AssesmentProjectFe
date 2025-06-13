@@ -13,7 +13,6 @@ import {
   TestSubmittedPage,
 } from './pages';
 import { RegisterParticipantPage } from './pages';
-import { RequireLinkTokenGuard, TestSessionGuard, TestWorkflowGuard } from './guard';
 import { TestWorkflowState } from './types';
 import { TestRunnerProvider } from './providers';
 import { TestFlowRoutes } from './core';
@@ -21,6 +20,7 @@ import TestOverviewPage from './pages/test-overview.page';
 import PrivacyPolicyPage from './components/policy/privacy-policy-content.component';
 import TestInterfacePage from './pages/test-interface.page';
 import TestInterfaceLayout from './pages/layout/test-interface.layout';
+import { TestWorkflowGuard, TestSessionGuard, RequireLinkTokenGuard } from './guard';
 
 function stripBasePath(route: string, base = '/test-runner/'): string {
   return route.startsWith(base) ? route.slice(base.length) : route;

@@ -11,47 +11,13 @@ import { useGetTestLinksByTypeQuery } from 'store/slices/test-link.slice.';
 type SharedSectionProps = {
   testId: string;
 };
-// const dummyData = [
-//   {
-//     maxAttempts: 1,
-//     maxUsages: 1,
-//     id: '2aa897f8-6d6f-4afd-b0e4-eb7055b276ae',
-//     createdById: '4cad9047-8300-4bf2-ab51-8ccf069bf964',
-//     updatedById: '4cad9047-8300-4bf2-ab51-8ccf069bf964',
-//     testId: '8d6102a8-32d6-4dff-b9aa-415d1bb813bc',
-//     name: 'Test for Shared 1',
-//     description: 'test',
-//     token: '2952eaaae132b4936cb3ee0a133de7b3a18718c8fd70312c49ae34280556f66f',
-//     activeFrom: '2025-05-31T18:30:00.000Z',
-//     activeUntil: '2025-06-04T18:30:00.000Z',
-//     timeZone: 'IST',
-//     status: 'Active',
-//     isActive: true,
-//     visibility: 'Shared',
-//     url: 'https://assesmentprojectfe.onrender.com/runner/validate?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsaW5rVG9rZW4iOiIyOTUyZWFhYWUxMzJiNDkzNmNiM2VlMGExMzNkZTdiM2ExODcxOGM4ZmQ3MDMxMmM0OWFlMzQyODA1NTZmNjZmIiwiaWF0IjoxNzQ4NjY1NTQwLCJleHAiOjE3NDg3MDg3NDB9.Zd3-xTOj15UbMhXUZMwl8DFx__pJHvFhxs44NAbCUws',
-//   },
-//   {
-//     maxAttempts: 1,
-//     maxUsages: 10,
-//     id: '2aa897f8-6d6f-4afd-b0e4-eb7055b276ae',
-//     createdById: '4cad9047-8300-4bf2-ab51-8ccf069bf964',
-//     updatedById: '4cad9047-8300-4bf2-ab51-8ccf069bf964',
-//     testId: '8d6102a8-32d6-4dff-b9aa-415d1bb813bc',
-//     name: 'Test for Shared 2',
-//     description: 'test',
-//     token: '2952eaaae132b4936cb3ee0a133de7b3a18718c8fd70312c49ae34280556f66f',
-//     activeFrom: '2025-05-31T18:30:00.000Z',
-//     activeUntil: '2025-06-04T18:30:00.000Z',
-//     timeZone: 'IST',
-//     status: 'Active',
-//     isActive: true,
-//     visibility: 'Shared',
-//     url: 'https://assesmentprojectfe.onrender.com/runner/validate?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsaW5rVG9rZW4iOiIyOTUyZWFhYWUxMzJiNDkzNmNiM2VlMGExMzNkZTdiM2ExODcxOGM4ZmQ3MDMxMmM0OWFlMzQyODA1NTZmNjZmIiwiaWF0IjoxNzQ4NjY1NTQwLCJleHAiOjE3NDg3MDg3NDB9.Zd3-xTOj15UbMhXUZMwl8DFx__pJHvFhxs44NAbCUws',
-//   },
-// ];
+
 function SharedSection({ testId }: SharedSectionProps) {
   const [showGenrateLinkForm, setShowGenrateLinkForm] = useState(false);
-  const { data: allLinkOfPersonal = [] } = useGetTestLinksByTypeQuery(TestLinkType.Shared);
+  const { data: allLinkOfPersonal = [] } = useGetTestLinksByTypeQuery({
+    testId,
+    type: TestLinkType.Shared,
+  });
   // const allLinkOfPersonal = dummyData;  //didnt get api for this
   return (
     <div className="flex flex-col gap-3">
@@ -78,9 +44,7 @@ function SharedSection({ testId }: SharedSectionProps) {
           </div>
         )}
       </div>
-      {allLinkOfPersonal.length > 0 && (
-        <RegisteredUsersTable allLink={allLinkOfPersonal} />
-      )}
+      {allLinkOfPersonal.length > 0 && <RegisteredUsersTable allLink={allLinkOfPersonal} />}
     </div>
   );
 }

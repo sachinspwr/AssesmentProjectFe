@@ -5,12 +5,19 @@ import { useState } from 'react';
 import { VFormFieldData } from '@types';
 import { VModal } from '../modal/v-modal.organism';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import ReviewForm from 'apps/evalytics/components/review-result/review-form.component';
+
+type FillInTheBlanksFormData = VFormFieldData & {
+  testQuestionResponses?: { gradingStatus?: string }[];
+};
+
 
 type FillInTheBlanksPreviewProps = {
   formData: VFormFieldData;
   mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[];
   correctAnswers?: string[];
+  onClose?: () => void;
 };
 
 function FillInTheBlanksPreview({
@@ -18,6 +25,7 @@ function FillInTheBlanksPreview({
   mode = 'preview',
   selectedAnswers = [],
   correctAnswers = [],
+  onClose,
 }: FillInTheBlanksPreviewProps) {
   const isPreview = mode === 'preview';
   const isReview = mode === 'review';
@@ -29,31 +37,29 @@ function FillInTheBlanksPreview({
   const reviewSelectedValues = selectedAnswers ?? [];
 
   const options = formData.answerOptions
-  ? (
-      Array.isArray(formData.answerOptions)
+    ? (Array.isArray(formData.answerOptions)
         ? formData.answerOptions
         : (formData.answerOptions as string).split(',')
-    ).map((rawOption: string) => {
-      const option = rawOption.trim();
+      ).map((rawOption: string) => {
+        const option = rawOption.trim();
 
-      if (isReview) {
-        const isCorrect = correctAnswers?.includes(option);
-        const isSelectedWrong = selectedAnswers?.includes(option) && !isCorrect;
+        if (isReview) {
+          const isCorrect = correctAnswers?.includes(option);
+          const isSelectedWrong = selectedAnswers?.includes(option) && !isCorrect;
 
-        let colorClass = '';
-        if (isCorrect) colorClass = 'text-theme-positive';
-        else if (isSelectedWrong) colorClass = 'text-theme-negative';
+          let colorClass = '';
+          if (isCorrect) colorClass = 'text-theme-positive';
+          else if (isSelectedWrong) colorClass = 'text-theme-negative';
 
-        return {
-          label: <span className={`${colorClass} ${isCorrect ? 'font-semibold' : ''}`}>{option}</span>,
-          value: option,
-        };
-      }
+          return {
+            label: <span className={`${colorClass} ${isCorrect ? 'font-semibold' : ''}`}>{option}</span>,
+            value: option,
+          };
+        }
 
-      return { label: option, value: option };
-    })
-  : [];
-
+        return { label: option, value: option };
+      })
+    : [];
 
   const handleOptionChange = (values: string[]) => {
     if (isPreview) setSelectedValues(values);
@@ -67,6 +73,9 @@ function FillInTheBlanksPreview({
   const displaySelectedValues = isPreview ? selectedValues : reviewSelectedValues;
 
   const hasGuidelines = formData.answerExplanation && formData.answerExplanation !== 'NA';
+
+  const gradingStatus = (formData as FillInTheBlanksFormData)?.testQuestionResponses?.[0]?.gradingStatus;
+
 
   return (
     <>
@@ -131,6 +140,14 @@ function FillInTheBlanksPreview({
               )}
             </div>
           </>
+        )}
+
+        {mode === 'review' && gradingStatus === 'NEEDS_REVIEW' ? (
+          <>
+            <ReviewForm onClose={() => onClose} data={formData} />
+          </>
+        ) : (
+          <></>
         )}
       </div>
 

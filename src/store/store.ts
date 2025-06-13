@@ -44,9 +44,8 @@ import featureToggleReducer, { featureManagerApiSlice } from './slices/feature-m
 import testinvitationReducer, { testInvitationApiSlice } from './slices/test-invitation.slice'
 import linkRegistrationReducer, { linkRegistrationApiSlice } from './slices/link-registration.slice';
 import { testLinkApiSlice } from './slices/test-link.slice.';
-import dashboardReducer, { dashboardApiSlice } from './slices/dashboard.slice';
-import userTestSummaryReducer, { userTestSummaryApiSlice } from './slices/user-test-summary.slice';
 import { testGuestsApiSlice } from './slices/test-guest.slice';
+import { testReviewsApiSlice } from './slices/test-review.slice'
 
 /* eslint-disable no-underscore-dangle */
 export const store = configureStore({
@@ -82,8 +81,6 @@ export const store = configureStore({
     featureToggle: featureToggleReducer,
     test_invitation: testinvitationReducer,
     linkRegistration: linkRegistrationReducer,
-    guests: dashboardReducer,
-    userTestSummary: userTestSummaryReducer,
     [accountApiSlice.reducerPath]: accountApiSlice.reducer,
     [authApiSlice.reducerPath]: authApiSlice.reducer,
     [questionsApiSlice.reducerPath]: questionsApiSlice.reducer,
@@ -124,8 +121,7 @@ export const store = configureStore({
     [testInvitationApiSlice.reducerPath]: testInvitationApiSlice.reducer,
     [linkRegistrationApiSlice.reducerPath]: linkRegistrationApiSlice.reducer,
     [testLinkApiSlice.reducerPath]:testLinkApiSlice.reducer,
-    [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
-    [userTestSummaryApiSlice.reducerPath]: userTestSummaryApiSlice.reducer
+    [testReviewsApiSlice.reducerPath]: testReviewsApiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -171,8 +167,7 @@ export const store = configureStore({
       testInvitationApiSlice.middleware,
       linkRegistrationApiSlice.middleware,
       testLinkApiSlice.middleware,
-      dashboardApiSlice.middleware,
-      userTestSummaryApiSlice.middleware
+      testReviewsApiSlice.middleware,
     ),
   devTools: process.env.NODE_ENV !== 'production'
 });

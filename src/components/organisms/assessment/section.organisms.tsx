@@ -82,7 +82,7 @@ function AssessmentSection({ tabRef, test, onComplete, viewMode }: AssessmentSec
 
   const handleProceed = (isExit?: boolean) => {
     onComplete(test, { shouldExit: isExit });
-    tabRef.current?.nextTab();
+    tabRef?.current?.nextTab();
   };
 
   return (
@@ -114,7 +114,7 @@ function AssessmentSection({ tabRef, test, onComplete, viewMode }: AssessmentSec
         (viewMode === 'content' ? (
           <AssessmentNavigation
             isSaveDisabled={sections.length === 0}
-            onPrevious={() => tabRef.current?.prevTab()}
+            onPrevious={() => tabRef?.current?.prevTab()}
             onSaveProceed={() => handleProceed()}
             onSaveExit={() => handleProceed(true)}
           />

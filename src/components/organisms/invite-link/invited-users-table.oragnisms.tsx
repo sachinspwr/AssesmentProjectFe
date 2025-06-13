@@ -16,7 +16,7 @@ function InvitedUsersTable({ allLink }: InvitedUsersTableProps) {
   const { data: invitationRecipients, isLoading } = useGetInvitationRecipientsQuery(
     {
       testId: selectedLink?.testId || '',
-      linkId: selectedLink?.id || ''
+      linkId: selectedLink?.id || '',
     },
     {
       skip: !selectedLink,
@@ -24,10 +24,10 @@ function InvitedUsersTable({ allLink }: InvitedUsersTableProps) {
     }
   );
 
-  const linkOptions = allLink.map(link => ({
+  const linkOptions = allLink.map((link) => ({
     label: link.name,
     value: link.id,
-    data: link // Store the entire link object
+    data: link, // Store the entire link object
   }));
 
   const columns: VTableColumn<InvitationResponseDto>[] = [
@@ -42,27 +42,25 @@ function InvitedUsersTable({ allLink }: InvitedUsersTableProps) {
     {
       key: 'status',
       label: 'Status',
-      customRender: (status: unknown) => {
-        const statusText = typeof status === 'string' ? status : 'Pending';
+      customRender: (row: InvitationResponseDto) => {
+        const statusText = row.status || 'Pending';
         return <VStatus label={statusText} />;
-      }
+      },
     },
     {
       key: 'acceptedAt',
       label: 'Accepted At',
-      customRender: (row: InvitationResponseDto) =>
-        row.acceptedAt ? new Date(row.acceptedAt).toLocaleString() : '-'
+      customRender: (row: InvitationResponseDto) => (row.acceptedAt ? new Date(row.acceptedAt).toLocaleString() : '-'),
     },
     {
       key: 'rejectedAt',
       label: 'Rejected At',
-      customRender: (row: InvitationResponseDto) =>
-        row.rejectedAt ? new Date(row.rejectedAt).toLocaleString() : '-'
-    }
+      customRender: (row: InvitationResponseDto) => (row.rejectedAt ? new Date(row.rejectedAt).toLocaleString() : '-'),
+    },
   ];
 
   return (
-    <div className='!boder-t-2 mt-4'>
+    <div className="!boder-t-2 mt-4">
       <div className="flex items-center gap-10">
         <VTypography as="h3">Invited Users</VTypography>
         <div className="w-64">
@@ -71,7 +69,7 @@ function InvitedUsersTable({ allLink }: InvitedUsersTableProps) {
             options={linkOptions}
             value={selectedLink?.id || ''}
             onChange={(value) => {
-              const selected = linkOptions.find(opt => opt.value === value)?.data;
+              const selected = linkOptions.find((opt) => opt.value === value)?.data;
               setSelectedLink(selected || null);
             }}
             placeholder="Select a link"

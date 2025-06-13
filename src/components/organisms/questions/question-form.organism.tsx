@@ -54,7 +54,7 @@ function QuestionForm({
   const [industryDomains, setIndustryDomains] = useState<DomainResponseDTO[]>([]);
   const [domainRoles, setDomainRoles] = useState<IndustryRoleResponseDTO[]>([]);
 
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPublic, setIsPublic] = useState<boolean>(initialValue?.isPublic);
   const [formData, setIsFormData] = useState<VFormFieldData>();
   const [isSavedOrSubmitted, setIsSavedOrSubmitted] = useState(false);
   const [publishQuestion, { isLoading: isPublishing }] = usePublishQuestionMutation();
@@ -536,37 +536,46 @@ function QuestionForm({
     },
     {
       name: 'preview',
-      type: 'submit',
-      label: 'Preview Question',
+      type: 'custom',
+      customContent:
+      <VButton type="submit" name="preview" variant='secondary'>
+         Preview Question   
+      </VButton>,
       position: '18 1 2',
     },
     {
       name: 'save',
-      label: 'Save Question',
-      type: 'submit',
+      type: 'custom',
+      customContent:
+        viewMode !== 'review' ? (
+          <VButton type="submit" name="save" isLoading={isCreatingQuestion || isUpdatingQuestion}>
+            Save Question   
+          </VButton>
+        ): <></>,   
       position: '18 3 2',
     },
     {
       name: 'buttons',
       type: 'custom',
       customContent:
-        isPublic && viewMode === 'content' ? (
-          <VButton type="submit" name="save-and-review" className="!w-60">
-            Save & Mark For Review
-          </VButton>
-        ) : (
-          <VButton
-            className="!w-48"
-            name="publish-button"
-            onClick={() => handlePublish()}
-            disabled={!isPublic}
-            isLoading={isPublishing}
-          >
-            Publish Question
-          </VButton>
-        ),
+        viewMode !== 'review' ? (
+          isPublic && viewMode === 'content' ? (
+            <VButton type="submit" name="save-and-review" className="!w-60">
+              Save & Mark For Review
+            </VButton>
+          ) : (
+            <VButton
+              className="!w-48"
+              name="publish-button"
+              onClick={() => handlePublish()}
+              isLoading={isPublishing}
+            >
+              Publish Question
+            </VButton>
+          )
+        ) : <></>,
       position: '18 5 3',
-    },
+    }    
   ];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -624,7 +633,8 @@ function QuestionForm({
           setIsSavedOrSubmitted(true);
           console.log('Response', response);
       }
-      onSuccess && onSuccess();
+      if (isPublic)
+      { onSuccess && onSuccess() };
     } catch (error) {
       console.error('Failed to process question: ', error);
       toast.error((error as Error).message);
@@ -672,7 +682,6 @@ function QuestionForm({
             })),
             starterCode: initialValue?.codingQuestion?.starterCodes,
           })}
-          isFormSubmitting={isCreatingQuestion || isUpdatingQuestion}
           onSubmit={handleSubmit}
         />
       ) : (

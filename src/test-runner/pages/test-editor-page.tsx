@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import { Answer, QuestionProps } from 'test-runner/types';
 import config from '../components/code-editor/coding-cofig.component';
 import examples from '../components/code-editor/coding-examples.component';
 import toast from 'react-hot-toast';
@@ -97,12 +96,21 @@ const mockQuestionData: QuestionResponseDTO = {
     }
 };
 
-export function CodingTestEditor({ question, currentQuestionId }: any) {
+type CodingQuestionProps = {
+    question: QuestionResponseDTO;
+    defaultSelection: string;
+    index: number;
+};
+
+export function CodingTestEditor({ question }: CodingQuestionProps) {
     // Redux hooks
     const dispatch = useAppDispatch();
     const [evaluateCode, { isLoading }] = useEvaluateCodeMutation();
-    const { evaluationResult } = useAppSelector((state) => state.codeEvaluation);
+    const evaluation = useAppSelector((state) => state.codeEvaluation);
 
+    const evaluationResult = evaluation?.evaluationResult;
+
+    console.log(question, 'question from props');
     // State management
     const [selectedLanguageId, setSelectedLanguageId] = useState<number>(19); // Default to JavaScript
     const [monacoTheme, setMonacoTheme] = useState(config.defaultThemes[1] ?? 'light');
@@ -305,18 +313,6 @@ export function CodingTestEditor({ question, currentQuestionId }: any) {
         document.addEventListener('mouseup', handleMouseUp);
     };
 
-    function handleBack(): void {
-        throw new Error('Function not implemented.');
-    }
-
-    function handleAnswer(questionId: string, answer: any): void {
-        throw new Error('Function not implemented.');
-    }
-
-    function handleNext(): void {
-        throw new Error('Function not implemented.');
-    }
-
     function handleSubmit(): void {
         throw new Error('Function not implemented.');
     }
@@ -330,14 +326,14 @@ export function CodingTestEditor({ question, currentQuestionId }: any) {
                         onResizeStart={handleResizeStart}
                         isCollapsed={isProblemCollapsed}
                         onToggle={toggleProblemStatement}
-                        currentQuestionId={currentQuestionId}
-                        isLastQuestion={false}
-                        onAnswer={handleAnswer}
-                        onBack={handleBack}
-                        onNext={handleNext}
-                        onSubmit={handleSubmit}
-                        question={mockQuestionData}
-                        questionAnswer={mockQuestionData.answerOptions}
+                        question={question}
+                    // currentQuestionId={currentQuestionId}
+                    // isLastQuestion={false}
+                    // onAnswer={handleAnswer}
+                    // onBack={handleBack}
+                    // onNext={handleNext}
+                    // onSubmit={handleSubmit}
+                    // questionAnswer={mockQuestionData.answerOptions}
                     />
                 )}
                 <div className="flex-1 flex flex-col min-w-0">

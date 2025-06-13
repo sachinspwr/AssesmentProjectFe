@@ -3,6 +3,7 @@ import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { useMemo } from 'react';
 import { TestResultResponseDTO } from '@dto/response';
 import ManageQuestionPreviewpage from '@components/pages/question/manage-question-preview.page';
+import { VStatus } from '@components/atoms';
 
 function DynamicQuestionModal({
   isOpen,
@@ -10,12 +11,14 @@ function DynamicQuestionModal({
   sectionId,
   questionId,
   detailedResultData,
+  mode
 }: {
   isOpen: boolean;
   onClose: () => void;
   sectionId: string;
   questionId: string;
   detailedResultData: TestResultResponseDTO;
+  mode?: 'review' | 'view'
 }) {
   const section = Array.isArray(detailedResultData?.sections)
     ? detailedResultData.sections.find((sec) => sec.id === sectionId)
@@ -26,6 +29,14 @@ function DynamicQuestionModal({
   const correctAnswers = useMemo(() => {
     return question?.correctAnswer?.split(',')?.map((opt) => opt.trim()) || [];
   }, [question]);
+
+  const selectedAnswers = useMemo(() => {
+    return question?.userAnswer
+      ? question.userAnswer.split(',').map((opt) => opt.trim())
+      : [];
+  }, [question]);
+  
+  
 
   if (!section || !question) return null;
 
@@ -49,6 +60,9 @@ function DynamicQuestionModal({
             <VTypography color="muted" className="text-xs">
               Difficulty Level: <span className="text-theme-primary">{question?.difficulty}</span>
             </VTypography>
+            <VStatus 
+              label={question?.status} 
+              type={ question?.status === "answered" ? 'positive' : 'negative'}/>
           </div>
         </div>
       }
@@ -58,8 +72,9 @@ function DynamicQuestionModal({
       <ManageQuestionPreviewpage
         type={question?.type ?? ''}
         formData={question}
-        mode="view"
-        selectedAnswers={question?.userAnswer}
+        mode={mode}
+        onClose={onClose}
+        selectedAnswers={selectedAnswers}
         correctAnswers={correctAnswers}
       />
     </VModal>

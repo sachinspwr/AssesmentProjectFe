@@ -31,9 +31,9 @@ function SectionForm({ testId, testSection, onCancel, onComplete, testQuestionFo
   const [updateTestSection, { isLoading: isUpdatingSection }] = useUpdateTestSectionMutation();
   const [searchQuestion, { data: paginationResponse, isLoading: isSearching }] = useSearchQuestionMutation();
   const [hasSearched, setHasSearched] = useState(false);
-
   const filterRef = useRef<VFilterRef>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
+  
 
   const questions = (paginationResponse?.data || []).map((question) =>
     mapper.map(question, QuestionResponseDTO, Question)
@@ -81,11 +81,13 @@ function SectionForm({ testId, testSection, onCancel, onComplete, testQuestionFo
   };
 
   const hasSelectedQuestions = (sectionDetails?.questions ?? []).length > 0;
+  
 
   const handleFilterReset = () => {
     setHasSearched(false);
     searchQuestion(SearchRequestDTO.default([]));
   };
+  
 
   return (
     <div className="flex flex-col">
@@ -93,28 +95,21 @@ function SectionForm({ testId, testSection, onCancel, onComplete, testQuestionFo
 
       {/* Available Questions Table */}
       <VToggle title={<VTypography as="h5">Add Questions</VTypography>} defaultOpen={!hasSelectedQuestions}>
-        <VCard className="shadow-sm">
-          <AdvancedQuestionFilter
-            onFilterApply={handleFilterApply}
-            onReset={handleFilterReset}
-            selectedTestFormat={testQuestionFormat}
-            filterRef={filterRef}
-            filterButtonRef={filterButtonRef}
-            scope={'all'}
+       <VCard className='shadow-sm'>
+       <AdvancedQuestionFilter onFilterApply={handleFilterApply} onReset={handleFilterReset} selectedTestFormat={testQuestionFormat} filterRef={filterRef} filterButtonRef={filterButtonRef}/>
+        {isSearching ? (
+          <VLoader size="md" />
+        ) : questions.length > 0 ? (
+          <QuestionsTable
+            mode="select"
+            questions={questions}
+            selectedQuestions={sectionDetails?.questions ?? []}
+            onSelect={handleAddQuestions}
           />
-          {isSearching ? (
-            <VLoader size="md" />
-          ) : questions.length > 0 ? (
-            <QuestionsTable
-              mode="select"
-              questions={questions}
-              selectedQuestions={sectionDetails?.questions ?? []}
-              onSelect={handleAddQuestions}
-            />
-          ) : hasSearched ? (
-            <div className="text-center text-gray-500 py-8">No results found</div>
-          ) : null}
-        </VCard>
+        ) : hasSearched ? (
+          <div className="text-center text-gray-500 py-8">No results found</div>
+        ) : null }
+       </VCard>
       </VToggle>
 
       <hr className="my-4" />

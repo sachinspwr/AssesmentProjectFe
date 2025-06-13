@@ -1,45 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'api/base.query';
-import { RootState } from 'store/store';
-import { createSlice } from '@reduxjs/toolkit';
-import { handleApiError, handleQueryResponse } from 'api/api.error';
-import { TestInvitationResponseDTO } from '@dto/response/test-invitation.response.dto';
-import { TestInvitationRequestDTO } from '@dto/request/test-invitation.request.dto';
-import toast from 'react-hot-toast';
 import { TestLinkType } from '@utils/enums/test-link-type.enums';
 import { CreateTestLinkRequestDTO } from '@dto/request/genrate-link.request.dto';
 import { CreateTestLinkResponseDTO } from '@dto/response/genrate-link.response.dto';
 import { GetTestInvitationResponseDTO } from '@dto/response/get-test-link-invitation-response.dto';
 import { TestInvitationResponseDto } from '@dto/response/test-invite-response.dto';
-
-// interface TestInvitationState {
-//   test_invitation: TestInvitationResponseDTO[];
-//   loading: boolean;
-//   error: string | null;
-// }
-
-// const initialState: TestInvitationState = {
-//   test_invitation: [],
-//   loading: false,
-//   error: null,
-// };
-
-// const TestLinkSlice = createSlice({
-//   name: 'test_link',
-//   initialState,
-//   reducers: {},
-// });
-
-// export const selectTestInvitation = (state: RootState) => state.test_invitation;
-// export default TestLinkSlice.reducer;
+import { handleQueryResponse } from 'api/api.error';
 
 export const testLinkApiSlice = createApi({
   reducerPath: 'test-link-api',
   baseQuery: axiosBaseQuery,
   endpoints: (builder) => ({
-    getTestLinksByType: builder.query<GetTestInvitationResponseDTO[], TestLinkType>({
-      query: (type) => ({
-        url: `/links`,
+    getTestLinksByType: builder.query<GetTestInvitationResponseDTO[], { testId: string; type: TestLinkType }>({
+      query: ({ testId, type }) => ({
+        url: `/tests/${testId}/links`,
         method: 'GET',
         params: { type },
       }),
@@ -58,10 +33,13 @@ export const testLinkApiSlice = createApi({
       },
     }),
 
-    getInvitationRecipients: builder.query<TestInvitationResponseDto, {
-      testId: string;
-      linkId: string
-    }>({
+    getInvitationRecipients: builder.query<
+      TestInvitationResponseDto,
+      {
+        testId: string;
+        linkId: string;
+      }
+    >({
       query: ({ testId, linkId }) => ({
         url: `/tests/${testId}/links/${linkId}/invitation-recipient`,
         method: 'GET',
@@ -70,7 +48,6 @@ export const testLinkApiSlice = createApi({
         await handleQueryResponse(arg, api);
       },
     }),
-
 
     createTestLink: builder.mutation<
       CreateTestLinkResponseDTO,
@@ -99,10 +76,10 @@ export const testLinkApiSlice = createApi({
         await handleQueryResponse(arg, api, 'Test Link Updated Successfully!');
       },
     }),
-    deactivateTestLink: builder.mutation<any, { id: string; }>({
-      query: ({ id, }) => ({
+    deactivateTestLink: builder.mutation<any, { id: string }>({
+      query: ({ id }) => ({
         url: `/links/${id}/deactivate`,
-        method: 'PATCH'
+        method: 'PATCH',
       }),
       onQueryStarted: async (arg, api) => {
         await handleQueryResponse(arg, api, 'Test Link Deactivate Successfully!');
@@ -117,5 +94,5 @@ export const {
   useGetInvitationRecipientsQuery,
   useCreateTestLinkMutation,
   usePatchTestLinkMutation,
-  useDeactivateTestLinkMutation
+  useDeactivateTestLinkMutation,
 } = testLinkApiSlice;

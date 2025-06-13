@@ -27,7 +27,7 @@ function InviteTestPage() {
       {
         name: 'restricted',
         label: 'Restricted',
-        content: <RestrictedSection testId={id || ''} />
+        content: <RestrictedSection testId={id || ''} />,
       },
       {
         name: 'shared',

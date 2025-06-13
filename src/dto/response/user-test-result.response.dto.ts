@@ -22,3 +22,22 @@ export interface UserTestResultResponseDTO {
     action: string;
   }
   
+  export interface InvitedUserTestResultResponseDTO {
+    assessmentId: string
+    testSessionId: string
+    testId: string
+    testTitle: string
+    participantId: string
+    status: string
+    candidateName: string
+    resultStatus: string
+    correctAnswersCount: number
+    score: string
+    outOf: string
+    startedAt: string
+    submittedAt: string
+    experienceLevel: string
+    experienceLevelId: string
+    action: string;
+  }
+  

@@ -42,6 +42,9 @@ const MultipleChoiceQuestion = React.memo(
           ));
         
         const answerString = uniqueOptions.join(',');
+
+         // call this
+        // dispatch(saveAnswer(sessionToken!, sectionId, questionId, answerString));
         dispatch(
           setAnswer({
             questionId,

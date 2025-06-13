@@ -32,3 +32,38 @@ export enum ResultStatus {
    Error = 'Error'
 }
 
+/* eslint-disable no-unused-vars */
+export enum TestSessionStatus {
+  /** Test has been created but not yet started by participant */
+  Created = 'Created',
+
+  /** Participant has entered the test but not answered questions */
+  Started = 'Started',
+
+  /** Participant is actively taking the test */
+  InProgress = 'InProgress',
+
+  /** Test was paused by admin/proctor */
+  Paused = 'Paused',
+
+  /** Test is submitting by admin/proctor */
+  Submitting = 'Submitting',
+
+  /** Test was successfully submitted */
+  Completed = 'Completed',
+
+  /** Test was auto-submitted due to timeout */
+  Expired = 'Expired',
+
+  /** Test was abandoned (browser closed or left without submitting) */
+  Abandoned = 'Abandoned',
+
+  /** Test was terminated by admin/proctor */
+  Terminated = 'Terminated',
+
+  /** Test requires manual review (e.g. proctoring violation) */
+  UnderReview = 'UnderReview'
+}
+
+
+

@@ -1,8 +1,8 @@
 import { TestResponseObjDTO, TestResultResponseDTO } from '@dto/response';
+import { GuestInviterSummaryResponseDTO } from '@dto/response/guest-inviter-summury.response.dto';
 import { PaginatedResponse } from '@dto/response/pagination-response.dto';
 import { UserDashbaordSummaryDTO } from '@dto/response/user-dashboard-summary.dto';
-import { UserTestResultResponseDTO } from '@dto/response/user-test-result.response.dto';
-import { UserTestResults } from '@dto/response/user-test-results-response.dto';
+import { InvitedUserTestResultResponseDTO, UserTestResultResponseDTO } from '@dto/response/user-test-result.response.dto';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { handleApiError } from 'api/api.error';
 import { axiosBaseQuery } from 'api/base.query';
@@ -62,7 +62,67 @@ export const testResultApiSlice = createApi({
         }
       },
     }),
-  }),
+
+    getInvitedParticipantsResultSummary: builder.query<GuestInviterSummaryResponseDTO, void>({
+      query: () => ({
+        url: '/dashboard/invited-participants/result-summary',
+        method: 'GET',
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
+
+    getAllTestResultsGivenByInvitedUser: builder.query<PaginatedResponse<InvitedUserTestResultResponseDTO>, void>({
+      query: () => ({ url: `/test-results/invited-participants`, method: 'GET' }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
+    
+    getTestsByStatus: builder.query<PaginatedResponse<UserTestResultResponseDTO>, { status: string }>({
+      query: ({ status }) => ({
+        url: `/test-results/users`,
+        method: 'GET',
+        params: { status },
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
+
+    getFilteredTestResults: builder.query<PaginatedResponse<UserTestResultResponseDTO>, Record<string, string | number>>({
+      query: (params) => ({
+        url: `/test-results/users`,
+        method: 'GET',
+        params, // Pass the whole query param object
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
+    
+  })    
 });
 
 export const {
@@ -70,4 +130,8 @@ export const {
   useGetDetailedResultQuery,
   useGetAllTestsGivenByUserQuery,
   useGetAllTestsSummaryByUserQuery,
+  useGetTestsByStatusQuery,
+  useGetInvitedParticipantsResultSummaryQuery,
+  useGetAllTestResultsGivenByInvitedUserQuery,
+  useGetFilteredTestResultsQuery
 } = testResultApiSlice;

@@ -1,19 +1,25 @@
 import { VButton, VICon } from '@components/atoms';
-import { VLabelledInput, VRadioButtonGroup } from '@components/molecules/index';
+import {  VRadioButtonGroup } from '@components/molecules/index';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { VFormFieldData } from '@types';
 import { useState } from 'react';
 import { VModal } from '../modal/v-modal.organism';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import ReviewForm from 'apps/evalytics/components/review-result/review-form.component';
+
+type TrueFalseFormData = VFormFieldData & {
+  testQuestionResponses?: { gradingStatus?: string }[];
+};
 
 type TrueFalsePreviewProps = {
   formData: VFormFieldData;
   mode?: 'preview' | 'review' | 'view';
   selectedAnswers?: string[];
   correctAnswers?: string[];
+  onClose?: () => void;
 };
 
-function TrueFalsePreview({ formData, mode = 'preview', selectedAnswers, correctAnswers }: TrueFalsePreviewProps) {
+function TrueFalsePreview({ formData, mode = 'preview', selectedAnswers, correctAnswers, onClose }: TrueFalsePreviewProps) {
   const reviewSelectedAnswer = selectedAnswers?.[0] ?? '';
   const [showGuidelines, setShowGuidelines] = useState(false);
 
@@ -71,6 +77,8 @@ function TrueFalsePreview({ formData, mode = 'preview', selectedAnswers, correct
   const hasGuidelines = isPreview
     ? formData.answerExplanation && formData.answerExplanation !== 'NA'
     : formData.explanation && formData.explanation !== 'NA';
+
+  const gradingStatus = (formData as TrueFalseFormData)?.testQuestionResponses?.[0]?.gradingStatus;
 
   return (
     <>
@@ -139,23 +147,9 @@ function TrueFalsePreview({ formData, mode = 'preview', selectedAnswers, correct
             </div>
           </>
         )}
-        {mode === 'review' ? (
+        {mode === 'review' && gradingStatus === 'NEEDS_REVIEW' ? (
           <>
-            <div className="border-b theme-border-default mt-4"></div>
-            <div className="flex flex-col gap-2">
-              <VTypography as="h6" color="primary" className="mt-2">
-                Add score for this question
-              </VTypography>
-              <VLabelledInput name="score" label="Score" placeholder="Enter Score" required className="w-96" />
-              <div className="flex flex-row gap-4 mt-2">
-                <VButton variant="secondary" className="!w-[100px]" onClick={onClose}>
-                  Cancel
-                </VButton>
-                <VButton variant="primary" className="!w-[170px]">
-                  Review & Submit
-                </VButton>
-              </div>
-            </div>
+            <ReviewForm onClose={()=> onClose} data={formData}/>
           </>
         ) : (
           <></>

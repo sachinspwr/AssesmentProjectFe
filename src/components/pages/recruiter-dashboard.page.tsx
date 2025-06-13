@@ -1,5 +1,4 @@
 import { VICon } from '@components/atoms/icon/v-icon.atom';
-import { VImage } from '@components/atoms/image/v-image.atom';
 import { VStatus } from '@components/atoms/status/v-status.component';
 import { VTypography } from '@components/molecules/typography/v-typography.mol';
 import { ChartWrapper } from '@components/organisms/graph/char-wrapper.organisms';
@@ -8,216 +7,127 @@ import { VPieGraph } from '@components/organisms/graph/v-pie-graph.organisms';
 import { VOverview } from '@components/organisms/overview/v-overview.organism';
 import { VStatSummery } from '@components/organisms/overview/v-stat-summery';
 import VTable, { VTableColumn } from '@components/organisms/table/v-table.organism';
-import { TestResultDTO } from '@dto/response/guest-inviter-summury.response.dto';
+import { InvitedUserTestResultResponseDTO } from '@dto/response/user-test-result.response.dto';
 import { ResultStatus } from '@utils/enums';
 import { defaultFormatDtTm } from '@utils/index';
 import { FiEye } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { useGetAllTestResultsGivenByInvitedUserQuery, useGetInvitedParticipantsResultSummaryQuery } from 'store/slices/test-result.slice';
 
 function RecruiterDashboard() {
+  const { data: summary } = useGetInvitedParticipantsResultSummaryQuery();
+  const { data: invitedTestsByUser, isLoading: invitedTestsByUserLoading } = useGetAllTestResultsGivenByInvitedUserQuery();
+  console.log("Invited Test User Result : ",invitedTestsByUser);
   const navigate = useNavigate();
 
-  const columnsConfig: VTableColumn<TestResultDTO>[] = [
+  const columnsConfig: VTableColumn<InvitedUserTestResultResponseDTO>[] = [
     {
       key: 'testTitle',
       label: 'Assessment Name',
-      customRender: (row: TestResultDTO) => <p className="font-[500]  text-theme-primary">{row.testTitle}</p>,
       sortable: true,
       searchable: true,
     },
     {
-      key: 'recruiterFirstName',
-      label: 'Recruiter FirstName',
-      customRender: (row: TestResultDTO) => (
-        <div className="flex gap-2">
-          <VImage className={'w-4 h-4 rounded-full'} src="https://placehold.co/30x30.png" />
-          <p className="font-[500] text-theme-primary">{row.recruiterFirstName}</p>
-        </div>
-      ),
+      key: 'candidateName',
+      label: 'Candidate Name',
       sortable: true,
       searchable: true,
     },
     {
-      key: 'assessmentStatus',
+      key: 'resultStatus',
       label: 'Status',
-      customRender: (row: TestResultDTO) => (
+      customRender: (row) => (
         <VStatus
-          label={row.assessmentStatus}
+          label={row.resultStatus}
           type={
-            row.assessmentStatus === ResultStatus.Passed
+            row.resultStatus === ResultStatus.Passed
               ? 'positive'
-              : row.assessmentStatus === ResultStatus.Under_Review
-                ? 'warning'
-                : 'negative'
+              : row.resultStatus === ResultStatus.Under_Review
+              ? 'warning'
+              : 'negative'
           }
-        ></VStatus>
+        />
       ),
     },
     {
-      key: 'candidatesCount',
-      label: 'Candidates',
-      customRender: (row: TestResultDTO) => <span>{row.candidatesCount ?? '_'}</span>,
+      key: 'startedAt',
+      label: 'Started At',
+      customRender: (row) => <span>{defaultFormatDtTm(row.startedAt)}</span>,
     },
     {
-      key: 'completedAt',
-      label: 'Completed At',
-      customRender: (row: TestResultDTO) => <span>{defaultFormatDtTm(row?.completedAt)}</span>,
+      key: 'submittedAt',
+      label: 'Submitted At',
+      customRender: (row) => <span>{defaultFormatDtTm(row?.submittedAt)}</span>,
     },
     {
-      key: 'actions',
+      key: 'action',
       label: 'Actions',
-      customRender: (row: TestResultDTO) => (
+      customRender: (row) => (
         <VICon
-          className="text-theme-muted"
+          className="text-theme-muted cursor-pointer"
           icon={FiEye}
-          onClick={() => navigate(`/result/${row?.testId}/participants/${row?.participantId}`)}
-        ></VICon>
+          onClick={() => navigate(`/test-results/${row?.assessmentId}`)}
+        />
       ),
     },
   ];
 
-  const data = {
-    summaryCounts: {
-      ongoingAssessments: 0,
-      completedAssessments: 1,
-      totalCandidates: 1,
-    },
-    assessmentSummaries: [
-      {
-        testId: '6f85e064-7316-4a0e-9d7e-11b43f23960f',
-        testTitle: 'Full Stack Java',
-        totalCandidates: 1,
-      },
-      
-    ],
-    recentAssessments: [
-      {
-        assessmentId: '8b233a5c-f515-4cdb-8031-309f4a7c1e09',
-        testId: '6f85e064-7316-4a0e-9d7e-11b43f23960f',
-        testTitle: 'Full Stack Java',
-        participantId: '48e3fee0-96e4-4278-99a1-519cb6b194e4',
-        recruiterId: '67bdf7fa-fdac-8004-b949-381ab479d78c',
-        recruiterFirstName: 'Test',
-        recruiterLastName: 'User',
-        recruiterEmail: 'testuser@valt.com',
-        assessmentStatus: 'Under_Review',
-        candidatesCount: 1,
-        correctAnswersCount: 2,
-        score: 2,
-        outOf: 6,
-        completedAt: '2025-05-31T14:16:15.000Z',
-      },
-    ],
-    experienceLevelCounts: [
-      {
-        experienceLevelId: 'c2e6b7f2-5d6f-4f95-9e2f-2c8eaf9d6f5b',
-        experienceLevelName: 'Intermediate',
-        participantCount: 15,
-        value: 1,
-        percentage: 33.33,
-      },
-      {
-        experienceLevelId: 'b1d5a6f1-3c4e-4e94-8d1f-1b7d9f8c5e4a',
-        experienceLevelName: 'Beginner',
-        participantCount: 10,
-        value: 2,
-        percentage: 70.67,
-      },
-      {
-        experienceLevelId: 'b1d5a6f1-3c4e-4e94-8d1f-1b7d9f8c5e4a',
-        experienceLevelName: 'Expert',
-        participantCount: 5,
-        value: 2,
-        percentage: 70.67,
-      },
-    ],
-  };
+  // Pie Chart Data Preprocessing
+  const pieChartData = (summary?.experienceLevelCounts ?? []).reduce((acc, { experienceLevelName, participantCount }) => {
+    const existing = acc.find((item) => item.name === experienceLevelName);
+    if (existing) existing.value += participantCount;
+    else acc.push({ name: experienceLevelName, value: participantCount });
+    return acc;
+  }, [] as { name: string; value: number }[]).map(({ name, value }, _, arr) => {
+    const total = arr.reduce((sum, item) => sum + item.value, 0);
+    return { name, value, percentage: parseFloat(((value / total) * 100).toFixed(2)) };
+  });
 
-  type RawData = {
-    experienceLevelName: string;
-    participantCount: number;
-  };
+  const experienceLevelData = summary?.experienceLevelCounts?.map(({ experienceLevelName, participantCount }) => ({
+    name: experienceLevelName,
+    participants: participantCount,
+  })) ?? [];
 
-  type PieChartDataWithPercentage = {
-    name: string;
-    value: number;
-    percentage: number;
-  };
-
-  function getPieChartData(rawData: RawData[]): PieChartDataWithPercentage[] {
-    const totals: Record<string, number> = {};
-
-    for (const item of rawData) {
-      const name = item.experienceLevelName;
-
-      totals[name] = (totals[name] || 0) + item.participantCount;
-    }
-
-    const totalCount = Object.values(totals).reduce((sum, count) => sum + count, 0);
-
-    return Object.entries(totals).map(([name, value]) => ({
-      name,
-
-      value,
-
-      percentage: parseFloat(((value / totalCount) * 100).toFixed(2)),
-    }));
-  }
-
-  const pieChartData = getPieChartData(data?.experienceLevelCounts ?? []);
-
-  const experienceLevelData = data.experienceLevelCounts.map((item) => ({
-    name: item.experienceLevelName,
-    participants: item.participantCount,
-  }));
+  const assessmentSummaries = summary?.assessmentSummaries ?? [];
+  const paddedSummaries = [...assessmentSummaries, ...Array(Math.max(0, 3 - assessmentSummaries.length)).fill(null)];
 
   return (
     <div className="min-h-screen">
       <div className="flex gap-5 items-center">
         <VTypography as="h3">Dashboard</VTypography>
       </div>
-      <div className="border border-theme-default mb-5 mt-5"></div>
+      <div className="border border-theme-default my-5"></div>
+
       <div className="grid grid-cols-2 gap-5">
+        {/* Assessment Overview */}
         <VOverview title="Assessment Overview">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
-            <VStatSummery count={data?.summaryCounts?.ongoingAssessments} label="On going assessments" />
-            <VStatSummery count={data?.summaryCounts?.completedAssessments} label="Completed Assessments" />
-            <VStatSummery count={data?.summaryCounts?.totalCandidates} label="Total Candidates" />
+            <VStatSummery count={summary?.summaryCounts?.ongoingAssessments} label="On going assessments" />
+            <VStatSummery count={summary?.summaryCounts?.completedAssessments} label="Completed Assessments" />
+            <VStatSummery count={summary?.summaryCounts?.totalCandidates} label="Total Candidates" />
           </div>
         </VOverview>
-        <VOverview title="Recent Assessments">
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
-    {(data.assessmentSummaries.length > 0 
-      ? [...data.assessmentSummaries, ...Array(3 - data.assessmentSummaries.length).fill(null)]
-      : [null, null, null]
-    ).map((summary, index) => (
-      <div key={index}>
-        {summary ? (
-          <VStatSummery
-            count={summary.totalCandidates}
-            label="Total Candidates"
-            children={
-              <VTypography as="p" className="text-xs">
-                {summary.testTitle}
-              </VTypography>
-            }
-          />
-        ) : (
-          <VStatSummery
-            count="-"
-            label="Total Candidates"
-            children={
-              <VTypography as="p" className="text-xs">
-                -
-              </VTypography>
-            }
-          />
-        )}
-      </div>
-    ))}
-  </div>
-</VOverview>
 
+        {/* Recent Assessments */}
+        <VOverview title="Recent Assessments">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
+            {paddedSummaries.map((item, index) => (
+              <div key={index}>
+                {item ? (
+                  <VStatSummery count={item.totalCandidates} label="Total Candidates">
+                    <VTypography as="p" className="text-xs">{item.testTitle}</VTypography>
+                  </VStatSummery>
+                ) : (
+                  <VStatSummery count="-" label="Total Candidates">
+                    <VTypography as="p" className="text-xs">-</VTypography>
+                  </VStatSummery>
+                )}
+              </div>
+            ))}
+          </div>
+        </VOverview>
+
+        {/* Area Graph */}
         <VOverview
           title="Assessment Trend"
           overViewLableChildren={
@@ -233,6 +143,7 @@ function RecruiterDashboard() {
           </div>
         </VOverview>
 
+        {/* Pie Chart */}
         <VOverview title="Assessment Type Distribution">
           <div className="p-2 w-full">
             <ChartWrapper title="" data={pieChartData}>
@@ -241,20 +152,22 @@ function RecruiterDashboard() {
           </div>
         </VOverview>
       </div>
+
+      {/* Table */}
       <div className="mt-5">
-        <VTable<TestResultDTO>
+        <VTable<InvitedUserTestResultResponseDTO>
           title="Test Assessment"
-          data={data?.recentAssessments}
+          data={invitedTestsByUser?.data ?? []}
+          loading={invitedTestsByUserLoading}
           columns={columnsConfig}
           headerClassName="font-[600] text-lg"
           itemsPerPage={5}
           tableClassName="w-full border border-gray-200"
           emptyState={<div>No users found!</div>}
-          // addConfig={{ label: 'Create Assessment', onAddRecord: () => {} }}
-          // showPagination={false}
         />
       </div>
     </div>
   );
 }
+
 export { RecruiterDashboard };

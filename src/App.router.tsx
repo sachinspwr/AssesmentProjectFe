@@ -9,6 +9,7 @@ import {
   LogoutPage,
   ManageTicketPage,
   NotFoundPage,
+  RecruiterDashboard,
   RegisterPage,
   RequestaDemoPage,
   ResetPasswordPage,
@@ -55,7 +56,6 @@ import { HelpCenterRoutes } from 'apps/help-center';
 import { AdminConsoleRoutes } from 'apps/admin-console';
 import { EvalyticsRoutes } from 'apps/evalytics';
 import DetailedCandidateTestResultPage from 'test-result/detailed-candidate-result.page';
-import UserResultDashboard from 'test-result/user-result-dashboard.page';
 import InvitationPage from '@components/pages/invitation/invitation.page';
 import InvitationAcceptPage from '@components/pages/invitation/invitation-accept.page';
 import InvitationRejectPage from '@components/pages/invitation/invitation-reject.page';
@@ -64,127 +64,110 @@ import InviteTestPage from '@components/pages/invitation/invite-test.page';
 import { CompliancePage } from '@components/pages/compliance.page';
 import PrivacyPolicy from '@components/organisms/compliance/privacy-policy.organism';
 import Dashboard from '@components/pages/dashboard.page';
-import MaintenanceCheckProvider from '@context/maintenance-check-provider';
 import ResultPage from '@components/pages/result/page/result.page';
 import { TestRunnerRoutes } from 'test-runner';
-import { CodingTestEditor } from 'test-runner/pages/test-editor-page';
-import { QuestionResponseDTO } from '@dto/response';
 
 function AppRouter() {
   return (
     <div className="w-full h-screen">
       <Router>
-        <MaintenanceCheckProvider>
-          <Routes>
-            {/* General Routes */}
-            <Route path="/" element={<Landingpage />} />
-            <Route path="/components" element={<ComponentsPage />} />
+        {/* <MaintenanceCheckProvider> */}
+        <Routes>
+          {/* General Routes */}
+          <Route path="/" element={<Landingpage />} />
+          <Route path="/components" element={<ComponentsPage />} />
 
-            {/* Account Routes */}
-            <Route path="/sign-in" element={<LoginPage />} />
-            <Route path="/sign-up" element={<RegisterPage />} />
-            <Route path="/register-user-success" element={<RegisterUserSuccessPage />} />
-            <Route path="/sign-out" element={<LogoutPage />} />
-            <Route path="/verify-account" element={<VerifyAccountPage />} />
-            <Route path="/verify-account-status" element={<VerifyAccountStatusPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/reset-password-success" element={<ResetPasswordSuccessPage />} />
-            <Route path="/request-demo" element={<RequestaDemoPage />} />
-            <Route path="/compliance-page" element={<CompliancePage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          {/* Account Routes */}
+          <Route path="/sign-in" element={<LoginPage />} />
+          <Route path="/sign-up" element={<RegisterPage />} />
+          <Route path="/register-user-success" element={<RegisterUserSuccessPage />} />
+          <Route path="/sign-out" element={<LogoutPage />} />
+          <Route path="/verify-account" element={<VerifyAccountPage />} />
+          <Route path="/verify-account-status" element={<VerifyAccountStatusPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/reset-password-success" element={<ResetPasswordSuccessPage />} />
+          <Route path="/request-demo" element={<RequestaDemoPage />} />
+          <Route path="/compliance-page" element={<CompliancePage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-            {/* // Authenticated Layout */}
-            <Route path="/" element={<AuthenticatedLayout />}>
-              <Route path="invitations/accept" element={<InvitationAcceptPage />} />
-              <Route path="invitations/reject" element={<InvitationRejectPage />} />
-              <Route path="link/register" element={<LinkRegisterPage />} />
+          {/* // Authenticated Layout */}
+          <Route path="/" element={<AuthenticatedLayout />}>
+            <Route path="invitations/accept" element={<InvitationAcceptPage />} />
+            <Route path="invitations/reject" element={<InvitationRejectPage />} />
+            <Route path="link/register" element={<LinkRegisterPage />} />
 
-              <Route element={<HydrationProvider />}>
-                {/* Bootstrap Page */}
-                <Route path="/bootstrap" element={<BootstrapAppPage />} />
-                <Route path="/apps" element={<AppLauncher />} />
+            <Route element={<HydrationProvider />}>
+              {/* Bootstrap Page */}
+              <Route path="/bootstrap" element={<BootstrapAppPage />} />
+              <Route path="/apps" element={<AppLauncher />} />
 
-                {/* Protect these routes with SubscriptionGuard */}
-                <Route element={<SubscriptionGuard />}>
-                  <Route path="/" element={<FeatureLayout />}>
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="assessments" element={<TestAssessmentpage />} />
-                    <Route path="assessments/:id" element={<ManageAssessment />} />
-                    <Route path="support" element={<SupportPage />} />
-                    <Route path="pricing" element={<SubscriptionPlans />} />
-                    <Route path="subscriptions" element={<Subscriptionpage />} />
-                    <Route path="tickets/:id" element={<ManageTicketPage />} />
-                    <Route path="questions" element={<Questionspage />} />
-                    <Route path="questions/:id" element={<ManageQuestionpage />} />
-                    <Route path="settings" element={<AccountSettings />} />
-                    <Route path="user-dashboard" element={<UserResultDashboard />} />
+              {/* Protect these routes with SubscriptionGuard */}
+              <Route element={<SubscriptionGuard />}>
+                <Route path="/" element={<FeatureLayout />}>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="assessments" element={<TestAssessmentpage />} />
+                  <Route path="assessments/:id" element={<ManageAssessment />} />
+                  <Route path="support" element={<SupportPage />} />
+                  <Route path="pricing" element={<SubscriptionPlans />} />
+                  <Route path="subscriptions" element={<Subscriptionpage />} />
+                  <Route path="tickets/:id" element={<ManageTicketPage />} />
+                  <Route path="questions" element={<Questionspage />} />
+                  <Route path="questions/:id" element={<ManageQuestionpage />} />
+                  <Route path="settings" element={<AccountSettings />} />
+                  <Route path="inviter-dashboard" element={<RecruiterDashboard />} />
 
-                    <Route path="result" element={<ResultPage />} />
-                    <Route
-                      path="test-results/:id"
-                      element={<DetailedCandidateTestResultPage />}
-                    />
+                  <Route path="result" element={<ResultPage />} />
+                  <Route path="test-results/:id" element={<DetailedCandidateTestResultPage mode="view" />} />
 
-                    <Route path="invite" element={<InvitationPage />} />
-                    {/* <Route path="invite" element={<InvitationPage />} /> */}
-                    <Route path="link/:id" element={<InviteTestPage />} />
-                  </Route>
+                  <Route path="invite" element={<InvitationPage />} />
+                  {/* <Route path="invite" element={<InvitationPage />} /> */}
+                  <Route path="link/:id" element={<InviteTestPage />} />
                 </Route>
+              </Route>
 
-                {/* These routes are outside SubscriptionGuard */}
-                <Route path="/" element={<HeaderOnlyLayout />}>
-                  <Route path="subscriptions">
-                    <Route path="upgrade" element={<UpgradeSubscriptionpage />} />
-                  </Route>
+              {/* These routes are outside SubscriptionGuard */}
+              <Route path="/" element={<HeaderOnlyLayout />}>
+                <Route path="subscriptions">
+                  <Route path="upgrade" element={<UpgradeSubscriptionpage />} />
                 </Route>
               </Route>
             </Route>
+          </Route>
 
-            <Route path="/test-runner/code-editor" element={<CodingTestEditor question={new QuestionResponseDTO} currentQuestionId={''} questionAnswer={''} isLastQuestion={false} onAnswer={function (): void {
-              throw new Error('Function not implemented.');
-            } } onSubmit={function (): void {
-              throw new Error('Function not implemented.');
-            } } onNext={function (): void {
-              throw new Error('Function not implemented.');
-            } } onBack={function (): void {
-              throw new Error('Function not implemented.');
-            } } />} />
+          {/* Support Doc Routes */}
+          {HelpCenterRoutes}
 
-            {/* Support Doc Routes */}
-            {HelpCenterRoutes}
+          {/* Payment Route */}
+          <Route path="/payment" element={<RazorpayCheckout orderId={''} amount={0} subscriptionId={''} />} />
 
-            {/* Payment Route */}
-            <Route path="/payment" element={<RazorpayCheckout orderId={''} amount={0} subscriptionId={''} />} />
+          {/* Support Doc Routes */}
+          {HelpCenterRoutes}
 
-            {/* Support Doc Routes */}
-            {HelpCenterRoutes}
+          {/* Support Routes */}
+          {SupportDeskRoutes}
 
-            {/* Support Routes */}
-            {SupportDeskRoutes}
+          {/* Test Runner Routes */}
+          {TestRunnerRoutes}
 
-            {/* Test Runner Routes */}
-            {TestRunnerRoutes}
+          {AdminConsoleRoutes}
 
-            {AdminConsoleRoutes}
+          {/* Evaluate and Analytics Routes */}
+          {EvalyticsRoutes}
 
-            {/* Evaluate and Analytics Routes */}
-            {EvalyticsRoutes}
+          {/* Error Handling */}
+          <Route
+            path="/error"
+            element={
+              <ErrorBoundary>
+                <Errorpage />
+              </ErrorBoundary>
+            }
+          />
 
-            {/* Error Handling */}
-            <Route
-              path="/error"
-              element={
-                <ErrorBoundary>
-                  <Errorpage />
-                </ErrorBoundary>
-              }
-            />
-
-            {/* 404 Not Found */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </MaintenanceCheckProvider>
+          {/* 404 Not Found */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </Router>
     </div>
   );

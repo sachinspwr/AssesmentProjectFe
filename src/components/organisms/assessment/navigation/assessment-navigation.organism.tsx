@@ -58,7 +58,7 @@ function AssessmentNavigation({
 
       {onSaveProceed && (
         <VButton
-          className="!w-44"
+          className="!w-56"
           disabled={isSaveDisabled}
           isLoading={action === 'save-proceed' && isLoading}
           onClick={() => handleClick('save-proceed', onSaveProceed)}

@@ -2,35 +2,74 @@ import { VTitleWithIcon } from "@components/molecules/icon-title/v-title-with-ic
 import { VRadioButtonGroup } from "@components/molecules/index";
 import { useState } from "react";
 import { MdArrowBack } from "react-icons/md";
-import AllReviewsList from "../../components/all-reviews-list.component";
+import ResultReviewsList from "../../components/result-reviews-list.component";
+import { useGetAllTestsGivenByUserQuery, useGetTestsByStatusQuery } from "store/slices/test-result.slice";
 
-type ReviewTabType = 'all reviews' | 'pending reviews';
+type ReviewTabType = 'all' | 'pending' | 'under-review' | 'processing' | 'incomplete';
 
 const REVIEW_TAB_OPTIONS = [
-  { label: 'All Reviews', value: 'all reviews' },
-  { label: 'Pending Reviews', value: 'pending reviews' }
+  { label: 'All', value: 'all' },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Under Review', value: 'under-review' },
+  { label: 'Processing', value: 'processing' },
+  {label: 'Incomplete', value: 'incomplete'}
 ];
 
 function ReviewResultpage() {
-  const [activeTab, setActiveTab] = useState<ReviewTabType>('all reviews');
 
+  const [activeTab, setActiveTab] = useState<ReviewTabType>('all');
   const handleTabChange = (selectedValue: string) => {
     setActiveTab(selectedValue as ReviewTabType);
   };
 
+  const { data: allResult, isLoading: loadingAllResult } = useGetAllTestsGivenByUserQuery();
+
+  const { data: pendingResult, isLoading: loadingPendingResult } = useGetTestsByStatusQuery({ status: 'Pending' });
+
+  const { data: underReviewResult, isLoading: loadingUnderReviewResult } = useGetTestsByStatusQuery({ status: 'Under_Review' });
+
+  const { data: processingResult, isLoading: loadingProcessingResult } = useGetTestsByStatusQuery({ status: 'Processing' });
+
+  const { data: inCompleteResult, isLoading: loadingInCompleteResult } = useGetTestsByStatusQuery({ status: 'Incomplete' });
+
+  
   function renderActiveContent() {
-      if (activeTab === 'all reviews') {
+      if (activeTab === 'all') {
         return (
           <div>
-            <AllReviewsList/>
+            <ResultReviewsList data={allResult?.data ?? []} loading={loadingAllResult}/>
           </div>
         );
       }
-      if (activeTab === 'pending reviews') {
+      if (activeTab === 'pending') {
         return (
-          <div></div>
+          <div>
+            <ResultReviewsList data={pendingResult?.data ?? []} loading={loadingPendingResult}/>
+          </div>
         );
       }
+      if (activeTab === 'under-review') {
+        return (
+          <div>
+            <ResultReviewsList data={underReviewResult?.data ?? []} loading={loadingUnderReviewResult}/>
+          </div>
+        );
+      }
+      if (activeTab === 'processing') {
+        return (
+          <div>
+              <ResultReviewsList data={processingResult?.data ?? []} loading={loadingProcessingResult}/>
+          </div>
+        );
+      }
+      if (activeTab === 'incomplete') {
+        return (
+          <div>
+            <ResultReviewsList data={inCompleteResult?.data ?? []} loading={loadingInCompleteResult}/>
+          </div>
+        );
+      }
+
       return <div>Something</div>;
     }
   
@@ -41,7 +80,7 @@ function ReviewResultpage() {
               <VRadioButtonGroup
                 name="review-content-tabs"
                 options={REVIEW_TAB_OPTIONS}
-                defaultValue="all reviews"
+                defaultValue="all"
                 direction="horizontal"
                 onChange={handleTabChange}
                 wrapperClasses="!w-fit"

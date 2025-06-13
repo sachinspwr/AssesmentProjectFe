@@ -9,11 +9,11 @@ import {
 
 import { selectCurrentQuestionAnswer } from 'test-runner/store/session/answer';
 
-import { CodingQuestion } from './code-editor/coding-question.component';
 import FillInTheBlanks from './question-type/fill-in-the-blanks.component';
 import { MultipleChoiceQuestion } from './question-type/mcq.component';
 import ShortAnswerQuestion from './question-type/short-answer-question.component';
 import {SingleChoiceQuestion} from './question-type/single-choice-question.component';
+import { CodingTestEditor } from 'test-runner/pages/test-editor-page';
 
 type QuestionProps = {
   question: QuestionResponseDTO;
@@ -56,7 +56,7 @@ function QuestionTypeRendererComponent({ question }: QuestionProps) {
         return <FillInTheBlanks {...commonProps} />;
 
       case QuestionType.Coding:
-        return <CodingQuestion {...commonProps} />;
+        return <CodingTestEditor {...commonProps} />;
 
       case QuestionType.ShortAnswer:
       case QuestionType.Essay:

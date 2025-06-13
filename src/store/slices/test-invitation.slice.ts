@@ -43,6 +43,17 @@ export const testInvitationApiSlice = createApi({
       },
     }),
 
+    createTestInviteOnlyInvitation: builder.mutation<TestInvitationResponseDTO, TestInvitationRequestDTO>({
+      query: (testInvitationData) => ({
+        url: '/invitations/link',
+        method: 'POST',
+        body: testInvitationData,
+      }),
+      onQueryStarted: async (arg, api) => {
+        await handleQueryResponse(arg, api, 'Test Invitation Send Successfully!');
+      },
+    }),
+
     acceptInvitation: builder.mutation<{ message: string }, string>({
       query: (token) => ({
         url: '/invitations/accept',
@@ -61,34 +72,32 @@ export const testInvitationApiSlice = createApi({
       },
     }),
 
-    rejectInvitation: builder.mutation<{ message: string }, { token: string; rejectionMessage: string }>(
-      {
-        query: ({ token, rejectionMessage }) => ({
-          url: '/invitations/reject',
-          method: 'POST',
-          body: {
-            rejectionMessage,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        onQueryStarted: async (_, { queryFulfilled }) => {
-          try {
-            await queryFulfilled;
-          } catch (err) {
-            toast.error(handleApiError(err));
-            throw err;
-          }
+    rejectInvitation: builder.mutation<{ message: string }, { token: string; rejectionMessage: string }>({
+      query: ({ token, rejectionMessage }) => ({
+        url: '/invitations/reject',
+        method: 'POST',
+        body: {
+          rejectionMessage,
         },
-      }
-    ),
-
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          toast.error(handleApiError(err));
+          throw err;
+        }
+      },
+    }),
   }),
 });
 
 export const {
   useCreateTestInvitationMutation,
+  useCreateTestInviteOnlyInvitationMutation,
   useAcceptInvitationMutation,
   useRejectInvitationMutation,
 } = testInvitationApiSlice;

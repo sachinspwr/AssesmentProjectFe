@@ -38,7 +38,7 @@ export const questionsApiSlice = createApi({
   endpoints: (builder) => ({
     fetchQuestions: builder.query<
       PaginatedResponse<QuestionResponseDTO>,
-      { scope: 'all' | 'public' | 'personal'; limit?: number; page?: number }
+      { scope: 'all' | 'public' | 'personal'; limit?: number; viewMode?: number }
     >({
       query: ({ scope, limit, page }) => {
         const params = new URLSearchParams();
